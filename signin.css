@@ -1,0 +1,22 @@
+body 
+{
+    background-color: darkgrey;
+    text-align: center;
+    color: green;
+}
+h1
+{
+    color: blue
+}
+p
+{
+    background-color: lightblue;
+    color: darkgoldenrod
+}
+button
+{
+    background-color: graytext;
+}
+.cl {
+    background-color: blue;
+}

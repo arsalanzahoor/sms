@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Student Sign in Page</title>
+        <script type="text/javascript" src="index.js"></script>
+        <link rel="stylesheet" href="signin.css"/>
+    </head>
+    <body>
+        <h1 class="">WELCOME TO ADMINISTRATION PAGE <br> Please Sign In</h1>
+
+        <form action="/signin" method="post" enctype="multipart/form-data">
+            User Name:<br>
+            <input type="text" id="user_name" name="username">
+            <br>
+            Password:
+            <br>
+            <input type="text" id="pass_word" name="password">
+            <br><br>
+            <input type="submit" id="submit" value="Submit" onsubmit="return validate();">
+        </form> 
+    </body>
+</html>
