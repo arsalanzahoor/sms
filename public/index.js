@@ -5,6 +5,7 @@ var username=document.getElementById('user_name').value();
 var password=document.getElementById('pass_word').value();
 if(username.length>1 &&  password.length>1)
     {
+        
         return true;
     }
     else
