@@ -56,7 +56,8 @@ app.post('/SignIn', function(req, res){
         }
         else
         {
-            res.redirect('/SignIn?message=1'); 
+            res.redirect('/SignIn');
+            
         //res.sendFile(_dirname+'/SignIn.html')
         }
 
