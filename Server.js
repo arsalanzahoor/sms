@@ -10,7 +10,7 @@ var server = http.createServer(function (request, response)
 server.listen(9000);
 console.log('Server running at http://127.0.0.1:9000/');
 
-*/
+ */
 
 var express = require('express');
 var app = express();
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({
 app.use(multer()); // for parsing multipart/form-data
 
 //app.set('views', 'views');
-  //app.set('view engine', 'ejs');
+//app.set('view engine', 'ejs');
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
@@ -37,47 +37,38 @@ app.get('/Home', function (req, res) {
 app.get('/SignIn', function (req, res) {
     console.log(req.query);
     res.sendFile(__dirname + '/SignIn.html');
-    //res.render('SignIn',{message:"Please Insert Details Again"});
+//res.render('SignIn',{message:"Please Insert Details Again"});
 });
 app.post('/SignIn', function(req, res){
     var username=req.body.username;
     var password=req.body.password;
+    var sql= 'select * from users where username= ? and password=?';
+    
+    var connection = require('./mysqlconnection.js');
+    
     //if(username.length>1 || password.length>1)
     //{
-        console.log( req.body);//display user input values on server side
-        if(username==='admin' && password==='admin')
+    console.log( req.body);//display user input values on server side
+    connection.query(sql, [username,password],function(err, result)
+    {
+        console.log(result, err);
+        if(result)
         {
             
             //app.post('/Home', function (req, res){
             //res.send("Congratulatios!!! You Have Successfully Login!"); 
             //res.sendFile(__dirname + '/Home.html');
+            
             res.redirect('/Home');
-            //});
+        //});
         }
         else
         {
-            res.redirect('/SignIn');
-            
+            res.redirect('/SignIn'); 
         //res.sendFile(_dirname+'/SignIn.html')
         }
-
-    //}
-    //else
-    //{
-      //  res.send("Username or Password Field Is Empty")
-    //}
-    
-//res.send(req.body); 
-/*
-    if(req.body.valueOf()=='{ }')
-        {
-            res.send("Sorry You Didn't Enter Any Rocords!"); 
-        }
-        else
-            {
-                res.send("Congratulatios!!! You Have Successfully Registered!"); 
-            }
-    //sending the reponse after submission
-    */
+    }
+    );
 });
 
+//connection.end();
