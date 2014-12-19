@@ -6,7 +6,13 @@ body
 }
 h1
 {
-    color: blue
+    color: blue;
+    font-family: cursive;
+}
+h3
+{
+    color: palegoldenrod;
+    font-style: italic;
 }
 p
 {
@@ -16,6 +22,10 @@ p
 button
 {
     background-color: graytext;
+    border: 5px;
+    font-style: normal;
+    color: darkslategrey;
+    text-align: center;
 }
 .cl {
     background-color: blue;

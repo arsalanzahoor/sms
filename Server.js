@@ -54,13 +54,7 @@ app.post('/SignIn', function(req, res){
         console.log(result, err);
         if(result)
         {
-            
-            //app.post('/Home', function (req, res){
-            //res.send("Congratulatios!!! You Have Successfully Login!"); 
-            //res.sendFile(__dirname + '/Home.html');
-            
             res.redirect('/Home');
-        //});
         }
         else
         {
@@ -69,6 +63,51 @@ app.post('/SignIn', function(req, res){
         }
     }
     );
+    
+    app.post('/Home', function (req, res){
+        console.log(req.body);
+        var sqlquery;
+        var newusername=req.body.newusername;
+        var newpassword=req.body.newpassword;
+        if(req.body.action=='Insert')
+        {
+            sqlquery='insert into users (username,password) values(?,?)';
+            //('+connection.escape(newusername)+','+connection.escape(newpassword)+';
+        //console.log("Congratulations");
+        //res.redirect('/Home');
+        }
+        else if(req.body.action=='Update')
+        {
+            sqlquery='update users set password=?where username=?';
+                //+connection.escape(newusername);    
+            //+connection.escape(newpassword)+'
+        }
+        else if(req.body.action=='Delete')
+        {
+            sqlquery='delete from users where username=?';//+connection.escape(newusername);
+        }
+        else{
+            
+        }
+        
+        connection.query(sqlquery,[newusername,newpassword],function(err,result)
+        {
+            console.log(result,err);
+            if(err)
+            {
+                    
+                res.send('There is an Error in your Program!')
+            }
+            else
+            {
+                //console.log(result);
+                res.send('Database is Updated!')
+            }
+            
+        })
+    //res.send("Congratulatios!!! You Have Successfully Login!"); 
+    //res.redirect('/Home');
+    });
 });
-
+            
 //connection.end();
