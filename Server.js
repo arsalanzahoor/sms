@@ -28,6 +28,9 @@ app.use(multer()); // for parsing multipart/form-data
 
 //app.set('views', 'views');
 //app.set('view engine', 'ejs');
+//app.get('/', function (req, res) {
+  //  res.sendFile(__dirname + '/Test.html');
+//});
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
@@ -51,14 +54,14 @@ app.post('/SignIn', function(req, res){
     console.log( req.body);//display user input values on server side
     connection.query(sql, [username,password],function(err, result)
     {
-        console.log(result, err);
-        if(result)
+        console.log(result);
+        if(result=='')
         {
-            res.redirect('/Home');
+            res.redirect('/SignIn');
         }
         else
         {
-            res.redirect('/SignIn'); 
+            res.redirect('/Home'); 
         //res.sendFile(_dirname+'/SignIn.html')
         }
     }
@@ -71,32 +74,31 @@ app.post('/SignIn', function(req, res){
         var newpassword=req.body.newpassword;
         if(req.body.action=='Insert')
         {
-            sqlquery='insert into users (username,password) values(?,?)';
-            //('+connection.escape(newusername)+','+connection.escape(newpassword)+';
+            sqlquery='insert into users (username,password) values('+connection.escape(newusername)+','+connection.escape(newpassword)+')';
         //console.log("Congratulations");
         //res.redirect('/Home');
         }
         else if(req.body.action=='Update')
         {
-            sqlquery='update users set password=?where username=?';
+            sqlquery='update users set password='+connection.escape(newpassword)+'where username='+ connection.escape(newusername);
                 //+connection.escape(newusername);    
             //+connection.escape(newpassword)+'
         }
         else if(req.body.action=='Delete')
         {
-            sqlquery='delete from users where username=?';//+connection.escape(newusername);
+            sqlquery='delete from users where username='+connection.escape(newusername)+'and password='+connection.escape(newpassword);
         }
         else{
             
         }
         
-        connection.query(sqlquery,[newusername,newpassword],function(err,result)
+        connection.query(sqlquery,function(err,result)
         {
             console.log(result,err);
-            if(err)
+            if(result==='')
             {
                     
-                res.send('There is an Error in your Program!')
+                res.send('Database is not updated! Please put right information!')
             }
             else
             {
