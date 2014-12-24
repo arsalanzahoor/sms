@@ -29,19 +29,12 @@ app.use(multer()); // for parsing multipart/form-data
 //app.set('views', 'views');
 //app.set('view engine', 'ejs');
 //app.get('/', function (req, res) {
-  //  res.sendFile(__dirname + '/Test.html');
+//  res.sendFile(__dirname + '/Test.html');
 //});
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
+app.get('*', function (req, res) {
+    res.sendFile(__dirname + '/public/pages/index.html');
 });
-app.get('/Home', function (req, res) {
-    res.sendFile(__dirname + '/Home.html');
-});
-app.get('/SignIn', function (req, res) {
-    console.log(req.query);
-    res.sendFile(__dirname + '/SignIn.html');
-//res.render('SignIn',{message:"Please Insert Details Again"});
-});
+
 app.post('/SignIn', function(req, res){
     var username=req.body.username;
     var password=req.body.password;
@@ -66,36 +59,42 @@ app.post('/SignIn', function(req, res){
         }
     }
     );
-    
-    app.post('/Home', function (req, res){
-        console.log(req.body);
-        var sqlquery;
-        var newusername=req.body.newusername;
-        var newpassword=req.body.newpassword;
-        if(req.body.action=='Insert')
+//connection.end();
+});
+       
+app.post('/Home', function (req, res){
+    console.log(req.body);
+    var connection=require('./mysqlconnection.js')
+    var sqlquery;
+    var newusername=req.body.newusername;
+    var newpassword=req.body.newpassword;
+        
+    if(newusername != null && newpassword != null)
+    {
+        if(req.body.action=='insert')
         {
             sqlquery='insert into users (username,password) values('+connection.escape(newusername)+','+connection.escape(newpassword)+')';
         //console.log("Congratulations");
         //res.redirect('/Home');
         }
-        else if(req.body.action=='Update')
+        else if(req.body.action=='update')
         {
             sqlquery='update users set password='+connection.escape(newpassword)+'where username='+ connection.escape(newusername);
-                //+connection.escape(newusername);    
-            //+connection.escape(newpassword)+'
+        //+connection.escape(newusername);    
+        //+connection.escape(newpassword)+'
         }
-        else if(req.body.action=='Delete')
+        else if(req.body.action=='delete')
         {
             sqlquery='delete from users where username='+connection.escape(newusername)+'and password='+connection.escape(newpassword);
         }
         else{
-            
+            res.send("Wrong Action Input");
         }
         
         connection.query(sqlquery,function(err,result)
         {
-            console.log(result,err);
-            if(result==='')
+            console.log(result);
+            if(result==' ')
             {
                     
                 res.send('Database is not updated! Please put right information!')
@@ -105,11 +104,17 @@ app.post('/SignIn', function(req, res){
                 //console.log(result);
                 res.send('Database is Updated!')
             }
-            
+    
         })
-    //res.send("Congratulatios!!! You Have Successfully Login!"); 
-    //res.redirect('/Home');
-    });
+    }
+    else 
+    {
+        console.log("Username or Password field is empty");
+        res.send("Username or Password field is empty");
+    }
+//res.send("Congratulatios!!! You Have Successfully Login!"); 
+//res.redirect('/Home');
+// connection.end();
 });
-            
+      
 //connection.end();

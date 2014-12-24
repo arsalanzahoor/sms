@@ -1,0 +1,56 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-field/core-field.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<polymer-element name="paper-button-submit" extends="button" noscript>
+  <template>
+    <style>
+      :host {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        font-size: inherit;
+        background-color: greenyellow;
+        color: blue;
+      }
+    </style>
+    <paper-button>
+      <content></content>
+    </paper-button>
+  </template>
+</polymer-element>
+<polymer-element name="signin-page" attributes="pathArg1 queryParam1" >
+  <template>
+    <h2>Login</h2>
+    <core-field>
+        <label>Username</label>
+        <input placeholder="Username" id="username" value="" flex>
+  </core-field>
+    <core-field>
+        <label>Password</label>
+        <input placeholder="Password" id="password" value="" type="password" flex>
+  </core-field>
+    <button type="submit" is="paper-button-submit" on-click="{{validate}}">Submit</button>
+    <!--<paper-button label="Submit" id="submitbutton" raisedButton on-click="{{validate}}">Submit</paper-button>-->
+  </template>
+    <script>
+        
+        Polymer('signin-page', {
+            validate: function(){
+                var username = this.$.username.value;
+                var password = this.$.password.value;
+                if(username == '' || password == '')
+                    {
+                        console.log("not submit");
+                        //this.redirect('/signin-page');
+                    }
+                    else
+                        {
+                            console.log("submit");
+                            //this.submit();                
+                        }
+            }
+            
+        });
+        
+    </script>
+</polymer-element>
