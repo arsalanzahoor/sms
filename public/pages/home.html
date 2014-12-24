@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Student Sign in Page</title>
+        <link rel="import" href="bower_components/paper-button/paper-button.html">
+        <link rel="stylesheet" href="signin.css"/>
+    </head>
+    <body>
+        <h1>WELCOME TO HOME PAGE</h1>
+
+        <form id="form" action="/Home" method="post" enctype="multipart/form-data">
+            <img src="test1.jpg" width="300" height="150" alt="Today's Lecture">
+            <img src="test2.gif" width="300" height="150" alt="Today's Lecture">
+            <p>
+                Today is 18th of December and we have 6 Lectures in total
+                <br> But the most important Lectures as mention above in 
+                <br> todays images will be conducted in afternoon by professor
+                <br> P.K Smith.<br>
+            </p>
+            <br><br>
+            <h3>Please Insert,Update or Delete Users records from here!</h3>                
+            User Name:<br>
+            <input type="text" id="new_user_name" name="newusername">
+            <br>
+            User Password:
+            <br>
+            <input type="password" id="new_pass_word" name="newpassword">
+            <input type="hidden" name="action" id="action">
+            <br><br>
+            <paper-button onclick="javascript:s('insert');" class="my-action-button" id="my-button" name="insert">Insert</paper-button>
+            &nbsp;
+            <paper-button onclick="javascript:s('update');" class="my-action-button" id="my-button" name="update">Update</paper-button>
+            &nbsp;
+            <paper-button onclick="javascript:s('delete');" class="my-action-button" id="my-button" name="delete">Delete</paper-button>
+            <br>
+        </form>
+        <script>
+            function s(name) {
+                document.getElementById('action').value = name;
+                //window.location.href = e.target.getAttribute('link');
+                form.submit();
+            }
+        </script>
+    </body>
+</html>
