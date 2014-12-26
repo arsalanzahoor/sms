@@ -1,0 +1,79 @@
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="stylesheet" href="signin.css">
+<polymer-element name="home-page" router="{{router}}">    
+    <template>
+        <h1>WELCOME TO HOME PAGE</h1>
+
+        <form id="form" action="/Home" method="post" enctype="multipart/form-data">
+            <img src="test1.jpg" width="300" height="150" alt="Today's Lecture">
+            <img src="test2.gif" width="300" height="150" alt="Today's Lecture">
+            <p>
+                Today is 18th of December and we have 6 Lectures in total
+                <br> But the most important Lectures as mention above in 
+                <br> todays images will be conducted in afternoon by professor
+                <br> P.K Smith.<br>
+            </p>
+            <br><br>
+            <h3>Please Insert,Update or Delete Users records from here!</h3>                
+            User Name:<br>
+            <input type="text" id="newusername" name="new-username">
+            <br>
+            User Password:
+            <br>
+            <input type="password" id="newpassword" name="new-password">
+            <input type="hidden" name="action" id="action">
+            <br><br>
+            <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="insert">Insert</paper-button>
+            &nbsp;
+            <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="update">Update</paper-button>
+            &nbsp;
+            <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="delete">Delete</paper-button>
+            <br>
+        </form>
+        <core-ajax id="ajax"
+                   url="/home"
+                   method="POST"
+                   on-core-response="{{homeResponse}}"
+                   handleAs="json">
+        </core-ajax>
+    </template>
+    <script>
+        Polymer('home-page', {
+                
+            sty: function (e, detail, sender) {
+                console.log(this.$.newusername.value);
+
+                var newusername = this.$.newusername.value;
+                var newpassword = this.$.newpassword.value;
+                if(newusername == '' || newpassword == '')
+                {
+                    console.log("not submit");
+                        
+                    //this.redirect('/signin-page');
+                }
+                else
+                {
+                        
+                    var name = e.target.getAttribute('name');
+                    this.$.action.value = name;
+                    //                form.submit();
+                    this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
+
+                    this.$.ajax.go();
+
+                }
+            },
+            homeResponse: function()
+            {
+                if(this.$.ajax.response.status==true)
+                {
+                    var app = document.querySelector("index-app");
+                    //                        console.log(this.router);
+                    app.session=true;
+                    this.router.go('/home', {replace:true});
+                        
+                }
+            }
+        });
+    </script>
+</polymer-element>

@@ -29,8 +29,9 @@
 
             <app-router mode="pushstate" init="manual" id="router" on-state-change="{{stateChange}}">
                 <app-route path="/" import="/pages/index.html" on-before-data-binding="{{bindSession}}"></app-route>
-                <app-route path="/signin" import="/pages/signin-page.html"></app-route>
-                <app-route path="/home" import="/pages/Home.html"></app-route>
+                <app-route path="/signin" bindRouter import="/pages/signin-page.html"  on-before-data-binding="{{bindSession}}"></app-route>
+                
+                <app-route path="/home" import="/pages/home-page.html"></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>
 
@@ -38,10 +39,12 @@
         <script>
             Polymer('index-app', {
                 init: function(){
-                    console.log(this.$.router);
+//                    console.log(this.$.router);
                     this.$.router.init();  
                 },
                 stateChange: function(event) {
+                    
+                    //console.log(this.session);
                     // redirect to the login page if not signed in
                     if (!this.session && event.detail.path !== '/signin') {
                         event.preventDefault();
@@ -59,8 +62,8 @@
     <script>
         window.addEventListener('WebComponentsReady', function() {
             var app = document.querySelector('index-app');
-            console.log("Error");
-            console.log(app);
+//            console.log("Error");
+//            console.log(app);
             app.init();
         });
     </script>

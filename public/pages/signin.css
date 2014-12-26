@@ -4,7 +4,7 @@ html,body {
     background-color: darkgray;
     font-family: 'RobotoDraft', sans-serif;
     text-align: center;
-    color: graytext;
+    color: blue;
 }
 core-header-panel {
     height: 100%;
