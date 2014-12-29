@@ -1,9 +1,12 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
-<link rel="stylesheet" href="signin.css">
-<polymer-element name="home-page" router="{{router}}">    
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+
+<link rel="stylesheet" href="/pages/signin.css">
+<polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1">    
     <template>
         <h1>WELCOME TO HOME PAGE</h1>
-
+        <h6><paper-button on-click="{{signOut}}" id="sign-out" name="signout">Sign Out</paper-button></h6>
         <form id="form" action="/Home" method="post" enctype="multipart/form-data">
             <img src="test1.jpg" width="300" height="150" alt="Today's Lecture">
             <img src="test2.gif" width="300" height="150" alt="Today's Lecture">
@@ -22,6 +25,9 @@
             <br>
             <input type="password" id="newpassword" name="new-password">
             <input type="hidden" name="action" id="action">
+            &nbsp;
+            <paper-toast id="toast1" text="Database is Updated Successfully!" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+            <!--<paper-toast id="toast2" text="Sorry Database is not Updated." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>-->
             <br><br>
             <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="insert">Insert</paper-button>
             &nbsp;
@@ -41,12 +47,14 @@
         Polymer('home-page', {
                 
             sty: function (e, detail, sender) {
-                console.log(this.$.newusername.value);
+                //                console.log(this.$.newusername.value);
 
                 var newusername = this.$.newusername.value;
                 var newpassword = this.$.newpassword.value;
                 if(newusername == '' || newpassword == '')
                 {
+                    this.$.toast1.text="Username or Password Field Is Empty. Please Fill All Fields!";
+                    this.$.toast1.opened="true";
                     console.log("not submit");
                         
                     //this.redirect('/signin-page');
@@ -65,15 +73,48 @@
             },
             homeResponse: function()
             {
+                console.log(this.$.ajax.response);
                 if(this.$.ajax.response.status==true)
                 {
+                    //                    this.$.toast1.text="DataBase Updated!!!"
+                    this.$.toast1.opened="true";
                     var app = document.querySelector("index-app");
                     //                        console.log(this.router);
                     app.session=true;
-                    this.router.go('/home', {replace:true});
+                    
+                    //                    this.router.go('/home', {replace:true});
+                    //res.send();
                         
                 }
+                else
+                {
+                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                    this.$.toast1.opened="true";
+                }
+            },
+            dataResponse : function(el)
+            {
+                el.show();
+            },
+//            init: function(){
+//                console.log(this.$.router);
+//                this.$.router.init();  
+//            },
+            signOut : function()
+            {
+                console.log(this.router);
+                var app = document.querySelector('index-app');
+                app.session=false;
+                //app.init();
+
+                //                app.init();     
+                // redirect to the login page if not signed in
+                this.router.go('/signin');
+//                this.$.toast1.text="Sign Out Successfully";
+//                this.$.toast1.opened="true";
             }
+           
+            
         });
     </script>
 </polymer-element>

@@ -63,8 +63,10 @@ app.post('/signin', function(req, res){
     console.log(req.body);
     var username=req.body.username;
     var password=req.body.password;
-    res.send({status:true});
-        return;
+//    res.send({
+//        status:true
+//    });
+//    return;
     if(username != null && password != null)
     {
         var sql= 'select * from users where username= ? and password=?';
@@ -79,15 +81,20 @@ app.post('/signin', function(req, res){
             console.log(result);
             if(result=='')
             {
-                //            res.send({status:true});
                 console.log("Unauthorise User Values");
+                res.send({
+                    status:false
+                });
+                return;
             // res.redirect('/signin');
             }
             else
             {
-                res.send({status:true});
-
                 console.log("Authorised");
+                res.send({
+                    status:true
+                });
+                return;
             //res.redirect('/home'); 
             //res.sendFile(_dirname+'/SignIn.html')
             }
@@ -97,6 +104,10 @@ app.post('/signin', function(req, res){
     else
     {
         console.log("Username or Password Field Is Empty");
+        res.send({
+            status:false
+        });
+        return;
     }
 //connection.end();
 });
@@ -123,6 +134,9 @@ app.post('/home', function (req, res){
     var sqlquery;
     var newusername=req.body.newusername;
     var newpassword=req.body.newpassword;
+    var status;
+    //    res.send({status:true});
+    //        return;
         
     if(newusername != null && newpassword != null)
     {
@@ -142,22 +156,24 @@ app.post('/home', function (req, res){
         {
             sqlquery='delete from users where username='+connection.escape(newusername)+'and password='+connection.escape(newpassword);
         }
-        else{
-            res.send("Wrong Action Input");
-        }
         
         connection.query(sqlquery,function(err,result)
         {
             console.log(result);
             if(result==' ')
             {
-                    
-                res.send('Database is not updated! Please put right information!')
+                res.send({
+                    status:false
+                });
+                return;
             }
             else
             {
                 //console.log(result);
-                res.send('Database is Updated!')
+                res.send({
+                    status:true
+                });
+                return;
             }
     
         })
@@ -165,7 +181,10 @@ app.post('/home', function (req, res){
     else 
     {
         console.log("Username or Password field is empty");
-        res.send("Username or Password field is empty");
+        res.send({
+            status:false
+        });
+        return;
     }
 //res.send("Congratulatios!!! You Have Successfully Login!"); 
 //res.redirect('/Home');

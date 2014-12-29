@@ -1,8 +1,11 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/core-field/core-field.html">
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<link rel="stylesheet" href="signin.css">
 
 
 <polymer-element name="paper-button-submit" extends="button" noscript>
@@ -26,14 +29,15 @@
     <template>
 
         <h2>Login</h2>
-        <core-field>
+        <core-field align="centre">
             <label>Username</label>
-            <input placeholder="Username" id="username" value="admin"  flex>
+            <input placeholder="Username..." id="username" autofocus="true" value="admin"  flex>
         </core-field>
         <core-field>
             <label>Password</label>
-            <input placeholder="Password" id="password" value="admin" type="password" flex>
+            <input placeholder="Password..." id="password" type="password" value="admin" flex>
         </core-field>
+        <paper-toast id="toast1" text="Login Successfully!" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
         <button type="submit" is="paper-button-submit" on-click="{{validate}}">Submit</button>
         <core-ajax id="ajax"
                    url="/signin"
@@ -54,7 +58,8 @@
                 if(username == '' || password == '')
                 {
                     console.log("not submit");
-                        
+                    this.$.toast1.text="Username or Password Field is Empty";
+                    this.$.toast1.opened="true";
                     //this.redirect('/signin-page');
                 }
                 else
@@ -65,8 +70,8 @@
                     //                            console.log(this.$.ajax);
                     //                    this.$.ajax.body = 'username='+username+'&password='+password;
                     this.$.ajax.body = {username:username, password:password};
-//                    console.log(this.$.ajax.body);
-//                    console.log("test");
+                    //                    console.log(this.$.ajax.body);
+                    //                    console.log("test");
 
                     //                            this.$.ajax.body.username =  username ;
                     //                            this.$.ajax.body.username =  username ;
@@ -79,13 +84,23 @@
             signinresponse: function()
             {
                 if(this.$.ajax.response.status==true)
-                    {
-                        var app = document.querySelector("index-app");
-//                        console.log(this.router);
-                        app.session=true;
-                        this.router.go('/home', {replace:true});
+                {
+                    var app = document.querySelector("index-app");
+                    //                        console.log(this.router);
+                    app.session=true;
+                   // this.$.toast1.opened="true";
+                    this.router.go('/home', {replace:true});
                         
-                    }
+                }
+                else
+                {
+                    this.$.toast1.text="Username or Password is Incorrect";
+                    this.$.toast1.opened="true";
+                }
+            },
+            dataResponse : function(el)
+            {
+                el.show();
             }
             
         });
