@@ -24,6 +24,15 @@ core-toolbar {
     user-select: none;
     text-transform: uppercase;
 }
+h6 { 
+    display: block;
+    font-size: .67em;
+    margin-top: 2.33em;
+    margin-bottom: 2.33em;
+    margin-left: 100px;
+    margin-right: 0;
+    font-weight: bold;
+}
 #toast1{
     bottom: 10px;
     left: 10px;

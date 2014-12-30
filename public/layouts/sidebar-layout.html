@@ -5,22 +5,43 @@
 <link rel="import" href="/bower_components/core-item/core-item.html">
 
 <polymer-element name="sidebar-layout" attributes="selected" noscript>
-  <template>
-    <link rel="stylesheet" href="sidebar-layout.css">
-    <core-scaffold>
-      <core-header-panel navigation flex mode="seamed">
-        <core-toolbar>app-router-examples</core-toolbar>
-        <core-item icon="home" label="Home" active?="{{selected == 'home'}}"><a href="/#"></a></core-item>
-        <core-item icon="polymer" label="Data Binding" active?="{{selected == 'demo'}}"><a href="/#/demo/1337?queryParam1=Routing%20with%20Web%20Components!"></a></core-item>
-        <core-item icon="info-outline" label="Notes" active?="{{selected == 'notes'}}"><a href="/#/notes"></a></core-item>
-        <core-item icon="exit-to-app" label="GitHub"><a href="https://github.com/erikringsmuth/app-router"></a></core-item>
-      </core-header-panel>
-      <div tool>
-        <content select=".title"></content>
-      </div>
-      <div class="content">
-        <content></content>
-      </div>
-    </core-scaffold>
-  </template>
+    <template>
+        <link rel="stylesheet" href="sidebar-layout.css">
+        <core-scaffold>
+            <core-header-panel navigation flex mode="seamed">
+                <core-toolbar style="background-color: #526E9C; color: #fff;">WELCOME TO SMS</core-toolbar>
+                <core-menu>
+                    <core-item icon="home" label="Home" active?="{{selected == 'home'}}"><a is="pushstate-anchor" href="/#/home"></a>
+                    </core-item>
+                    <core-item icon="settings" label="Administration" active?="{{selected == 'admin'}}"><a is="pushstate-anchor" href="/#/admin"></a>
+                        <!--<a href="/pages/admin-page.html"></a>--> 
+                    </core-item>
+                    <!--<core-item icon="signout" label="Sign Out"></core-item>-->
+                </core-menu>
+            </core-header-panel>
+            <div tool>SMS
+                <content select=".title"></content>
+            </div>
+            <div class="content">
+                <content></content>
+            </div>
+        </core-scaffold>
+    </template>
+<!--    <script>
+        Polymer('sidebar-layout',{
+            signOut : function()
+            {
+                //console.log(this.router);
+                var app = document.querySelector('index-app');
+                app.session=false;
+                //app.init();
+
+                //                app.init();     
+                // redirect to the login page if not signed in
+                this.router.go('/signin');
+                //                this.$.toast1.text="Sign Out Successfully";
+                //                this.$.toast1.opened="true";
+            }
+        });
+    </script>-->
 </polymer-element>

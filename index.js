@@ -216,6 +216,14 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/pages/index.html');
 });
 
+
+
+app.get('/admin', function (req, res) {
+    // Will require a valid access_token
+    //console.log("hello!");
+    res.sendFile(__dirname + '/public/pages/admin-page.html');
+});
+
 app.get('/public', function (req, res) {
     // Does not require an access_token
     res.send('Public area');

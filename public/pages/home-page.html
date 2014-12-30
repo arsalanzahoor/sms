@@ -1,47 +1,82 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="/bower_components/core-menu/core-menu.html">
+<link rel="import" href="/bower_components/core-item/core-item.html">
+<link rel="import" href="/layouts/sidebar-layout.html">
+
 
 <link rel="stylesheet" href="/pages/signin.css">
 <polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1">    
     <template>
-        <h1>WELCOME TO HOME PAGE</h1>
-        <h6><paper-button on-click="{{signOut}}" id="sign-out" name="signout">Sign Out</paper-button></h6>
-        <form id="form" action="/Home" method="post" enctype="multipart/form-data">
-            <img src="test1.jpg" width="300" height="150" alt="Today's Lecture">
-            <img src="test2.gif" width="300" height="150" alt="Today's Lecture">
-            <p>
-                Today is 18th of December and we have 6 Lectures in total
-                <br> But the most important Lectures as mention above in 
-                <br> todays images will be conducted in afternoon by professor
-                <br> P.K Smith.<br>
-            </p>
-            <br><br>
-            <h3>Please Insert,Update or Delete Users records from here!</h3>                
-            User Name:<br>
-            <input type="text" id="newusername" name="new-username">
-            <br>
-            User Password:
-            <br>
-            <input type="password" id="newpassword" name="new-password">
-            <input type="hidden" name="action" id="action">
-            &nbsp;
-            <paper-toast id="toast1" text="Database is Updated Successfully!" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
-            <!--<paper-toast id="toast2" text="Sorry Database is not Updated." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>-->
-            <br><br>
-            <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="insert">Insert</paper-button>
-            &nbsp;
-            <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="update">Update</paper-button>
-            &nbsp;
-            <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="delete">Delete</paper-button>
-            <br>
-        </form>
-        <core-ajax id="ajax"
-                   url="/home"
-                   method="POST"
-                   on-core-response="{{homeResponse}}"
-                   handleAs="json">
-        </core-ajax>
+        <sidebar-layout selected="home">
+
+            <form id="form" action="/Home" method="post" enctype="multipart/form-data">
+
+                <!--<core-scaffold>-->
+                <!--
+                                <core-header-panel navigation flex mode="seamed">
+                                    <core-toolbar style="background-color: #526E9C; color: #fff;">WELCOME TO SMS</core-toolbar>
+                                    <core-menu>
+                                        <core-item icon="home" label="Home" >
+                                        </core-item>
+                                        <core-item icon="settings" label="Administration" on-click="{{adminCall}}">
+                                            <a href="/pages/admin-page.html"></a> 
+                                        </core-item>
+                                        <core-item icon="settings" label="Sign Out" on-click="{{signOut}}"></core-item>
+                                    </core-menu>
+                                </core-header-panel>-->
+
+                <div>Welcome To Home Page<h6><paper-button on-click="{{signOut}}" id="sign-out" name="signout">Sign Out</paper-button></h6></div>
+
+                <div id="home-div">
+                    <br><br>
+                    <img src="/pages/test1.jpg" width="300" height="150" alt="Today's Lecture">
+                    <img src="/pages/test2.gif" width="300" height="150" alt="Today's Lecture">
+                    <p>
+                        Today is 18th of December and we have 6 Lectures in total
+                        <br> But the most important Lectures as mention above in 
+                        <br> todays images will be conducted in afternoon by professor
+                        <br> P.K Smith.<br>
+                    </p>
+                    <br><br>
+                </div>
+                <div class="administrator" id="administrator-div">
+                    <h3>Please Insert,Update or Delete Users records from here!</h3>                
+                    User Name:<br>
+                    <input type="text" id="newusername" name="new-username">
+                    <br>
+                    User Password:
+                    <br>
+                    <input type="password" id="newpassword" name="new-password">
+                    <input type="hidden" name="action" id="action">
+                    &nbsp;
+                    <paper-toast id="toast1" text="Database is Updated Successfully!" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+                    <!--<paper-toast id="toast2" text="Sorry Database is not Updated." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>-->
+                    <br><br>
+                    <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="insert">Insert</paper-button>
+                    &nbsp;
+                    <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="update">Update</paper-button>
+                    &nbsp;
+                    <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="delete">Delete</paper-button>
+                    <br>
+                </div>
+
+
+                <!--<div tool>Home</div>-->
+                <!--</core-scaffold>-->
+                <core-ajax id="ajax"
+                           url="/home"
+                           method="POST"
+                           on-core-response="{{homeResponse}}"
+                           handleAs="json">
+                </core-ajax>
+            </form>
+        </sidebar-layout>
+
     </template>
     <script>
         Polymer('home-page', {
@@ -96,10 +131,10 @@
             {
                 el.show();
             },
-//            init: function(){
-//                console.log(this.$.router);
-//                this.$.router.init();  
-//            },
+            //            init: function(){
+            //                console.log(this.$.router);
+            //                this.$.router.init();  
+            //            },
             signOut : function()
             {
                 console.log(this.router);
@@ -110,8 +145,22 @@
                 //                app.init();     
                 // redirect to the login page if not signed in
                 this.router.go('/signin');
-//                this.$.toast1.text="Sign Out Successfully";
-//                this.$.toast1.opened="true";
+                //                this.$.toast1.text="Sign Out Successfully";
+                //                this.$.toast1.opened="true";
+            },
+            adminCall : function()
+            {
+                var app = document.querySelector('index-app');
+
+                if(app.session)
+                {
+                    this.router.go('/admin');
+                    //                    app.session=true;
+                }
+                else
+                {
+                    this.router.go('/signin');
+                }
             }
            
             
