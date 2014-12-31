@@ -10,10 +10,10 @@
 
         <link rel="import" href="/bower_components/core-localstorage/core-localstorage.html">
         <link rel="import" href="/bower_components/app-router/app-router.html">
-        <link rel="import"
-              href="/bower_components/font-roboto/roboto.html">
-        <link rel="import"
-              href="/bower_components/paper-tabs/paper-tabs.html">
+        <link rel="import" href="/bower_components/font-roboto/roboto.html">
+        <link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+        <link rel="import" href="/bower_components/baasic-ajax/baasic-ajax.html">
+        <link rel="import" href="/bower_components/baasic-globals/baasic-globals.html">
 
         <link rel="stylesheet" href="styles.css" shim-shadowdom>
         <title>
@@ -25,6 +25,7 @@
 
     <polymer-element name="index-app">
         <template>
+            <baasic-globals id="globals"></baasic-globals>
             <!-- bind the session object to index--page -->
             <user-session session="{{session}}"></user-session>
 
@@ -37,16 +38,21 @@
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>
             <core-localstorage name="polymer-localstorage-app-session" value="{{session}}"></core-localstorage>
+
         </template>
         <script>
             Polymer('index-app', {
+                //                ready:function(){
+                //                  console.log(this.$.globals);
+                //                },
                 init: function(){
                     //                    console.log(this.$.router);
+                    //                    console.log(this.$.globals)
                     this.$.router.init();  
                 },
                 stateChange: function(event) {
                     
-                    console.log(event);
+                    //                    console.log(event);
                     // redirect to the login page if not signed in
                     if (!this.session && event.detail.path !== '/signin') {
                         event.preventDefault();
@@ -65,10 +71,14 @@
         window.addEventListener('WebComponentsReady', function() {
             var app = document.querySelector('index-app');
             //            console.log("Error");
-            //            console.log(app);
-            
+            console.log(app.$.globals);
+            //            this.globals = this.$.globals;
+            //            console.log(this.$.globals);
             if(app.session)
+            {
+                console.log(app.$.globals.baasicUser); 
                 app.$.router.go('/home');
+            }
             app.init();
         });
     </script>
