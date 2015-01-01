@@ -4,7 +4,7 @@ oauthserver = require('node-oauth2-server'); // Would be: 'oauth2-server'
 
 var app = express();
 app.use(logErrors);
-app.use(express.static(__dirname + '/baasic/public'));
+app.use(express.static(__dirname + '/baasic/public/'));
 function logErrors(err, req, res, next) {
     console.error(err.stack);
     next(err);

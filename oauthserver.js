@@ -1,6 +1,6 @@
 var express = require('express'),
   bodyParser = require('body-parser'),
-  oauthserver = require('/oauth2-server'); // Would be: 'oauth2-server'
+  oauthserver = require('oauth2-server'); // Would be: 'oauth2-server'
 
 var app = express();
 
@@ -13,7 +13,7 @@ app.oauth = oauthserver({
 });
 
 // Handle token grant requests
-app.all('/oauth/token', app.oauth.grant());
+app.all('/oauth/access_token', app.oauth.grant());
 
 // Show them the "do you authorise xyz app to access your content?" page
 app.get('/oauth/authorise', function (req, res, next) {
@@ -83,4 +83,5 @@ app.get('/public', function (req, res) {
 // Error handling
 app.use(app.oauth.errorHandler());
 
-app.listen(3000);
+app.listen(9000);
+console.log("Oauth Server is Listening at port:9000");

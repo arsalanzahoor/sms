@@ -1,114 +1,95 @@
+
 var express = require('express'),
 bodyParser = require('body-parser'),
-oauthserver = require('node-oauth2-server'); // Would be: 'oauth2-server'
+app = express();
 
-var app = express();
-app.use(logErrors);
-app.use(express.static(__dirname + '/public'));
-function logErrors(err, req, res, next) {
-    console.error(err.stack);
-    next(err);
-}
+var oauth2 = require('simple-oauth2')({
+    clientID: 'abc1',
+    clientSecret: '12345',
+    site: 'http://localhost:9000',
+    tokenPath: '/oauth/access_token'
+});
 app.use(bodyParser());
-
-app.oauth = oauthserver({
-    model: require('./model'),
-    grants: ['auth_code', 'password'],
-    debug: true
+app.use(express.static(__dirname + '/public'));
+// Authorization uri definition
+var authorization_uri = oauth2.authCode.authorizeURL({
+    redirect_uri: 'http://localhost:3000',
+    scope: 'notifications',
+    state: '3(#0/!~'
 });
 
-// Handle token grant requests
-app.all('/oauth/token', app.oauth.grant());
 
-// Show them the "do you authorise xyz app to access your content?" page
-app.get('/oauth/authorise', function (req, res, next) {
-    if (!req.session.user) {
-        // If they aren't logged in, send them to your own login implementation
-        return res.redirect('/login?redirect=' + req.path + '&client_id=' +
-            req.query.client_id + '&redirect_uri=' + req.query.redirect_uri);
-    }
-
-    res.render('authorise', {
-        client_id: req.query.client_id,
-        redirect_uri: req.query.redirect_uri
-    });
+// Initial page redirecting to Github
+app.get('/auth', function (req, res) {
+    res.redirect(authorization_uri);
 });
 
-// Handle authorise
-app.post('/oauth/authorise', function (req, res, next) {
-    if (!req.session.user) {
-        return res.redirect('/login?client_id=' + req.query.client_id +
-            '&redirect_uri=' + req.query.redirect_uri);
-    }
+// Callback service parsing the authorization token and asking for the access token
+app.get('/callback', function (req, res) {
+    var code = req.query.code;
+    console.log('/callback');
+    oauth2.authCode.getToken({
+        code: code,
+        redirect_uri: 'http://localhost:3000'
+    }, saveToken);
 
-    next();
-}, app.oauth.authCodeGrant(function (req, next) {
-    // The first param should to indicate an error
-    // The second param should a bool to indicate if the user did authorise the app
-    // The third param should for the user/uid (only used for passing to saveAuthCode)
-    next(null, req.body.allow === 'yes', req.session.user.id, req.session.user);
-}));
+    function saveToken(error, result) {
+        if (error) {
+            console.log('Access Token Error', error.message);
+        }
+        token = oauth2.accessToken.create(result);
+    }
+});
+
+//app.get('/', function (req, res) {
+//  res.send('Hello<br><a href="/auth">Log in with Github</a>');
+//});
+console.log('Express server started on port 3000');
 
 // Show login
-app.get('/signin', function (req, res, next) {
-    res.render('signin', {
-        redirect: req.query.redirect,
-        client_id: req.query.client_id,
-        redirect_uri: req.query.redirect_uri
-    });
+app.get('/signin', function (req, res, next){
+    
+},function (req, res, next) {
+    res.send({
+        id:1,
+        roles: []
+    })
 });
 
 // Handle login
-app.post('/signin', function(req, res){
-    console.log(req.body);
-    var username=req.body.username;
-    var password=req.body.password;
-//    res.send({
-//        status:true
-//    });
-//    return;
-    if(username != null && password != null)
-    {
-        var sql= 'select * from users where username= ? and password=?';
-    
-        var connection = require('./mysqlconnection.js');
-    
-        //if(username.length>1 || password.length>1)
-        //{
-        //    console.log( req.body);//display user input values on server side
-        connection.query(sql, [username,password],function(err, result)
-        {
-            console.log(result);
-            if(result=='')
-            {
-                console.log("Unauthorise User Values");
-                res.send({
-                    status:false
-                });
-                return;
-            // res.redirect('/signin');
-            }
-            else
-            {
-                console.log("Authorised");
-                res.send({
-                    status:true
-                });
-                return;
+app.post('/signin',  function(req, res){
+    //    console.log("Test");
+    //    console.log(req.body);
+    var username = req.body.username;
+    var password = req.body.password;
+//                console.log("Authorised");
+                var token;
+                oauth2.password.getToken({
+                    username: username,
+                    password: password 
+                }, saveToken);
+//                console.log(token);
+                // Save the access token
+                function saveToken(error, result) {
+                    if (error) {
+                        console.log('Access Token Error', error.message);
+                    }
+                    token = oauth2.accessToken.create(result);
+                    console.log(token);
+                    res.send(token.token);
+//                    oauth2.api('GET', '/users', {
+//                        access_token: token.token.access_token
+//                    }, function (err, data) {
+//                        console.log(err, data);
+//                    });
+                }
+            //                console.log("Authorised");
+            //                res.send({
+            //                    status:true
+            //                });
+            //                return;
             //res.redirect('/home'); 
             //res.sendFile(_dirname+'/SignIn.html')
-            }
-        }
-        );
-    }
-    else
-    {
-        console.log("Username or Password Field Is Empty");
-        res.send({
-            status:false
-        });
-        return;
-    }
 //connection.end();
 });
 
@@ -209,7 +190,7 @@ app.post('/login', function (req, res, next) {
         req.body.client_id + '&redirect_uri=' + req.body.redirect_uri);
   }
 });
-*/
+ */
 app.get('/', function (req, res) {
     // Will require a valid access_token
     //console.log("hello!");
@@ -230,6 +211,6 @@ app.get('/public', function (req, res) {
 });
 
 // Error handling
-app.use(app.oauth.errorHandler());
+//app.use(app.oauth.errorHandler());
 
 app.listen(3000);

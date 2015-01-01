@@ -54,9 +54,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (params && method == 'GET') {
           url += (url.indexOf('?') > 0 ? '&' : '?') + params;
         }
-        if('object' == typeof(options.body)) {
-            options.body = this.toQueryString(options.body);
-        }
         var xhrParams = this.isBodyMethod(method) ? (options.body || params) : null;
         //
         xhr.open(method, url, async);

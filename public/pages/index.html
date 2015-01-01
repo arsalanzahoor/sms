@@ -25,14 +25,14 @@
 
     <polymer-element name="index-app">
         <template>
-            <baasic-globals id="globals"></baasic-globals>
+            <!--<baasic-globals id="globals"></baasic-globals>-->
             <!-- bind the session object to index--page -->
             <user-session session="{{session}}"></user-session>
 
             <app-router mode="hash" init="manual" id="router" on-state-change="{{stateChange}}">
                 <app-route path="/" import="/pages/index.html" on-before-data-binding="{{bindSession}}"></app-route>
                 <app-route path="/signin" bindRouter import="/pages/signin-page.html"  on-before-data-binding="{{bindSession}}"></app-route>
-
+                <!--<app-route path="/signin" bindRouter import="/pages/baasic-login.html"  on-before-data-binding="{{bindSession}}"></app-route>-->
                 <app-route path="/home" bindRouter import="/pages/home-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
@@ -71,12 +71,12 @@
         window.addEventListener('WebComponentsReady', function() {
             var app = document.querySelector('index-app');
             //            console.log("Error");
-            console.log(app.$.globals);
+//            console.log(app.$.globals.baasicUser);
             //            this.globals = this.$.globals;
             //            console.log(this.$.globals);
             if(app.session)
             {
-                console.log(app.$.globals.baasicUser); 
+//                console.log(app.$.globals.baasicUser); 
                 app.$.router.go('/home');
             }
             app.init();
