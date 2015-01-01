@@ -45,15 +45,25 @@ app.get('/callback', function (req, res) {
 //  res.send('Hello<br><a href="/auth">Log in with Github</a>');
 //});
 console.log('Express server started on port 3000');
+var token;
 
 // Show login
-app.get('/signin', function (req, res, next){
-    
+app.get('/signin',function (req, res, next){
+    oauth2.api('GET','/oauth/authorise',{
+        access_token: token.token.access_token
+    },function (err, data) {
+        console.log("Error on your next call",err, data);
+        if(err)
+            res.send(err);
+        else next();
+    }
+    );
 },function (req, res, next) {
     res.send({
         id:1,
         roles: []
     })
+//    console.log(next());
 });
 
 // Handle login
@@ -62,34 +72,33 @@ app.post('/signin',  function(req, res){
     //    console.log(req.body);
     var username = req.body.username;
     var password = req.body.password;
+    //                console.log("Authorised");
+    oauth2.password.getToken({
+        username: username,
+        password: password 
+    }, saveToken);
+    //                console.log(token);
+    // Save the access token
+    function saveToken(error, result) {
+        if (error) {
+            console.log('Access Token Error', error.message);
+        }
+        token = oauth2.accessToken.create(result);
+        console.log(token);
+        res.send(token.token);
+    //                    oauth2.api('GET', '/users', {
+    //                        access_token: token.token.access_token
+    //                    }, function (err, data) {
+    //                        console.log(err, data);
+    //                    });
+    }
 //                console.log("Authorised");
-                var token;
-                oauth2.password.getToken({
-                    username: username,
-                    password: password 
-                }, saveToken);
-//                console.log(token);
-                // Save the access token
-                function saveToken(error, result) {
-                    if (error) {
-                        console.log('Access Token Error', error.message);
-                    }
-                    token = oauth2.accessToken.create(result);
-                    console.log(token);
-                    res.send(token.token);
-//                    oauth2.api('GET', '/users', {
-//                        access_token: token.token.access_token
-//                    }, function (err, data) {
-//                        console.log(err, data);
-//                    });
-                }
-            //                console.log("Authorised");
-            //                res.send({
-            //                    status:true
-            //                });
-            //                return;
-            //res.redirect('/home'); 
-            //res.sendFile(_dirname+'/SignIn.html')
+//                res.send({
+//                    status:true
+//                });
+//                return;
+//res.redirect('/home'); 
+//res.sendFile(_dirname+'/SignIn.html')
 //connection.end();
 });
 
@@ -97,6 +106,7 @@ app.post('/signin',  function(req, res){
 app.get('/home', function (req, res, next) {
     if (!req.session.user) {
         // If they aren't logged in, send them to your own login implementation
+//        console.log("test");
         return res.redirect('/login?redirect=' + req.path + '&client_id=' +
             req.query.client_id + '&redirect_uri=' + req.query.redirect_uri);
     }

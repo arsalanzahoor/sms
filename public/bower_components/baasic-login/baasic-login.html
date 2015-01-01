@@ -20,6 +20,7 @@ The `baasic-login` element provides support for authenticating users and logging
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../core-signals/core-signals.html">
 <link rel="import" href="../baasic-globals/baasic-globals.html">
+<link rel="import" href="/pages/home-page.html">
 
 <polymer-element name="baasic-login" attributes="baseUrl version application redirectUrl">
     <template>
@@ -91,14 +92,15 @@ The `baasic-login` element provides support for authenticating users and logging
                     </template>
                 </div>
             </template>
-            <template bind if="{{isLoggedIn}}">
+<!--            <template bind if="{{isLoggedIn}}">
+                <home-page></home-page>
                 <div id="loggedin" class="[ logininfo ]">
-                    <div class="[ message ]">Welcome <strong>{{baasicUser.userName}}!</strong></div>
-                    <div>
-                        <paper-button on-click="{{logOut}}">Log out</paper-button>
-                    </div>
+                <div class="[ message ]">Please Click on LogOut to log you out from <strong>{{baasicUser.userName}}!</strong></div>
+                <div onload="{{logOut}}">
+                    <paper-button  onload="{{logOut}}" align="right">Log out</paper-button>
                 </div>
-            </template>
+                </div>
+            </template>-->
         </div>
         <baasic-globals id="globals"></baasic-globals>
         <baasic-ajax url="/signin"
@@ -116,7 +118,6 @@ The `baasic-login` element provides support for authenticating users and logging
                      handleas="json"
                      on-core-response="{{ajaxGetResponse}}"
                      on-core-error="{{ajaxGetError}}"></baasic-ajax>
-
         <core-signals on-core-signal-user-login="{{loginChanged}}"></core-signals>
         <paper-toast text="An error has occured while trying to log you in. Please check your data and try again." id="toastError" onclick="discardToast(el)"></paper-toast>
     </template>
@@ -167,8 +168,8 @@ The `baasic-login` element provides support for authenticating users and logging
             loginInProgress: false,
             ready: function () {
                 var globals = this.$.globals;
-//                console.log(globals);
-//                console.log(this.$.globals.baasicUser);
+                //                console.log(globals);
+                //                console.log(this.$.globals.baasicUser);
                 if (!this.baseUrl) this.baseUrl = globals.config.baseUrl;
                 if (!this.version) this.version = globals.config.version;
                 if (!this.application) this.application = globals.config.application;
@@ -184,7 +185,6 @@ The `baasic-login` element provides support for authenticating users and logging
                 this.loginInProgress = true;
                 var ajax = this.$.ajax;
                 ajax.body = 'grant_type=password&username=' + this.username + '&password=' + this.password;
-                console.log(ajax);
                 ajax.go();
             },
             loginChanged: function (data) {
@@ -200,6 +200,11 @@ The `baasic-login` element provides support for authenticating users and logging
             logOut: function () {
                 //signal that user has logged out, so other modules could switch views acordingly
                 this.fire('core-signal', { name: 'user-login', data: { baasicUser: {} } });
+                var app = document.querySelector("index-app");
+                    //                        console.log(this.router);
+                    app.session=false;
+                    // this.$.toast1.opened="true";
+                    app.$.router.go('/signin');
             },
             ajaxPostResponse: function (e) {
                 this.baasicUser.accessToken = e.detail.response.access_token;
@@ -233,12 +238,17 @@ The `baasic-login` element provides support for authenticating users and logging
                 //signal that user has logged in, so other modules could switch views acordingly
                 this.fire('core-signal', { name: 'user-login', data: { baasicUser: this.baasicUser } });
                 this.loginInProgress = false;
-                //redirect to another URL if needed
-                if (this.redirectUrl)
+                // redirect to another URL if needed
+                if (this.redirectUrl){
                     window.location.href = this.redirectUrl;
-                else
+                }
+                else{
                     this.toggleView();
-
+                    //console.log("testing");
+                }                
+               
+            
+            
             },
             ajaxGetError: function (e) {
                 this.loginInProgress = false;
@@ -246,7 +256,16 @@ The `baasic-login` element provides support for authenticating users and logging
             },
             toggleView: function () {
                 if (this.baasicUser && this.baasicUser.accessToken)
+                {
                     this.isLoggedIn = true;
+                               
+                    var app = document.querySelector("index-app");
+                    //                        console.log(this.router);
+                    app.session=true;
+                    // this.$.toast1.opened="true";
+                    app.$.router.go('/home', {replace:true});
+                        
+                }
                 else
                     this.isLoggedIn = false;
             },

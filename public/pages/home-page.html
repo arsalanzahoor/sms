@@ -6,12 +6,14 @@
 <link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="/bower_components/core-menu/core-menu.html">
 <link rel="import" href="/bower_components/core-item/core-item.html">
+<link rel="import" href="/bower_components/baasic-globals/baasic-globals.html">
 <link rel="import" href="/layouts/sidebar-layout.html">
 
 
 <link rel="stylesheet" href="/pages/signin.css">
 <polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1">    
     <template>
+        <baasic-globals id="globals"></baasic-globals>
         <sidebar-layout selected="home">
 
             <form id="form" action="/Home" method="post" enctype="multipart/form-data">
@@ -137,14 +139,18 @@
             //            },
             signOut : function()
             {
-                console.log(this.router);
-                var app = document.querySelector('index-app');
-                app.session=false;
+                //                console.log(this.router);
+                //var app = document.querySelector('baasic-login');
+                //console.log("test-home-signout");
+                var globals = this.$.globals;
+                globals.logOut();
+                //var app = document.querySelector('index-app');
+                //app.$.session=false;
                 //app.init();
 
                 //                app.init();     
                 // redirect to the login page if not signed in
-                this.router.go('/signin');
+                //app.$.router.go('/signin');
                 //                this.$.toast1.text="Sign Out Successfully";
                 //                this.$.toast1.opened="true";
             },

@@ -37,7 +37,7 @@
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>
-            <core-localstorage name="polymer-localstorage-app-session" value="{{session}}"></core-localstorage>
+            <core-localstorage id="storage" name="polymer-localstorage-app-session" value="{{session}}"></core-localstorage>
 
         </template>
         <script>
@@ -56,11 +56,14 @@
                     // redirect to the login page if not signed in
                     if (!this.session && event.detail.path !== '/signin') {
                         event.preventDefault();
+                        //console.log(event.preventDefault());
                         this.$.router.go('/signin');
                     }
                 },
                 bindSession: function(event) {
+                    //var appSession = this.$.localstorage.session.value;
                     // update the route's model before it's bound to the home-page or login-page
+                    console.log(this.$.storage.value);
                     event.detail.model.session = this.session;
                 }
             });
@@ -71,12 +74,12 @@
         window.addEventListener('WebComponentsReady', function() {
             var app = document.querySelector('index-app');
             //            console.log("Error");
-//            console.log(app.$.globals.baasicUser);
+            //            console.log(app.$.globals.baasicUser);
             //            this.globals = this.$.globals;
             //            console.log(this.$.globals);
             if(app.session)
             {
-//                console.log(app.$.globals.baasicUser); 
+                //                console.log(app.$.globals.baasicUser); 
                 app.$.router.go('/home');
             }
             app.init();
