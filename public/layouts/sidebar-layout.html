@@ -4,7 +4,8 @@
 <link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="/bower_components/core-item/core-item.html">
 
-<polymer-element name="sidebar-layout" attributes="selected" noscript>
+
+<polymer-element name="sidebar-layout" attributes="selected">
     <template>
         <link rel="stylesheet" href="sidebar-layout.css">
         <core-scaffold>
@@ -16,7 +17,8 @@
                     <core-item icon="settings" label="Administration" active?="{{selected == 'admin'}}"><a is="pushstate-anchor" href="/#/admin"></a>
                         <!--<a href="/pages/admin-page.html"></a>--> 
                     </core-item>
-                    <core-item icon="settings" label="Sign Out"></core-item>
+                    <core-item icon="settings" label="Sign Out" active?="{{selected == 'signout'}}"></core-item>
+                    <!--<a is="pushstate-anchor" href="/#/signout"></a>-->
                 </core-menu>
             </core-header-panel>
             <div tool>SMS
@@ -27,21 +29,12 @@
             </div>
         </core-scaffold>
     </template>
-<!--    <script>
+    <script>
         Polymer('sidebar-layout',{
             signOut : function()
             {
-                //console.log(this.router);
-                var app = document.querySelector('index-app');
-                app.session=false;
-                //app.init();
-
-                //                app.init();     
-                // redirect to the login page if not signed in
-                this.router.go('/signin');
-                //                this.$.toast1.text="Sign Out Successfully";
-                //                this.$.toast1.opened="true";
+                this.$.login.logOut();
             }
         });
-    </script>-->
+    </script>
 </polymer-element>

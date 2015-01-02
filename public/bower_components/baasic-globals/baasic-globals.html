@@ -16,8 +16,6 @@ The `baasic-globals` element provides support for storing global settings and lo
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="globals-import.html">
-<link rel="import" href="../core-signals/core-signals.html">
-
 
 <polymer-element name="baasic-globals" hidden>
     <template>
@@ -39,9 +37,9 @@ The `baasic-globals` element provides support for storing global settings and lo
     <script>
         (function () {
             /**
-             * Global object storing application-wide configration settings.
-             * 
-             */
+            * Global object storing application-wide configration settings.
+            * 
+            */
             var config = {
                 //Add additional admin roles here
                 adminRoles: ['Administrators'],
@@ -68,17 +66,6 @@ The `baasic-globals` element provides support for storing global settings and lo
                 },
                 get actions() {
                     return this.getFromCache(this.$.axActions, 'baasicActions', 'accessAction');
-                },
-                logOut: function () {
-                    //signal that user has logged out, so other modules could switch views acordingly
-                    this.fire('core-signal', { name: 'user-login', data: { baasicUser: {} } });
-                    var app = document.querySelector("index-app");
-                    //console.log("test-baasic-globals");
-                    app.session=false;
-                    // this.$.toast1.opened="true";
-                    //console.log(app.session);
-                    //console.log(app.$.router);
-                    app.$.router.go('/signin');
                 },
                 getFromCache: function (ajax, cacheKey, collectionKey) {
                     var _this = this;

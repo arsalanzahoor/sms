@@ -35,6 +35,7 @@
                 <!--<app-route path="/signin" bindRouter import="/pages/baasic-login.html"  on-before-data-binding="{{bindSession}}"></app-route>-->
                 <app-route path="/home" bindRouter import="/pages/home-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
+                <app-route path="/signout" bindRouter import="/pages/signout-page.html" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>
             <core-localstorage id="storage" name="polymer-localstorage-app-session" value="{{session}}"></core-localstorage>
