@@ -106,7 +106,7 @@ app.post('/signin',  function(req, res){
 app.get('/home', function (req, res, next) {
     if (!req.session.user) {
         // If they aren't logged in, send them to your own login implementation
-//        console.log("test");
+        //        console.log("test");
         return res.redirect('/login?redirect=' + req.path + '&client_id=' +
             req.query.client_id + '&redirect_uri=' + req.query.redirect_uri);
     }
@@ -120,63 +120,56 @@ app.get('/home', function (req, res, next) {
 
        
 app.post('/home', function (req, res){
-    console.log(req.body);
+console.log(req.query)
+    console.log(req.body.newusername);
     var connection=require('./mysqlconnection.js')
+    res.send({
+        status:true
+    });
+    return;
     var sqlquery;
     var newusername=req.body.newusername;
     var newpassword=req.body.newpassword;
     var status;
-    //    res.send({status:true});
-    //        return;
         
-    if(newusername != null && newpassword != null)
+       
+    if(req.body.action=='insert')
     {
-        if(req.body.action=='insert')
-        {
-            sqlquery='insert into users (username,password) values('+connection.escape(newusername)+','+connection.escape(newpassword)+')';
-        //console.log("Congratulations");
-        //res.redirect('/Home');
-        }
-        else if(req.body.action=='update')
-        {
-            sqlquery='update users set password='+connection.escape(newpassword)+'where username='+ connection.escape(newusername);
-        //+connection.escape(newusername);    
-        //+connection.escape(newpassword)+'
-        }
-        else if(req.body.action=='delete')
-        {
-            sqlquery='delete from users where username='+connection.escape(newusername)+'and password='+connection.escape(newpassword);
-        }
+        sqlquery='insert into users (username,password) values('+connection.escape(newusername)+','+connection.escape(newpassword)+')';
+    //console.log("Congratulations");
+    //res.redirect('/Home');
+    }
+    else if(req.body.action=='update')
+    {
+        sqlquery='update users set password='+connection.escape(newpassword)+'where username='+ connection.escape(newusername);
+    //+connection.escape(newusername);    
+    //+connection.escape(newpassword)+'
+    }
+    else if(req.body.action=='delete')
+    {
+        sqlquery='delete from users where username='+connection.escape(newusername)+'and password='+connection.escape(newpassword);
+    }
         
-        connection.query(sqlquery,function(err,result)
+    connection.query(sqlquery,function(err,result)
+    {
+        console.log("Your Error:",result,err);
+        if(result==' ')
         {
-            console.log(result);
-            if(result==' ')
-            {
-                res.send({
-                    status:false
-                });
-                return;
-            }
-            else
-            {
-                //console.log(result);
-                res.send({
-                    status:true
-                });
-                return;
-            }
+            res.send({
+                status:false
+            });
+            return;
+        }
+        else
+        {
+            //console.log(result);
+            res.send({
+                status:true
+            });
+            return;
+        }
     
-        })
-    }
-    else 
-    {
-        console.log("Username or Password field is empty");
-        res.send({
-            status:false
-        });
-        return;
-    }
+    })
 //res.send("Congratulatios!!! You Have Successfully Login!"); 
 //res.redirect('/Home');
 // connection.end();

@@ -360,6 +360,9 @@ element.
       if (args.params && typeof(args.params) == 'string') {
         args.params = JSON.parse(args.params);
       }
+//      if (args.body && typeof(args.body) == 'string'){
+//          args.body = JSON.parse(args.body);
+//      }
       args.headers = this.headers || args.headers || {};
       if (args.headers && typeof(args.headers) == 'string') {
         args.headers = JSON.parse(args.headers);

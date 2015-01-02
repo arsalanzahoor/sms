@@ -6,14 +6,15 @@
 <link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
 <link rel="import" href="/bower_components/core-menu/core-menu.html">
 <link rel="import" href="/bower_components/core-item/core-item.html">
-<link rel="import" href="/bower_components/baasic-login/baasic-login.html">
+<!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
-
+<link rel="import" href="/pages/app-ajax.html">
 
 <link rel="stylesheet" href="/pages/signin.css">
-<polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1">    
+<polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token">    
     <template>
-        <baasic-login id="log"></baasic-login>
+         <baasic-globals id="globals"></baasic-globals>
+        <!--<baasic-login id="log"></baasic-login>-->
         <sidebar-layout selected="home">
 
             <form id="form" action="/Home" method="post" enctype="multipart/form-data">
@@ -32,7 +33,8 @@
                                     </core-menu>
                                 </core-header-panel>-->
 
-                <div>Welcome To Home Page<h6><paper-button on-click="{{signOut}}" id="sign-out" name="signout">Sign Out</paper-button></h6></div>
+                <div>Welcome To Home Page</div>
+                    <!--<h6><paper-button on-click="{{signOut}}" id="sign-out" name="signout">Sign Out</paper-button></h6></div>-->
 
                 <div id="home-div">
                     <br><br>
@@ -70,12 +72,14 @@
 
                 <!--<div tool>Home</div>-->
                 <!--</core-scaffold>-->
-                <core-ajax id="ajax"
+                <app-ajax id="ajax"
                            url="/home"
                            method="POST"
                            on-core-response="{{homeResponse}}"
+                           content-type="application/json"
+                           access_token="{{access_token}}"
                            handleAs="json">
-                </core-ajax>
+                </app-ajax>
             </form>
         </sidebar-layout>
 
@@ -103,7 +107,7 @@
                     this.$.action.value = name;
                     //                form.submit();
                     this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
-
+                    console.log(this.$.ajax.body);
                     this.$.ajax.go();
 
                 }
@@ -137,23 +141,23 @@
             //                console.log(this.$.router);
             //                this.$.router.init();  
             //            },
-            signOut : function()
-            {
-                //                console.log(this.router);
-                //var app = document.querySelector('baasic-login');
-                //console.log("test-home-signout");
-                //var globals = this.$.globals;
-                this.$.log.logOut();
-                //var app = document.querySelector('index-app');
-                //app.$.session=false;
-                //app.init();
-
-                //                app.init();     
-                // redirect to the login page if not signed in
-                //app.$.router.go('/signin');
-                //                this.$.toast1.text="Sign Out Successfully";
-                //                this.$.toast1.opened="true";
-            },
+//            signOut : function()
+//            {
+//                //                console.log(this.router);
+//                //var app = document.querySelector('baasic-login');
+//                //console.log("test-home-signout");
+//                //var globals = this.$.globals;
+//                this.$.log.logOut();
+//                //var app = document.querySelector('index-app');
+//                //app.$.session=false;
+//                //app.init();
+//
+//                //                app.init();     
+//                // redirect to the login page if not signed in
+//                //app.$.router.go('/signin');
+//                //                this.$.toast1.text="Sign Out Successfully";
+//                //                this.$.toast1.opened="true";
+//            },
             adminCall : function()
             {
                 var app = document.querySelector('index-app');
@@ -167,7 +171,12 @@
                 {
                     this.router.go('/signin');
                 }
+            },
+            ready: function(){
+                console.log(this.$.globals.baasicUser)
+                this.access_token = this.$.globals.baasicUser.accessToken;
             }
+            
            
             
         });

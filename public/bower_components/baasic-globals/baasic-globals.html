@@ -37,9 +37,9 @@ The `baasic-globals` element provides support for storing global settings and lo
     <script>
         (function () {
             /**
-            * Global object storing application-wide configration settings.
-            * 
-            */
+             * Global object storing application-wide configration settings.
+             * 
+             */
             var config = {
                 //Add additional admin roles here
                 adminRoles: ['Administrators'],
@@ -90,6 +90,28 @@ The `baasic-globals` element provides support for storing global settings and lo
                             resolve({ data: Baasic.Cache.getItem(cacheKey) });
                         }
                     });
+                },
+                loginChanged: function (data) {
+                    if (data.detail && data.detail.baasicUser && !data.detail.baasicUser.accessToken) {
+                        
+                        this.resetUser();
+                    }
+                },
+                resetUser: function () {
+                    this.baasicUser = {};
+                    Baasic.Cache.removeItem('baasicUser');
+//                    this.toggleView();
+                    var app = document.querySelector("index-app");
+                    //                        console.log(this.router);
+                    app.session=false;
+                    // this.$.toast1.opened="true";
+                    app.$.router.go('/signin');
+                },
+                logOut: function () {
+                    //signal that user has logged out, so other modules could switch views acordingly
+                    //this.fire('core-signal', { name: 'user-login', data: { baasicUser: {} } });
+                    this.resetUser();
+                    
                 }
             });
         })();

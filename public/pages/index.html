@@ -14,6 +14,8 @@
         <link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
         <link rel="import" href="/bower_components/baasic-ajax/baasic-ajax.html">
         <link rel="import" href="/bower_components/baasic-globals/baasic-globals.html">
+        <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
+
 
         <link rel="stylesheet" href="styles.css" shim-shadowdom>
         <title>
@@ -25,7 +27,8 @@
 
     <polymer-element name="index-app">
         <template>
-            <!--<baasic-globals id="globals"></baasic-globals>-->
+            <!--<baasic-login id="log"></baasic-login>-->
+            <baasic-globals id="globals"></baasic-globals>
             <!-- bind the session object to index--page -->
             <user-session session="{{session}}"></user-session>
 
@@ -35,12 +38,13 @@
                 <!--<app-route path="/signin" bindRouter import="/pages/baasic-login.html"  on-before-data-binding="{{bindSession}}"></app-route>-->
                 <app-route path="/home" bindRouter import="/pages/home-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
-                <app-route path="/signout" bindRouter import="/pages/signout-page.html" ></app-route>
+                <app-route path="/signout" bindRouter on-activate-route-start="{{logOut}}" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>
-            <core-localstorage id="storage" name="polymer-localstorage-app-session" value="{{session}}"></core-localstorage>
+            <!--<core-localstorage id="storage" name="polymer-localstorage-app-session" value="{{session}}"></core-localstorage>-->
 
         </template>
+
         <script>
             Polymer('index-app', {
                 //                ready:function(){
@@ -53,19 +57,27 @@
                 },
                 stateChange: function(event) {
                     
-                    //                    console.log(event);
+                    //console.log(event);
                     // redirect to the login page if not signed in
                     if (!this.session && event.detail.path !== '/signin') {
                         event.preventDefault();
                         //console.log(event.preventDefault());
                         this.$.router.go('/signin');
+                        
                     }
+                    
                 },
                 bindSession: function(event) {
                     //var appSession = this.$.localstorage.session.value;
                     // update the route's model before it's bound to the home-page or login-page
-                    console.log(this.$.storage.value);
-                    event.detail.model.session = this.session;
+                    //console.log(this.$.session);
+                    event.detail.model.session = this.$.session;
+                },
+                logOut : function(){
+                      this.$.globals.logOut();
+                      console.log("test");
+//                    this.$.session = false;
+//                    this.$.router.go('/signin');
                 }
             });
         </script>
