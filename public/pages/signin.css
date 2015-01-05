@@ -6,6 +6,22 @@ html,body {
     text-align: center;
     color: blue;
 }
+#table1{
+    text-align: center; 
+    font-style: italic;
+    display: inline-block; 
+    resize: both; 
+    border: 2px solid #008;
+    border-collapse: collapse; 
+    width: 80%
+}
+td,th{
+    text-align: left; 
+    border: 1px solid #008;
+    font-style: italic;
+    display: inline-block; 
+    padding: 15px;
+}
 core-header-panel {
     height: 100%;
     overflow: auto;

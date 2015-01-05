@@ -205,7 +205,18 @@ app.get('/', function (req, res) {
 app.get('/admin', function (req, res) {
     // Will require a valid access_token
     //console.log("hello!");
-    res.sendFile(__dirname + '/public/pages/admin-page.html');
+    res.sendFile(__dirname + '/public/pages/admin-page.html')
+});
+    
+    app.get('/employee', function (req, res) {
+    // Will require a valid access_token
+    //console.log("hello!");
+    res.sendFile(__dirname + '/public/pages/employees-page.html');
+    });  
+    app.get('/attendance', function (req, res) {
+    // Will require a valid access_token
+    //console.log("hello!");
+    res.sendFile(__dirname + '/public/pages/attendance-page.html');
 });
 
 app.get('/public', function (req, res) {

@@ -1,29 +1,64 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
-<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
-<link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
-<link rel="import" href="/bower_components/core-menu/core-menu.html">
-<link rel="import" href="/bower_components/core-item/core-item.html">
 <link rel="import" href="/bower_components/core-layout-grid/core-layout-grid.html">
 
 <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
 <link rel="import" href="/pages/app-ajax.html">
+<link rel="stylesheet" href="/pages/signin.css">
 
-
-<polymer-element name="employee-page" router="{{router}}" attributes="pathArg1 queryParam1">
+<polymer-element name="employees-page" router="{{router}}" attributes="employees">
     <template>
         <sidebar-layout selected="employee">
-        <core-layout-grid></core-layout-grid>
-        <div class="title">Employees</div>
-        <div>Welcome Employees Page</div>
+            <core-layout-grid application="webcomponents"></core-layout-grid>
+            <div class="title">Employees</div>
+            <table id="table1"> 
+                <tr>
+                    <th>Employee Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Company Name</th>
+                    <th>Registeration Date</th>
+                    <th>FMD</th>
+                    <th>MainID</th>
+                    <th>
+                <core-icon-button icon="add-circle" title="Add-Employee" on-click="{{}}"></core-icon-button>
+                <!--<paper-button id="insert-button" on-click="{{insert}}" raised>Insert</paper-button>-->
+                </th></tr>
+                <template repeat="{{employee in employees}}">
+                    <tr >
+                        <td>{{employee.employeeid}}</td>
+                        <td>{{employee.firstname}}</td>
+                        <td>{{employee.lastname}}</td>
+                        <td>{{employee.company}}</td>
+                        <td>{{employee.registerationdate}}</td>
+                        <td>{{employee.fmd}}</td>
+                        <td>{{employee.mainid}}</td>
+                        <td>
+                    <core-icon-button icon="arrow-forward" title="Update-Employee" on-click="{{}}"></core-icon-button>  
+                    <!--<paper-button id="update-button" on-click="update" width="20px" height="10px" raised>Update</paper-button></td>-->
+                    </tr>
+                </template>
+            </table>
         </sidebar-layout>
     </template>
     <script>
-    Polymer('employee-page', {
-                
+        Polymer('employees-page', {
+            ready : function(){
+                var employees = [
+                    {employeeid:"101",firstname:"Arsalan",lastname:"Zahoor",company:"Esajeesolutions",
+                        registerationdate:"12/03/2010",fmd:"abc",mainid:"10000099"},
+                    {employeeid:"102",firstname:"Ahmad",lastname:"Ali",company:"Esajeesolutions",
+                        registerationdate:"19/08/2009",fmd:"def",mainid:"10000109"},
+                    {employeeid:"103",firstname:"Junaid",lastname:"Ahmad",company:"Esajeesolutions",
+                        registerationdate:"27/09/2008",fmd:"xyz",mainid:"10000196"}
+                ];
+                this.employees=employees;
+            },
+            update : function(){
+               
+           } 
             
         });
     </script>
