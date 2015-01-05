@@ -37,6 +37,8 @@
                 <app-route path="/signin" bindRouter import="/pages/signin-page.html"  on-before-data-binding="{{bindSession}}"></app-route>
                 <!--<app-route path="/signin" bindRouter import="/pages/baasic-login.html"  on-before-data-binding="{{bindSession}}"></app-route>-->
                 <app-route path="/home" bindRouter import="/pages/home-page.html" ></app-route>
+                <app-route path="/employee" bindRouter import="/pages/employees-page.html" ></app-route>
+                <app-route path="/attendance" bindRouter import="/pages/attendance-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
                 <app-route path="/signout" bindRouter on-activate-route-start="{{logOut}}" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
@@ -74,10 +76,10 @@
                     event.detail.model.session = this.$.session;
                 },
                 logOut : function(){
-                      this.$.globals.logOut();
-                      console.log("test");
-//                    this.$.session = false;
-//                    this.$.router.go('/signin');
+                    this.$.globals.logOut();
+                    //                      console.log("test");
+                    //                    this.$.session = false;
+                    //                    this.$.router.go('/signin');
                 }
             });
         </script>

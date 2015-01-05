@@ -107,7 +107,7 @@
                     this.$.action.value = name;
                     //                form.submit();
                     this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
-                    console.log(this.$.ajax.body);
+//                    console.log(this.$.ajax.body);
                     this.$.ajax.go();
 
                 }
@@ -173,7 +173,7 @@
                 }
             },
             ready: function(){
-                console.log(this.$.globals.baasicUser)
+//                console.log(this.$.globals.baasicUser)
                 this.access_token = this.$.globals.baasicUser.accessToken;
             }
             

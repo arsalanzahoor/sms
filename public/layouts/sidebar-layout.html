@@ -14,6 +14,10 @@
                 <core-menu>
                     <core-item icon="home" label="Home" active?="{{selected == 'home'}}"><a is="pushstate-anchor" href="/#/home"></a>
                     </core-item>
+                    <core-item icon="setting" label="Manage Employees" active?="{{selected == 'employee'}}"><a is="pushstate-anchor" href="/#/employees"></a>
+                    </core-item>
+                    <core-item icon="setting" label="View Attendance" active?="{{selected == 'attendance'}}"><a is="pushstate-anchor" href="/#/attendance"></a>
+                    </core-item>
                     <core-item icon="settings" label="Administration" active?="{{selected == 'admin'}}"><a is="pushstate-anchor" href="/#/admin"></a>
                         <!--<a href="/pages/admin-page.html"></a>--> 
                     </core-item>
@@ -21,7 +25,7 @@
                     <!--<a is="pushstate-anchor" href="/#/signout"></a>-->
                 </core-menu>
             </core-header-panel>
-            <div tool>SMS
+            <div tool>ESAJEESOLUTIONS
                 <content select=".title"></content>
             </div>
             <div class="content">

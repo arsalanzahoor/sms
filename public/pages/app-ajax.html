@@ -10,14 +10,13 @@
         Polymer('app-ajax',{
             ready: function(){
               this.access_token = this.access_token || '';
-              this.super()
+              this.super();
             },
             go : function(){
                 if(this.method == 'GET')
                 this.params.access_token = this.access_token;
                 else
                 this.body.access_token = this.access_token;
-      
                 this.body=this.xhr.toQueryString(this.body);
                 this.super();
             }

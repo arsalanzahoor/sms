@@ -120,13 +120,13 @@ app.get('/home', function (req, res, next) {
 
        
 app.post('/home', function (req, res){
-console.log(req.query)
-    console.log(req.body.newusername);
+//console.log(req.query)
+//    console.log(req.body.newusername);
     var connection=require('./mysqlconnection.js')
-    res.send({
-        status:true
-    });
-    return;
+//    res.send({
+//        status:true
+//    });
+//    return;
     var sqlquery;
     var newusername=req.body.newusername;
     var newpassword=req.body.newpassword;
@@ -153,7 +153,7 @@ console.log(req.query)
     connection.query(sqlquery,function(err,result)
     {
         console.log("Your Error:",result,err);
-        if(result==' ')
+        if(result=='')
         {
             res.send({
                 status:false
