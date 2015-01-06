@@ -1,19 +1,23 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
-<link rel="import" href="/bower_components/core-layout-grid/core-layout-grid.html">
+<link rel="import" href="/bower_components/core-item/core-item.html">
 
 <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
 <link rel="import" href="/pages/app-ajax.html">
-<link rel="stylesheet" href="/pages/signin.css">
 
 <polymer-element name="employees-page" router="{{router}}" attributes="employees">
     <template>
         <sidebar-layout selected="employee">
-            <core-layout-grid application="webcomponents"></core-layout-grid>
             <div class="title">Employees</div>
-            <table id="table1"> 
+            <table style=" text-align: center; 
+                   font-style: italic;
+                   display: inline-block; 
+                   resize: both; 
+                   border: 1px solid #008;
+                   border-collapse: collapse; 
+                   width: 80%"> 
                 <tr>
                     <th>Employee Id</th>
                     <th>First Name</th>
@@ -23,11 +27,11 @@
                     <th>FMD</th>
                     <th>MainID</th>
                     <th>
-                <core-icon-button icon="add-circle" title="Add-Employee" on-click="{{}}"></core-icon-button>
+                <core-item icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update"></a></core-item>
                 <!--<paper-button id="insert-button" on-click="{{insert}}" raised>Insert</paper-button>-->
                 </th></tr>
                 <template repeat="{{employee in employees}}">
-                    <tr >
+                    <tr>
                         <td>{{employee.employeeid}}</td>
                         <td>{{employee.firstname}}</td>
                         <td>{{employee.lastname}}</td>
@@ -36,16 +40,20 @@
                         <td>{{employee.fmd}}</td>
                         <td>{{employee.mainid}}</td>
                         <td>
-                    <core-icon-button icon="arrow-forward" title="Update-Employee" on-click="{{}}"></core-icon-button>  
+                    <core-item icon="arrow-forward" title="Update-Employee" name="update"><a is="pushstate-anchor" href="/#/employees/update"></a></core-item>  
                     <!--<paper-button id="update-button" on-click="update" width="20px" height="10px" raised>Update</paper-button></td>-->
                     </tr>
                 </template>
             </table>
+            <div>
+                <input type="hidden" name="action" id="action">
+            </div>
         </sidebar-layout>
     </template>
     <script>
         Polymer('employees-page', {
             ready : function(){
+                
                 var employees = [
                     {employeeid:"101",firstname:"Arsalan",lastname:"Zahoor",company:"Esajeesolutions",
                         registerationdate:"12/03/2010",fmd:"abc",mainid:"10000099"},
@@ -57,8 +65,10 @@
                 this.employees=employees;
             },
             update : function(){
-               
-           } 
+                var app = document.querySelector('index-app');
+                app.session = true;
+                app.$.router.go('/update');
+            } 
             
         });
     </script>

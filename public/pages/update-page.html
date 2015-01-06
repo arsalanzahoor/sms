@@ -1,0 +1,105 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/pages/app-ajax.html">
+<link rel="import" href="/layouts/sidebar-layout.html">
+
+<polymer-element name="update-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token">
+    <template>
+        <baasic-globals id="globals"></baasic-globals>
+        <sidebar-layout>
+            <div class="title">Employees Update</div>
+
+            <!--                <paper-input id="employeeid" label="Employee ID" value="{{employeeid}}" floatinglabel></paper-input>
+                        </div><div>-->
+            <div><paper-input id="firstname" label="First Name" value="{{firstname}}" floatinglabel></paper-input></div>
+            <div><paper-input id="lastname" label="Last Name" value="{{lastname}}" floatinglabel></paper-input></div>
+
+            <div><paper-input id="companyname" label="CompanyName" value="{{companyname}}" floatinglabel></paper-input></div>
+            <div><paper-input id="registerationdate" label="RegisterationDate" value="{{registerationdate}}" floatinglabel></paper-input></div>
+            <!--<paper-input id="fmd" label="FMD" value="{{fmd}}" floatinglabel></paper-input>-->
+            <div><paper-input id="mainid" label="MainID" value="{{mainid}}" floatinglabel></paper-input></div>
+            <div>
+                <paper-button on-click="{{submit}}" id="submit-button">Save</paper-button>
+                <!--<paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>-->
+                <paper-toast id="updatetoast" text="Employee Record Is Updated Successfully." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+            </div>
+            <app-ajax id="ajax"
+                      url="/update"
+                      method="POST"
+                      on-core-response="{{updateResponse}}"
+                      content-type="application/json"
+                      access_token="{{access_token}}"
+                      handleAs="json">
+            </app-ajax>
+        </sidebar-layout>
+    </template>
+    <script>
+        Polymer('update-page',{
+            submit : function(){
+                //                var employeeid = this.$.employeeid.value;
+                var firstname = this.$.firstname.value;
+                var lastname = this.$.lastname.value;
+                var companyname = this.$.companyname.value;
+                var registerationdate = this.$.registerationdate.value;
+                //                var fmd = this.$.fmd.value;
+                var mainid = this.$.mainid.value;
+
+                if(firstname == '' || lastname == '' || companyname == '' || registerationdate == '' || mainid == '')
+                {
+                    this.$.updatetoast.text="Some of User Input Field Is Empty. Please Fill All Fields!";
+                    this.$.updatetoast.opened="true";
+//                    console.log("not submit");
+                        
+                    //this.redirect('/signin-page');
+                }
+                else
+                {
+                    var name="";  
+                    //var name = e.target.getAttribute('name');
+                    //this.$.action.value = name;
+                    //                form.submit();
+                    this.$.ajax.body = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registerationdate, mainid:mainid, action:name};
+                    //                    console.log(this.$.ajax.body);
+                    this.$.ajax.go();
+
+                }
+            },
+            updateResponse: function()
+            {
+                console.log(this.$.ajax.response);
+                if(this.$.ajax.response.status==true)
+                {
+                    //                    this.$.toast1.text="DataBase Updated!!!"
+                    this.$.updatetoast.opened="true";
+                    var app = document.querySelector("index-app");
+                    //                        console.log(this.router);
+                    app.session=true;
+                    
+                    //                    this.router.go('/home', {replace:true});
+                    //res.send();
+                        
+                }
+                else
+                {
+                    this.$.updatetoast.text="Database is not Updated!!! Please Verify Your Details";
+                    this.$.updatetoast.opened="true";
+                }
+            },
+            dataResponse : function(el)
+            {
+                el.show();
+            },
+            ready: function(){
+                //                console.log(this.$.globals.baasicUser)
+                this.access_token = this.$.globals.baasicUser.accessToken;
+            }
+//            cancel : function(){
+//                var app = document.querySelector('index-app');
+//                app.session = true;
+//                app.$.router.go('/employees');
+//            }
+        });
+    </script>
+</polymer-element>

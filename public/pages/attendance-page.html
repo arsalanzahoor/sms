@@ -1,0 +1,90 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/layouts/sidebar-layout.html">
+<link rel="import" href="/bower_components/core-dropdown/core-dropdown.html">
+<link rel="import" href="/bower_components/core-dropdown-menu/core-dropdown-menu.html">
+<link rel="import" href="/bower_components/core-menu/core-menu.html">
+<link rel="import" href="/bower_components/core-item/core-item.html">
+<link rel="import" href="/bower_components/core-selector/core-selector.html">
+
+
+
+
+<polymer-element name="attendance-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token">
+    <template>
+        <sidebar-layout selected="attendance">
+            <div class="title">Employees Attendance</div>
+            <div>
+                <table style="
+                       text-align: center; 
+                       font-style: oblique;
+                       display: inline-block; 
+                       resize: both; 
+                       border: 2px solid #008;
+                       border-collapse: collapse; 
+                       width: 45%">
+                    <tr>
+                        <th>Date:</th>
+                    </tr>
+                    <tr>
+                        <td><paper-input id="datefrom" label="Date From" value="{{datefrom}}" floatinglabel></paper-input></td>
+                    <td><paper-input id="dateto" label="Date To" value="{{dateto}}" floatinglabel></paper-input></td>
+                    </tr>
+                    <tr>
+                        <td>
+                    <core-dropdown-menu label="Employees" closedIcon="arrow-drop-down" openedIcon="arrow-drop-up" relative="" layout="" inline="" horizontal="" center="" tabindex="0">
+                        <core-dropdown class="dropdown">
+                            <core-selector>
+                                <template repeat="{{employee in employees}}">
+                                    <core-item>{{employee.firstname}} {{employee.lastname}}</core-item>
+                                </template>
+                            </core-selector>
+                        </core-dropdown>
+                    </core-dropdown-menu>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td><core-item icon="view-agenda" label="View Report" title="View Attendance Report" width="20%" text-align="right">
+                        <a is="pushstate-anchor" href="/#/attendance/attendance-view"></a>
+                    </core-item>  
+                    </td>
+                    </tr>
+                </table>
+                <!--                </div>
+                                <div>-->
+                <!--<paper-button id="viewbutton" on-click="{{view}}">View</paper-button>-->
+
+
+            </div>
+        </sidebar-layout>
+    </template>
+    <script>
+        Polymer('attendance-page',{
+            ready : function(){
+                var employees = [
+                    {employeeid:"101",firstname:"Arsalan",lastname:"Zahoor",company:"Esajeesolutions",
+                        registerationdate:"12/03/2010",fmd:"abc",mainid:"10000099"},
+                    {employeeid:"102",firstname:"Ahmad",lastname:"Ali",company:"Esajeesolutions",
+                        registerationdate:"19/08/2009",fmd:"def",mainid:"10000109"},
+                    {employeeid:"103",firstname:"Junaid",lastname:"Ahmad",company:"Esajeesolutions",
+                        registerationdate:"27/09/2008",fmd:"xyz",mainid:"10000196"},
+                    {employeeid:"104",firstname:"Ali",lastname:"Zia",company:"Esajeesolutions",
+                        registerationdate:"01/04/2008",fmd:"xyz",mainid:"10000176"},
+                    {employeeid:"105",firstname:"Noman",lastname:"Ahmad",company:"Esajeesolutions",
+                        registerationdate:"15/12/2007",fmd:"xyz",mainid:"10000089"},
+                    {employeeid:"106",firstname:"Kamran",lastname:"Ahmad",company:"Esajeesolutions",
+                        registerationdate:"20/06/2007",fmd:"xyz",mainid:"10000065"},
+                    {employeeid:"107",firstname:"Junaid",lastname:"Zia",company:"Esajeesolutions",
+                        registerationdate:"01/03/2012",fmd:"xyz",mainid:"10000196"}
+                ];
+                this.employees=employees;
+            },
+            view : function(){
+                var app = document.querySelector('index-app');
+                app.session = true;
+                app.$.router.go('/attendance-view');
+            } 
+        });
+    </script>
+</polymer-element>

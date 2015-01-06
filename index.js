@@ -120,13 +120,13 @@ app.get('/home', function (req, res, next) {
 
        
 app.post('/home', function (req, res){
-//console.log(req.query)
-//    console.log(req.body.newusername);
+    //console.log(req.query)
+    //    console.log(req.body.newusername);
     var connection=require('./mysqlconnection.js')
-//    res.send({
-//        status:true
-//    });
-//    return;
+    //    res.send({
+    //        status:true
+    //    });
+    //    return;
     var sqlquery;
     var newusername=req.body.newusername;
     var newpassword=req.body.newpassword;
@@ -208,15 +208,26 @@ app.get('/admin', function (req, res) {
     res.sendFile(__dirname + '/public/pages/admin-page.html')
 });
     
-    app.get('/employee', function (req, res) {
+app.get('/employee', function (req, res) {
     // Will require a valid access_token
     //console.log("hello!");
     res.sendFile(__dirname + '/public/pages/employees-page.html');
-    });  
-    app.get('/attendance', function (req, res) {
+});  
+app.get('/attendance', function (req, res) {
     // Will require a valid access_token
     //console.log("hello!");
     res.sendFile(__dirname + '/public/pages/attendance-page.html');
+});
+
+app.get('/attendance-view', function (req, res) {
+    // Will require a valid access_token
+    //console.log("hello!");
+    res.sendFile(__dirname + '/public/pages/attendance-view-page.html');
+});
+app.get('/employees/update', function (req, res) {
+    // Will require a valid access_token
+    //console.log("hello!");
+    res.sendFile(__dirname + '/public/pages/update-page.html');
 });
 
 app.get('/public', function (req, res) {

@@ -1,0 +1,67 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
+<link rel="import" href="/layouts/sidebar-layout.html">
+
+
+<polymer-element name="attendance-view-page" router="{{router}}" attributes="employeeattendance">
+    <template>
+        <sidebar-layout selected="attendance-view">
+            <div class="title">Attendance Overview</div>
+            <div>
+                <table style="alignment-baseline: baseline;
+                       alignment-adjust: central;  
+                       text-align: center; 
+                       font-style: oblique;
+                       display: inline-block; 
+                       resize: both; 
+                       border: 2px solid #006;
+                       border-collapse: collapse; 
+                       padding: 2%;
+                       width: 44%"> 
+                    <tr>
+                        <th>Attendance Id</th>
+                        <th>Employee Id</th>
+                        <th>Attendance</th>
+                    </tr>
+                    <template repeat="{{attendance in employeeattendance}}">
+                        <tr >
+                            <td>{{attendance.attendanceid}}</td>
+                            <td>{{attendance.employeeid}}</td>
+                            <td>{{attendance.attendance}}</td>
+                        </tr>
+                    </template>
+                </table>
+            </div>
+<!--            <div>
+                <paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>
+            </div>-->
+        </sidebar-layout>
+    </template>
+    <script>
+        Polymer('attendance-view-page', {
+            ready : function(){
+                var employeeattendance = [
+                    {attendanceid:"387",employeeid:"6",attendance:"2014-11-26 15:39:29"},
+                    {attendanceid:"388",employeeid:"5",attendance:"2014-11-26 17:16:47"},   
+                    {attendanceid:"389",employeeid:"9",attendance:"2014-11-26 17:21:35"},
+                    {attendanceid:"390",employeeid:"2",attendance:"2014-11-26 17:20:59"},   
+                    {attendanceid:"391",employeeid:"4",attendance:"2014-11-26 17:21:35"},
+                    {attendanceid:"392",employeeid:"6",attendance:"2014-11-26 17:21:35"},
+                    {attendanceid:"393",employeeid:"5",attendance:"2014-11-26 08:59:10"},
+                    {attendanceid:"394",employeeid:"9",attendance:"2014-11-26 09:01:52"},
+                    {attendanceid:"395",employeeid:"8",attendance:"2014-11-26 09:14:17"},
+                    
+                ];
+                this.employeeattendance=employeeattendance;
+            }
+//            cancel : function(){
+//                var app = document.querySelector('index-app');
+//                app.session = true;
+//                app.$.router.go('/attendance');
+//            } 
+            
+        });
+    </script>
+</polymer-element>

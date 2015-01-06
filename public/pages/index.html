@@ -39,6 +39,8 @@
                 <app-route path="/home" bindRouter import="/pages/home-page.html" ></app-route>
                 <app-route path="/employees" bindRouter import="/pages/employees-page.html" ></app-route>
                 <app-route path="/attendance" bindRouter import="/pages/attendance-page.html" ></app-route>
+                <app-route path="/attendance/attendance-view" bindRouter import="/pages/attendance-view-page.html" ></app-route>
+                <app-route path="/employees/update" bindRouter import="/pages/update-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
                 <app-route path="/signout" bindRouter on-activate-route-start="{{logOut}}" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
@@ -88,15 +90,17 @@
     <script>
         window.addEventListener('WebComponentsReady', function() {
             var app = document.querySelector('index-app');
-            //            console.log("Error");
             //            console.log(app.$.globals.baasicUser);
-            //            this.globals = this.$.globals;
-            //            console.log(this.$.globals);
+            //                        this.globals = this.$.globals;
+            //                        console.log(app.$.globals);
             if(app.session)
             {
-                //                console.log(app.$.globals.baasicUser); 
+                //console.log(app.$.router.body); 
                 app.$.router.go('/home');
             }
+            //            console.log(this.globals.session);
+            console.log(app.$.router); 
+
             app.init();
         });
     </script>
