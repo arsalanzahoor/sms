@@ -106,7 +106,7 @@
                     var name = e.target.getAttribute('name');
                     this.$.action.value = name;
                     //                form.submit();
-                    this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
+                    this.$.ajax.data = {newusername:newusername, newpassword:newpassword,action:name};
 //                    console.log(this.$.ajax.body);
                     this.$.ajax.go();
 
@@ -114,7 +114,7 @@
             },
             homeResponse: function()
             {
-                console.log(this.$.ajax.response);
+                console.log(this.$.ajax.response.data);
                 if(this.$.ajax.response.status==true)
                 {
                     //                    this.$.toast1.text="DataBase Updated!!!"

@@ -7,11 +7,12 @@
 <link rel="import" href="/bower_components/core-menu/core-menu.html">
 <link rel="import" href="/bower_components/core-item/core-item.html">
 <link rel="import" href="/bower_components/core-selector/core-selector.html">
+<link rel="import" href="/pages/app-ajax.html">
 
 
 
 
-<polymer-element name="attendance-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token">
+<polymer-element name="attendance-page" router="{{router}}" attributes="pathArg1 queryParam1">
     <template>
         <sidebar-layout selected="attendance">
             <div class="title">Employees Attendance</div>
@@ -28,16 +29,16 @@
                         <th>Date:</th>
                     </tr>
                     <tr>
-                        <td><paper-input id="datefrom" label="Date From" value="{{datefrom}}" floatinglabel></paper-input></td>
-                    <td><paper-input id="dateto" label="Date To" value="{{dateto}}" floatinglabel></paper-input></td>
+                        <td><paper-input id="fromdate" label="Date From" value="{{fromdate}}" floatinglabel></paper-input></td>
+                    <td><paper-input id="todate" label="Date To" value="{{todate}}" floatinglabel></paper-input></td>
                     </tr>
                     <tr>
                         <td>
                     <core-dropdown-menu label="Employees" closedIcon="arrow-drop-down" openedIcon="arrow-drop-up" relative="" layout="" inline="" horizontal="" center="" tabindex="0">
                         <core-dropdown class="dropdown">
-                            <core-selector>
+                            <core-selector valueattr="employee"  selected="{{employee}}">
                                 <template repeat="{{employee in employees}}">
-                                    <core-item>{{employee.firstname}} {{employee.lastname}}</core-item>
+                                    <core-item employee="{{employee.EmployeeID}}">{{employee.FirstName}} {{employee.LastName}}</core-item>
                                 </template>
                             </core-selector>
                         </core-dropdown>
@@ -46,7 +47,7 @@
                     </tr>
                     <tr>
                         <td><core-item icon="view-agenda" label="View Report" title="View Attendance Report" width="20%" text-align="right">
-                        <a is="pushstate-anchor" href="/#/attendance/attendance-view"></a>
+                        <a is="pushstate-anchor" href="/#/attendance/attendance-view?fromdate={{fromdate}}&todate={{todate}}&EmployeeID={{employee}}"></a>
                     </core-item>  
                     </td>
                     </tr>
@@ -55,36 +56,58 @@
                                 <div>-->
                 <!--<paper-button id="viewbutton" on-click="{{view}}">View</paper-button>-->
 
+                <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
 
             </div>
+            <app-ajax id="ajax"
+                      url="/api/employee"
+                      method="GET"
+                      on-core-response="{{employeeResponse}}"
+                      content-type="application/json"
+                      handleAs="json">
+            </app-ajax>
         </sidebar-layout>
     </template>
     <script>
         Polymer('attendance-page',{
             ready : function(){
-                var employees = [
-                    {employeeid:"101",firstname:"Arsalan",lastname:"Zahoor",company:"Esajeesolutions",
-                        registerationdate:"12/03/2010",fmd:"abc",mainid:"10000099"},
-                    {employeeid:"102",firstname:"Ahmad",lastname:"Ali",company:"Esajeesolutions",
-                        registerationdate:"19/08/2009",fmd:"def",mainid:"10000109"},
-                    {employeeid:"103",firstname:"Junaid",lastname:"Ahmad",company:"Esajeesolutions",
-                        registerationdate:"27/09/2008",fmd:"xyz",mainid:"10000196"},
-                    {employeeid:"104",firstname:"Ali",lastname:"Zia",company:"Esajeesolutions",
-                        registerationdate:"01/04/2008",fmd:"xyz",mainid:"10000176"},
-                    {employeeid:"105",firstname:"Noman",lastname:"Ahmad",company:"Esajeesolutions",
-                        registerationdate:"15/12/2007",fmd:"xyz",mainid:"10000089"},
-                    {employeeid:"106",firstname:"Kamran",lastname:"Ahmad",company:"Esajeesolutions",
-                        registerationdate:"20/06/2007",fmd:"xyz",mainid:"10000065"},
-                    {employeeid:"107",firstname:"Junaid",lastname:"Zia",company:"Esajeesolutions",
-                        registerationdate:"01/03/2012",fmd:"xyz",mainid:"10000196"}
-                ];
-                this.employees=employees;
+                
+                this.employees = this.employees || [];
+                //                this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
+                //                    console.log(this.$.ajax.body);
+                this.$.ajax.go();
             },
-            view : function(){
-                var app = document.querySelector('index-app');
-                app.session = true;
-                app.$.router.go('/attendance-view');
-            } 
+            employeeResponse: function()
+            {
+                console.log(this.$.ajax.response.data[0]);
+                console.log(this.$.ajax.response.status);
+                if(this.$.ajax.response.status==true)
+                {
+                    this.employees = this.$.ajax.response.data;
+                    console.log(this.$.ajax.response.status);
+                    //                    this.employees=employees;
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            },
+            validate : function()
+            {
+                var fromdate = this.fromdate;
+                var todate = this.todate;
+                if(fromdate == '' || todate == '')
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            },
+            
+            dataResponse : function(el)
+            {
+                el.show();
+            }
         });
     </script>
 </polymer-element>

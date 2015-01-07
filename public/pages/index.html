@@ -17,7 +17,7 @@
         <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
 
 
-        <link rel="stylesheet" href="styles.css" shim-shadowdom>
+        <link rel="stylesheet" href="/pages/styles.css" shim-shadowdom>
         <title>
             Shell
         </title>
@@ -61,7 +61,7 @@
                 },
                 stateChange: function(event) {
                     
-                    //console.log(event);
+                    console.log(event.detail.path);
                     // redirect to the login page if not signed in
                     if (!this.session && event.detail.path !== '/signin') {
                         event.preventDefault();

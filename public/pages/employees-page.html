@@ -23,51 +23,66 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Company Name</th>
-                    <th>Registeration Date</th>
-                    <th>FMD</th>
+                    <th>Registration Date</th>
+                    <!--<th>FMD</th>-->
                     <th>MainID</th>
                     <th>
-                <core-item icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update"></a></core-item>
+                <core-item icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update?action=insert"></a></core-item>
                 <!--<paper-button id="insert-button" on-click="{{insert}}" raised>Insert</paper-button>-->
                 </th></tr>
                 <template repeat="{{employee in employees}}">
                     <tr>
-                        <td>{{employee.employeeid}}</td>
-                        <td>{{employee.firstname}}</td>
-                        <td>{{employee.lastname}}</td>
-                        <td>{{employee.company}}</td>
-                        <td>{{employee.registerationdate}}</td>
-                        <td>{{employee.fmd}}</td>
-                        <td>{{employee.mainid}}</td>
+                        <td>{{employee.EmployeeID}}</td>
+                        <td>{{employee.FirstName}}</td>
+                        <td>{{employee.LastName}}</td>
+                        <td>{{employee.CompanyName}}</td>
+                        <td>{{employee.RegistrationDate}}</td>
+                        <!--<td>{{employee.FMD}}</td>-->
+                        <td>{{employee.MainID}}</td>
                         <td>
-                    <core-item icon="arrow-forward" title="Update-Employee" name="update"><a is="pushstate-anchor" href="/#/employees/update"></a></core-item>  
+                    <core-item icon="arrow-forward" title="Update-Employee" name="update"><a is="pushstate-anchor" href="/#/employees/update?action=update"></a></core-item>  
                     <!--<paper-button id="update-button" on-click="update" width="20px" height="10px" raised>Update</paper-button></td>-->
                     </tr>
                 </template>
             </table>
             <div>
-                <input type="hidden" name="action" id="action">
+                <!--<input type="hidden" name="action" id="action">-->
+                <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+
             </div>
+            <app-ajax id="ajax"
+                      url="/api/employee"
+                      method="GET"
+                      on-core-response="{{employeeResponse}}"
+                      content-type="application/json"
+                      handleAs="json">
+            </app-ajax>
         </sidebar-layout>
     </template>
     <script>
         Polymer('employees-page', {
             ready : function(){
-                
-                var employees = [
-                    {employeeid:"101",firstname:"Arsalan",lastname:"Zahoor",company:"Esajeesolutions",
-                        registerationdate:"12/03/2010",fmd:"abc",mainid:"10000099"},
-                    {employeeid:"102",firstname:"Ahmad",lastname:"Ali",company:"Esajeesolutions",
-                        registerationdate:"19/08/2009",fmd:"def",mainid:"10000109"},
-                    {employeeid:"103",firstname:"Junaid",lastname:"Ahmad",company:"Esajeesolutions",
-                        registerationdate:"27/09/2008",fmd:"xyz",mainid:"10000196"}
-                ];
-                this.employees=employees;
+//                console.log("Employees Test");
+                this.employees = this.employees || [];
+                this.$.ajax.go();
+            }, 
+            employeeResponse: function()
+            {
+                console.log(this.$.ajax.response.data[0]);
+                if(this.$.ajax.response.status==true)
+                {
+                    this.employees = this.$.ajax.response.data;
+//                    this.employees=employees;
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
             },
-            update : function(){
-                var app = document.querySelector('index-app');
-                app.session = true;
-                app.$.router.go('/update');
+            dataResponse : function(el)
+            {
+                el.show();
             } 
             
         });

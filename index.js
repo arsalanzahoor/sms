@@ -1,6 +1,7 @@
 
 var express = require('express'),
 bodyParser = require('body-parser'),
+mysql = require('mysql'),
 app = express();
 
 var oauth2 = require('simple-oauth2')({
@@ -200,34 +201,38 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/pages/index.html');
 });
 
+var total_records=null;
+var total_attenedence=null;
+
+app.get('/employees',function(req, res) {
+    connection.query('SELECT COUNT(*) AS total FROM employee',function(err,row){
+        total_records=row[0].total;
+    });
+
+    var record_start=req.query.page_start;
+    var record_limit=req.query.page_limit;
+
+    if(record_start==='' && record_limit===''){
+        connection.query('SELECT * FROM employee LIMIT 10', function(err, rows){
+            res.json({
+                message : rows,
+                total_records:total_records,
+                status:'true'
+            });
+        });
+    }
+    else{
+
+        connection.query("SELECT * FROM employee LIMIT ? OFFSET ?",[parseInt(req.query.page_limit),parseInt(req.query.page_start)], function(err, rows){
+            res.json({
+                message : rows,
+                total_records:total_records,
+                status:'true'
+            });
+        });
 
 
-app.get('/admin', function (req, res) {
-    // Will require a valid access_token
-    //console.log("hello!");
-    res.sendFile(__dirname + '/public/pages/admin-page.html')
-});
-    
-app.get('/employee', function (req, res) {
-    // Will require a valid access_token
-    //console.log("hello!");
-    res.sendFile(__dirname + '/public/pages/employees-page.html');
-});  
-app.get('/attendance', function (req, res) {
-    // Will require a valid access_token
-    //console.log("hello!");
-    res.sendFile(__dirname + '/public/pages/attendance-page.html');
-});
-
-app.get('/attendance-view', function (req, res) {
-    // Will require a valid access_token
-    //console.log("hello!");
-    res.sendFile(__dirname + '/public/pages/attendance-view-page.html');
-});
-app.get('/employees/update', function (req, res) {
-    // Will require a valid access_token
-    //console.log("hello!");
-    res.sendFile(__dirname + '/public/pages/update-page.html');
+    }
 });
 
 app.get('/public', function (req, res) {
@@ -237,5 +242,234 @@ app.get('/public', function (req, res) {
 
 // Error handling
 //app.use(app.oauth.errorHandler());
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : '786ab786'
+});
+connection.query('USE dpemployeedb');
+
+// ROUTES FOR OUR API
+// =============================================================================
+var router = express.Router();              // get an instance of the express Router
+router.use(function(req, res, next) {
+    // do logging
+    console.log('processing request.');
+    next(); // make sure we go to the next routes and don't stop here
+});
+
+// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+router.get('/', function(req, res) {
+//    res.json({ message: 'hooray! welcome to our api!' });
+    res.sendFile(__dirname + '/public/pages/index.html');
+
+});
+
+
+
+//router.post('/signin',  function(req, res){
+//    //    console.log("Test");
+//    //    console.log(req.body);
+//    var username = req.body.username;
+//    var password = req.body.password;
+//    //                console.log("Authorised");
+//    if(username==='admin' && password==='admin')
+//        {
+//            res.send(true);
+//        }
+//        res.send(false);
+//});
+
+// more routes for our API will happen here
+
+
+
+// on routes that end in /employee
+// =============================================================================
+// =============================================================================
+router.route('/employee')
+
+    // create a sms (accessed at POST http://localhost:8080/api/employee)
+    .post(function(req, res) {
+var post1={FirstName:req.body.FirstName,LastName:req.body.LastName,CompanyName:req.body.CompanyName, RegistrationDate:new Date(),FMD:null,
+MainID:req.body.MainID};
+//-----------------------
+console.log(post1.MainID);
+if(post1.FirstName!='' && post1.LastName!='' && post1.CompanyName!='' && post1.MainID!==''){
+connection.query('INSERT INTO employee set ?', post1, function(err, result) {
+if(err){res.json({ message: err });}
+else{
+
+res.json({ message: 'New employee saved !',status:'true' });}
+})}
+else{res.json({message:'Please Enter Missing Field First',status:'false'});}
+
+
+//-----------------------
+})
+    // get all the employee from record table (accessed at GET http://localhost:8080/api/employee)
+    .get(function(req, res) {
+    	connection.query('SELECT COUNT(*) AS total FROM employee',function(err,row){
+		total_records=row[0].total;});
+
+        var record_start=req.query.page_start;
+        var record_limit=req.query.page_limit;
+
+//       if(record_start==='' && record_limit===''){
+        connection.query('SELECT * FROM employee LIMIT 10', function(err, rows){
+            var data = rows || [];
+      res.json({data : data,total_records:total_records,status:true});
+  		});
+//    }
+//        else{
+//
+//connection.query("SELECT * FROM employee LIMIT ? OFFSET ?",[parseInt(req.query.page_limit),parseInt(req.query.page_start)], function(err, rows){
+//      res.json({message : rows,total_records:total_records,status:'true'});
+//  		});
+//
+//
+//        }
+    });
+
+// =============================================================================
+// =============================================================================
+// on routes that end in /employee/search
+// ----------------------------------------------------
+
+router.route('/employee/:EmployeeID')
+    // get the person record  (accessed at GET http://localhost:8080/api/employee/)
+    .get(function(req, res) {
+//search on the base of FirstName
+connection.query("SELECT * FROM employee where EmployeeID =?",[req.params.EmployeeID], function(err, rows){
+  if(err){
+  
+    res.json({ message: err });
+      
+  }
+
+  else if(rows.length>0){res.json({message : rows,status:'true'});}
+  else{res.json({message : 'Person Does not exsist ! ',status:'false'});}
+  });
+
+
+    })
+//-----------------------------------
+
+
+// update  the Person recorrd (accessed at GET http://localhost:8080/api/employee)
+   .put(function(req, res) {
+     
+connection.query("SELECT * FROM employee where EmployeeID =?",[req.params.EmployeeID], function(err, rows){
+  if(err){
+  
+    res.json({ message: err });
+      
+  }
+
+  else if(rows.length>0){
+var post1={FirstName:req.body.FirstName,LastName:req.body.LastName,CompanyName:req.body.CompanyName};
+if(post1.FirstName!='' && post1.LastName!='' && post1.CompanyName!=''){
+connection.query("update employee set FirstName=?, LastName=?, CompanyName=? where EmployeeID=?",[post1.FirstName,post1.LastName,post1.CompanyName,req.params.EmployeeID], function(err) {
+if(err){res.json({ message: err });}
+else{
+res.json({ message: 'Person  data updated!',status:'true' });}
+});}
+else{res.json({message:'Please Enter Missing Field First',status:'false'});}
+
+  
+
+  }
+  else{res.json({message : 'Person Not Found',status:'false'});}
+  });
+
+
+    });
+
+
+
+
+// on routes that end in /employeeattendence
+// =============================================================================
+// =============================================================================
+router.route('/employeeattendence')
+
+    // create a sms (accessed at POST http://localhost:8080/api/employeeattendence)
+    .post(function(req, res) {
+var post1={EmployeeID:req.body.EmployeeID, attendence:new Date() };
+//-----------------------
+if(post1.EmployeeID!=''){
+connection.query('INSERT INTO employeeattendence set ?', post1, function(err, result) {
+if(err){res.json({ message: err });}
+else{
+
+res.json({ message: 'attendence saved !',status:'true' });}
+})}
+else{res.json({message:'Please Enter EmployeeID First',status:'false'});}
+
+
+
+//-----------------------
+})
+    // get all the employeeattendence from record table (accessed at GET http://localhost:8080/api/eemployeeattendence)
+    .get(function(req, res) {
+        
+        connection.query('SELECT COUNT(*) AS total FROM employeeattendence',function(err,row){
+		total_attenedence=row[0].total;});
+
+        var record_start=req.query.page_start;
+        var record_limit=req.query.page_limit;
+
+       if(record_start===''&&record_limit===''){
+        connection.query('SELECT * FROM employeeattendence LIMIT 10', function(err, rows){
+      res.json({data : rows,total_records:total_attenedence,status:true});
+  		});}
+        else{
+
+connection.query("SELECT * FROM employeeattendence LIMIT ? OFFSET ?",[parseInt(req.query.page_limit),parseInt(req.query.page_start)], function(err, rows){
+      res.json({data : rows,total_records:total_attenedence,status:true});
+  		});
+
+
+        }
+    });
+
+
+// =============================================================================
+// =============================================================================
+
+
+
+
+// on routes that end in /employeeattendence/search
+// ----------------------------------------------------
+
+router.route('/employeeattendence/report')
+    // get the person record  (accessed at GET http://localhost:8080/api/employeeattendence/search)
+    .get(function(req, res) {
+//search on the base of FirstName
+//console.log(req.query);
+var employeeid = req.query.EmployeeID;
+var fromdate = req.query.fromdate;
+var todate = req.query.todate;
+//console.log(employeeid,fromdate,todate);
+connection.query("SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?",[employeeid,fromdate,todate], function(err, rows){
+  if(err){
+  
+    res.json({ message: err });
+      
+  }
+
+  else if(rows.length>0){res.json( {data : rows,status:true});}
+  else{res.json({data : 'Person Does not exsist ! ',status:false});}
+  });
+
+//console.log(a.sql);
+    });
+
+
+
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
 
 app.listen(3000);

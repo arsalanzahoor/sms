@@ -5,7 +5,7 @@
 <link rel="import" href="/pages/app-ajax.html">
 <link rel="import" href="/layouts/sidebar-layout.html">
 
-<polymer-element name="update-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token">
+<polymer-element name="update-page" router="{{router}}" attributes="pathArg1 queryParam1 action">
     <template>
         <baasic-globals id="globals"></baasic-globals>
         <sidebar-layout>
@@ -23,83 +23,88 @@
             <div>
                 <paper-button on-click="{{submit}}" id="submit-button">Save</paper-button>
                 <!--<paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>-->
-                <paper-toast id="updatetoast" text="Employee Record Is Updated Successfully." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+                <paper-toast id="toast1" text="Employee Record Is Updated Successfully." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
             </div>
-            <app-ajax id="ajax"
+            <app-ajax id="ajax1"
                       url="/update"
                       method="POST"
-                      on-core-response="{{updateResponse}}"
+                      on-core-response="{{insertResponse}}"
                       content-type="application/json"
-                      access_token="{{access_token}}"
                       handleAs="json">
             </app-ajax>
+            <app-ajax id="ajax2"
+                      url="/update"
+                      method="PUT"
+                      on-core-response="{{updateResponse}}"
+                      content-type="application/json"
+                      handleAs="json">
+            </app-ajax>
+
         </sidebar-layout>
     </template>
     <script>
         Polymer('update-page',{
             submit : function(){
-                //                var employeeid = this.$.employeeid.value;
+                var action = this.action;
                 var firstname = this.$.firstname.value;
                 var lastname = this.$.lastname.value;
                 var companyname = this.$.companyname.value;
                 var registerationdate = this.$.registerationdate.value;
-                //                var fmd = this.$.fmd.value;
                 var mainid = this.$.mainid.value;
 
                 if(firstname == '' || lastname == '' || companyname == '' || registerationdate == '' || mainid == '')
                 {
-                    this.$.updatetoast.text="Some of User Input Field Is Empty. Please Fill All Fields!";
-                    this.$.updatetoast.opened="true";
-//                    console.log("not submit");
-                        
-                    //this.redirect('/signin-page');
+                    this.$.toast1.text="Some of User Input Field Is Empty. Please Fill All Fields!";
+                    this.$.toast1.opened="true";                        
                 }
                 else
                 {
-                    var name="";  
-                    //var name = e.target.getAttribute('name');
-                    //this.$.action.value = name;
-                    //                form.submit();
-                    this.$.ajax.body = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registerationdate, mainid:mainid, action:name};
-                    //                    console.log(this.$.ajax.body);
-                    this.$.ajax.go();
-
+                    if(action==='insert')
+                    {
+                        this.$.ajax1.data = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registerationdate, mainid:mainid, action:action};
+                        this.$.ajax1.go();
+                    }
+                    else if(action==='update'){
+                        this.$.ajax2.data = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registerationdate, mainid:mainid, action:action};
+                        this.$.ajax2.go();
+                    }
+                    else{
+                        this.$.toast1.text="Invalid Action Performed";
+                        this.$.toast1.opened="true";
+                    }
                 }
             },
             updateResponse: function()
             {
-                console.log(this.$.ajax.response);
+                console.log(this.$.ajax.response.data);
                 if(this.$.ajax.response.status==true)
                 {
-                    //                    this.$.toast1.text="DataBase Updated!!!"
-                    this.$.updatetoast.opened="true";
-                    var app = document.querySelector("index-app");
-                    //                        console.log(this.router);
-                    app.session=true;
-                    
-                    //                    this.router.go('/home', {replace:true});
-                    //res.send();
-                        
+                    this.$.toast1.opened="true";
                 }
                 else
                 {
-                    this.$.updatetoast.text="Database is not Updated!!! Please Verify Your Details";
-                    this.$.updatetoast.opened="true";
+                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                    this.$.toast1.opened="true";
+                }
+            },
+            insertResponse: function()
+            {
+                console.log(this.$.ajax.response.data);
+                if(this.$.ajax.response.status==true)
+                {
+                    this.$.toast1.opened="true";
+                }
+                else
+                {
+                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                    this.$.toast1.opened="true";
                 }
             },
             dataResponse : function(el)
             {
                 el.show();
-            },
-            ready: function(){
-                //                console.log(this.$.globals.baasicUser)
-                this.access_token = this.$.globals.baasicUser.accessToken;
             }
-//            cancel : function(){
-//                var app = document.querySelector('index-app');
-//                app.session = true;
-//                app.$.router.go('/employees');
-//            }
+           
         });
     </script>
 </polymer-element>

@@ -3,10 +3,12 @@
 
 <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
+<link rel="import" href="/pages/app-ajax.html">
 
 
-<polymer-element name="attendance-view-page" router="{{router}}" attributes="employeeattendance">
+<polymer-element name="attendance-view-page" router="{{router}}" attributes="employeeattendance todate fromdate EmployeeID">
     <template>
+        <baasic-globals id="globals"></baasic-globals>
         <sidebar-layout selected="attendance-view">
             <div class="title">Attendance Overview</div>
             <div>
@@ -27,40 +29,72 @@
                     </tr>
                     <template repeat="{{attendance in employeeattendance}}">
                         <tr >
-                            <td>{{attendance.attendanceid}}</td>
-                            <td>{{attendance.employeeid}}</td>
-                            <td>{{attendance.attendance}}</td>
+                            <td>{{attendance.AttendenceID}}</td>
+                            <td>{{attendance.EmployeeID}}</td>
+                            <td>{{attendance.Attendence}}</td>
                         </tr>
                     </template>
                 </table>
             </div>
-<!--            <div>
-                <paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>
-            </div>-->
+            <!--            <div>
+                            <paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>
+                        </div>-->
+            <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+
         </sidebar-layout>
+        <app-ajax id="ajax"
+                  url="/api/employeeattendence/report"
+                  method="GET"
+                  on-core-response="{{reportResponse}}"
+                  content-type="application/json"
+                  handleAs="json">
+        </app-ajax>
     </template>
     <script>
         Polymer('attendance-view-page', {
-            ready : function(){
-                var employeeattendance = [
-                    {attendanceid:"387",employeeid:"6",attendance:"2014-11-26 15:39:29"},
-                    {attendanceid:"388",employeeid:"5",attendance:"2014-11-26 17:16:47"},   
-                    {attendanceid:"389",employeeid:"9",attendance:"2014-11-26 17:21:35"},
-                    {attendanceid:"390",employeeid:"2",attendance:"2014-11-26 17:20:59"},   
-                    {attendanceid:"391",employeeid:"4",attendance:"2014-11-26 17:21:35"},
-                    {attendanceid:"392",employeeid:"6",attendance:"2014-11-26 17:21:35"},
-                    {attendanceid:"393",employeeid:"5",attendance:"2014-11-26 08:59:10"},
-                    {attendanceid:"394",employeeid:"9",attendance:"2014-11-26 09:01:52"},
-                    {attendanceid:"395",employeeid:"8",attendance:"2014-11-26 09:14:17"},
-                    
-                ];
-                this.employeeattendance=employeeattendance;
+            domReady : function(){
+                
+                this.emploeeattendance = this.employeeattendance || [];
+                var fromdate = this.fromdate;
+                var todate = this.todate;
+                var EmployeeID = this.EmployeeID;
+                //                                console.log(EmployeeID);
+                this.access_token = this.$.globals.baasicUser.accessToken;
+                this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
+//                this.$.ajax.data = {EmployeeID:EmployeeID};
+                ////                    console.log(this.$.ajax.body);
+                this.$.ajax.go();
+            
+            },
+            reportResponse : function(){
+//                console.log(this.$.ajax.response.status)
+                console.log(this.$.ajax.response);
+                if(this.$.ajax.response.status==true)
+                {
+                    this.employeeattendance  = this.$.ajax.response.data;
+                
+                    //                   {attendanceid:"387",employeeid:"6",attendance:"2014-11-26 15:39:29"},
+                    //                    {attendanceid:"388",employeeid:"5",attendance:"2014-11-26 17:16:47"},   
+                    //                    {attendanceid:"389",employeeid:"9",attendance:"2014-11-26 17:21:35"},
+                    //                    {attendanceid:"390",employeeid:"2",attendance:"2014-11-26 17:20:59"},   
+                    //                    {attendanceid:"391",employeeid:"4",attendance:"2014-11-26 17:21:35"},
+                    //                    {attendanceid:"392",employeeid:"6",attendance:"2014-11-26 17:21:35"},
+                    //                    {attendanceid:"393",employeeid:"5",attendance:"2014-11-26 08:59:10"},
+                    //                    {attendanceid:"394",employeeid:"9",attendance:"2014-11-26 09:01:52"},
+                    //                    {attendanceid:"395",employeeid:"8",attendance:"2014-11-26 09:14:17"},
+                    //                 
+                }
+                else
+                {
+                    this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
+                    this.$.toast1.opened="true";
+                }
+                
+            },
+            dataResponse : function(el)
+            {
+                el.show();
             }
-//            cancel : function(){
-//                var app = document.querySelector('index-app');
-//                app.session = true;
-//                app.$.router.go('/attendance');
-//            } 
             
         });
     </script>

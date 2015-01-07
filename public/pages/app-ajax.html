@@ -1,7 +1,7 @@
 
 <link rel="import" href="/bower_components/core-ajax/core-ajax.html">
 
-<polymer-element name="app-ajax" extends="core-ajax" attributes="access_token">
+<polymer-element name="app-ajax" extends="core-ajax" attributes="access_token data">
     <template>
 
 
@@ -9,15 +9,22 @@
     <script>
         Polymer('app-ajax',{
             ready: function(){
-              this.access_token = this.access_token || '';
-              this.super();
+                this.access_token = this.access_token || '';
+                this.super();
             },
             go : function(){
                 if(this.method == 'GET')
-                this.params.access_token = this.access_token;
+                {
+                    this.params = this.data || {};
+                    this.params.access_token = this.access_token;
+                }
+
                 else
-                this.body.access_token = this.access_token;
-                this.body=this.xhr.toQueryString(this.body);
+                {
+                    this.body = this.data || {};
+                    this.body.access_token = this.access_token;
+                    this.body=this.xhr.toQueryString(this.body);
+                }
                 this.super();
             }
         });
