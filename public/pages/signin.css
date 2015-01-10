@@ -1,7 +1,7 @@
 html,body {
     height: 100%;
     margin: 0;
-    background-color: darkgray;
+    background-color: gainsboro;
     font-family: 'RobotoDraft', sans-serif;
     text-align: center;
     color: blue;
@@ -86,7 +86,7 @@ polyfill-next-selector { content: ':host input'; }
     border: 0;
     padding: 0;
     margin: 0 4px;
-    color: black;
+    color: #00bcd4;
     font-size: 14px;
 }
 

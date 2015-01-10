@@ -49,7 +49,7 @@ console.log('Express server started on port 3000');
 var token;
 
 // Show login
-app.get('/signin',function (req, res, next){
+app.get('/roles',function (req, res, next){
 oauth2.api('GET','/oauth/authorise',{
     access_token: token.token.access_token
 },function (err, data) {
@@ -469,22 +469,23 @@ if(employeeid != '' && fromdate != '' && todate != '')
 
     //console.log(a.sql);
 }
-else if(employeeid != '')
+else if(employeeid == '' && fromdate != '' && todate != '')
     {
-        connection.query("SELECT * FROM employeeattendence where EmployeeID=?",[employeeid], function(err, rows){
+        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where Attendence between ? and ?) as records group by Date(Attendence)",[fromdate,todate], function(err, rows){
+//        console.log(err,rows);
         if(err){
   
             res.json({ message: err });
       
         }
-
+        
         else if(rows.length>0){res.json( {data : rows,status:true});}
         else{res.json({data : 'Person Does not exsist ! ',status:false});}
     });
     }
-    else if(fromdate != '' && todate != '')
+    else if(fromdate == '' && todate == '' && employeeid !='')
         {
-            connection.query("SELECT * FROM employeeattendence where Attendence between ? and ?",[fromdate,todate], function(err, rows){
+        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where EmployeeID=?) as records group by Date(Attendence)",[employeeid], function(err, rows){
         if(err){
   
             res.json({ message: err });

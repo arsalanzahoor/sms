@@ -2,9 +2,9 @@
 <link rel="import" href="/bower_components/baasic-login/baasic-login.html"> 
 
 
-<polymer-element name="signin-page" router="{{router}}" attributes="pathArg1 queryParam1" >
+<polymer-element name="signin-page" router="{{router}}" attributes="pathArg1 queryParam1 redirectUrl" >
     <template>
-        <baasic-login application="webcomponents"></baasic-login>
+        <baasic-login application="webcomponents" redirectUrl="{{redirectUrl}}"></baasic-login>
     </template>
     <script>
         

@@ -20,7 +20,7 @@ The `baasic-login` element provides support for authenticating users and logging
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../core-signals/core-signals.html">
 <link rel="import" href="../baasic-globals/baasic-globals.html">
-<link rel="import" href="/pages/home-page.html">
+<!--<link rel="import" href="/pages/home-page.html">-->
 
 <polymer-element name="baasic-login" attributes="baseUrl version application redirectUrl">
     <template>
@@ -90,17 +90,17 @@ The `baasic-login` element provides support for authenticating users and logging
                     <template bind if="{{loginInProgress}}">
                         <span class="loader">Loading</span>
                     </template>
-                </div>
+                </div> 
             </template>
-<!--            <template bind if="{{isLoggedIn}}">
-                <home-page></home-page>
-                <div id="loggedin" class="[ logininfo ]">
-                <div class="[ message ]">Please Click on LogOut to log you out from <strong>{{baasicUser.userName}}!</strong></div>
-                <div onload="{{logOut}}">
-                    <paper-button  onload="{{logOut}}" align="right">Log out</paper-button>
-                </div>
-                </div>
-            </template>-->
+            <!--            <template bind if="{{isLoggedIn}}">
+                            <home-page></home-page>
+                            <div id="loggedin" class="[ logininfo ]">
+                            <div class="[ message ]">Please Click on LogOut to log you out from <strong>{{baasicUser.userName}}!</strong></div>
+                            <div onload="{{logOut}}">
+                                <paper-button  onload="{{logOut}}" align="right">Log out</paper-button>
+                            </div>
+                            </div>
+                        </template>-->
         </div>
         <baasic-globals id="globals"></baasic-globals>
         <baasic-ajax url="/signin"
@@ -110,7 +110,7 @@ The `baasic-login` element provides support for authenticating users and logging
                      handleas="json"
                      on-core-response="{{ajaxPostResponse}}"
                      on-core-error="{{ajaxPostError}}"></baasic-ajax>
-        <baasic-ajax url="/signin"
+        <baasic-ajax url="/roles"
                      id="ajaxGet"
                      method="GET"
                      params='{"type":"Forms"}'
@@ -201,10 +201,10 @@ The `baasic-login` element provides support for authenticating users and logging
                 //signal that user has logged out, so other modules could switch views acordingly
                 this.fire('core-signal', { name: 'user-login', data: { baasicUser: {} } });
                 var app = document.querySelector("index-app");
-                    //                        console.log(this.router);
-                    app.session=false;
-                    // this.$.toast1.opened="true";
-                    app.$.router.go('/signin');
+                //                        console.log(this.router);
+                app.session=false;
+                // this.$.toast1.opened="true";
+                app.$.router.go('/signin');
             },
             ajaxPostResponse: function (e) {
                 this.baasicUser.accessToken = e.detail.response.access_token;
@@ -238,16 +238,16 @@ The `baasic-login` element provides support for authenticating users and logging
                 //signal that user has logged in, so other modules could switch views acordingly
                 this.fire('core-signal', { name: 'user-login', data: { baasicUser: this.baasicUser } });
                 this.loginInProgress = false;
-                // redirect to another URL if needed
-                if (this.redirectUrl){
-                    window.location.href = this.redirectUrl;
-                }
-                else{
-                    this.toggleView();
-                    //console.log("testing");
-                }                
-               
-            
+                // console.log(this.redirectUrl)
+                //                // redirect to another URL if needed
+                //                if (this.redirectUrl){
+                //                    window.location.href = this.redirectUrl;
+                //                }/*
+                //                else{
+                //                    //console.log("testing");
+                //                }  */              
+                this.toggleView();
+
             
             },
             ajaxGetError: function (e) {
@@ -255,6 +255,7 @@ The `baasic-login` element provides support for authenticating users and logging
                 this.$.toastError.show();
             },
             toggleView: function () {
+                
                 if (this.baasicUser && this.baasicUser.accessToken)
                 {
                     this.isLoggedIn = true;
@@ -263,7 +264,13 @@ The `baasic-login` element provides support for authenticating users and logging
                     //                        console.log(this.router);
                     app.session=true;
                     // this.$.toast1.opened="true";
-                    app.$.router.go('/home', {replace:true});
+                    console.log(this.redirectUrl);
+                    if(this.redirectUrl) {
+                        app.$.router.go(this.redirectUrl, {replace:true});
+                    }else {
+                        app.$.router.go('/home', {replace:true});
+                    }
+
                         
                 }
                 else

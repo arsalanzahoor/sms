@@ -7,10 +7,10 @@
 <link rel="import" href="/bower_components/core-menu/core-menu.html">
 <link rel="import" href="/bower_components/core-item/core-item.html">
 <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
-<link rel="import" href="/layouts/sidebar-layout.html">
+<!--<link rel="import" href="/layouts/sidebar-layout.html">-->
 <link rel="import" href="/pages/app-ajax.html">
 
-<link rel="stylesheet" href="/pages/signin.css">
+<!--<link rel="stylesheet" href="/pages/signin.css">-->
 <polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token">    
     <template>
          <baasic-globals id="globals"></baasic-globals>
@@ -96,7 +96,7 @@
                 {
                     this.$.toast1.text="Username or Password Field Is Empty. Please Fill All Fields!";
                     this.$.toast1.opened="true";
-                    console.log("not submit");
+//                    console.log("not submit");
                         
                     //this.redirect('/signin-page');
                 }
@@ -114,7 +114,7 @@
             },
             homeResponse: function()
             {
-                console.log(this.$.ajax.response.data);
+//                console.log(this.$.ajax.response.data);
                 if(this.$.ajax.response.status==true)
                 {
                     //                    this.$.toast1.text="DataBase Updated!!!"
