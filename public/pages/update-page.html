@@ -4,8 +4,8 @@
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/pages/app-ajax.html">
 <link rel="import" href="/layouts/sidebar-layout.html">
-
-<polymer-element name="update-page" router="{{router}}" attributes="pathArg1 queryParam1 action">
+<script src="/bower_components/moment/moment.js"></script>
+<polymer-element name="update-page" router="{{router}}" attributes="pathArg1 queryParam1 employees employeeid">
     <template>
         <baasic-globals id="globals"></baasic-globals>
         <sidebar-layout>
@@ -17,7 +17,7 @@
             <div><paper-input id="lastname" label="Last Name" value="{{lastname}}" floatinglabel></paper-input></div>
 
             <div><paper-input id="companyname" label="CompanyName" value="{{companyname}}" floatinglabel></paper-input></div>
-            <div><paper-input id="registerationdate" label="RegisterationDate" value="{{registerationdate}}" floatinglabel></paper-input></div>
+            <div><paper-input id="registrationdate" label="RegisterationDate" value="{{registrationdate}}" floatinglabel></paper-input></div>
             <!--<paper-input id="fmd" label="FMD" value="{{fmd}}" floatinglabel></paper-input>-->
             <div><paper-input id="mainid" label="MainID" value="{{mainid}}" floatinglabel></paper-input></div>
             <div>
@@ -25,15 +25,23 @@
                 <!--<paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>-->
                 <paper-toast id="toast1" text="Employee Record Is Updated Successfully." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
             </div>
+
+            <app-ajax id="ajax"
+                      url="/api/employee/:EmployeeID"
+                      method="GET"
+                      on-core-response="{{employeeResponse}}"
+                      content-type="application/json"
+                      handleAs="json">
+            </app-ajax>
             <app-ajax id="ajax1"
-                      url="/update"
+                      url="/api/employee"
                       method="POST"
                       on-core-response="{{insertResponse}}"
                       content-type="application/json"
                       handleAs="json">
             </app-ajax>
             <app-ajax id="ajax2"
-                      url="/update"
+                      url="/api/employee/:EmployeeID"
                       method="PUT"
                       on-core-response="{{updateResponse}}"
                       content-type="application/json"
@@ -45,66 +53,104 @@
     <script>
         Polymer('update-page',{
             submit : function(){
-                var action = this.action;
+                var employeeid = this.employeeid;
                 var firstname = this.$.firstname.value;
                 var lastname = this.$.lastname.value;
                 var companyname = this.$.companyname.value;
-                var registerationdate = this.$.registerationdate.value;
+//                this.$.registration.value = moment();
+                var registrationdate = this.$.registrationdate.value;
                 var mainid = this.$.mainid.value;
-
-                if(firstname == '' || lastname == '' || companyname == '' || registerationdate == '' || mainid == '')
+                
+//                console.log(registrationdate);
+                if(firstname == '' || lastname == '' || companyname == '' || registrationdate == '' || mainid == '')
                 {
                     this.$.toast1.text="Some of User Input Field Is Empty. Please Fill All Fields!";
                     this.$.toast1.opened="true";                        
                 }
                 else
                 {
-                    if(action==='insert')
+                    if(employeeid)
                     {
-                        this.$.ajax1.data = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registerationdate, mainid:mainid, action:action};
-                        this.$.ajax1.go();
-                    }
-                    else if(action==='update'){
-                        this.$.ajax2.data = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registerationdate, mainid:mainid, action:action};
+                        //                        console.log("ajax with id");
+                        this.$.ajax2.data = {employeeid:employeeid,firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registrationdate, mainid:mainid};
                         this.$.ajax2.go();
+                        
                     }
-                    else{
-                        this.$.toast1.text="Invalid Action Performed";
-                        this.$.toast1.opened="true";
+                    else
+                    {
+                        //                        console.log("ajax without id");
+                        this.$.ajax1.data = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registrationdate, mainid:mainid};
+                        this.$.ajax1.go();
+                        //                        this.$.toast1.text="Invalid Action Performed";
+                        //                        this.$.toast1.opened="true";
                     }
                 }
-            },
-            updateResponse: function()
+        },
+        updateResponse: function()
+        {
+//            console.log(this.$.ajax2.response.data);
+            if(this.$.ajax2.response.status==true)
             {
-                console.log(this.$.ajax.response.data);
-                if(this.$.ajax.response.status==true)
-                {
-                    this.$.toast1.opened="true";
-                }
-                else
-                {
-                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
-                    this.$.toast1.opened="true";
-                }
-            },
-            insertResponse: function()
-            {
-                console.log(this.$.ajax.response.data);
-                if(this.$.ajax.response.status==true)
-                {
-                    this.$.toast1.opened="true";
-                }
-                else
-                {
-                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
-                    this.$.toast1.opened="true";
-                }
-            },
-            dataResponse : function(el)
-            {
-                el.show();
+                this.$.toast1.opened="true";
             }
+            else
+            {
+                this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                this.$.toast1.opened="true";
+            }
+        },
+        insertResponse: function()
+        {
+            //                console.log(this.$.ajax1.response.data);
+            if(this.$.ajax1.response.status==true)
+            {
+                this.$.toast1.opened="true";
+            }
+            else
+            {
+                this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                this.$.toast1.opened="true";
+            }
+        },
+        domReady : function(){
+            //                console.log("Employees Test");
+            if(this.employeeid)
+            {
+                var employeeid = this.employeeid;
+                //                this.employeeid = this.employeeid;
+                //                console.log(employeeid);
+                
+                this.employees = this.employees || [];
+                this.$.ajax.data = {employeeid:employeeid};
+                this.$.ajax.go();
+            }
+            this.$.registrationdate.value = moment().format('YYYY/MM/DD');
+                
+        }, 
+        employeeResponse: function()
+        {
+            //                console.log(this.$.ajax.response.data);
+            if(this.$.ajax.response.status==true)
+            {
+                this.employees = this.$.ajax.response.data;
+                //                    this.employees=employees;
+                this.$.firstname.value = this.employees[0].FirstName;
+                this.$.lastname.value = this.employees[0].LastName;
+                this.$.companyname.value = this.employees[0].CompanyName;
+                this.$.registrationdate.value = moment(this.employees[0].RegistrationDate).format('YYYY/MM/DD');
+                this.$.mainid.value = this.employees[0].MainID;
+            }
+            else
+            {
+                this.$.toast1.text="There is an Error on Employees Request/Response";
+                this.$.toast1.opened="true";
+            }
+        },
+        dataResponse : function(el)
+        {
+            el.show();
+        }
            
-        });
+    });
     </script>
 </polymer-element>

@@ -2,6 +2,7 @@
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/core-item/core-item.html">
+<link rel="import" href="/bower_components/polymer-filters/polymer-filters.html">
 
 <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
@@ -11,6 +12,9 @@
     <template>
         <sidebar-layout selected="employee">
             <div class="title">Employees</div>
+            <div>
+                <ul><b>Esajeesolutions Employees List</b></ul>
+            </div>
             <table style=" text-align: center; 
                    font-style: italic;
                    display: inline-block; 
@@ -27,7 +31,7 @@
                     <!--<th>FMD</th>-->
                     <th>MainID</th>
                     <th>
-                <core-item icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update?action=insert"></a></core-item>
+                <core-item icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update/"></a></core-item>
                 <!--<paper-button id="insert-button" on-click="{{insert}}" raised>Insert</paper-button>-->
                 </th></tr>
                 <template repeat="{{employee in employees}}">
@@ -36,11 +40,12 @@
                         <td>{{employee.FirstName}}</td>
                         <td>{{employee.LastName}}</td>
                         <td>{{employee.CompanyName}}</td>
-                        <td>{{employee.RegistrationDate}}</td>
+                        <td>{{employee.RegistrationDate | date('yyyy/MM/dd')}}</td>
                         <!--<td>{{employee.FMD}}</td>-->
                         <td>{{employee.MainID}}</td>
                         <td>
-                    <core-item icon="arrow-forward" title="Update-Employee" name="update"><a is="pushstate-anchor" href="/#/employees/update?action=update"></a></core-item>  
+                    <core-item icon="arrow-forward" title="Update-Employee" name="update"><a is="pushstate-anchor" href="/#/employees/update/{{employee.EmployeeID}}"></a></core-item>  
+                    <!--&firstname={{employee.FirstName}}&lastname={{employee.LastName}}&companyname={{employee.CompanyName}}&registrationdate={{employee.RegistrationDate}}&mainid={{employee.MainID}}-->
                     <!--<paper-button id="update-button" on-click="update" width="20px" height="10px" raised>Update</paper-button></td>-->
                     </tr>
                 </template>
@@ -68,7 +73,7 @@
             }, 
             employeeResponse: function()
             {
-                console.log(this.$.ajax.response.data[0]);
+//                console.log(this.$.ajax.response.data[0]);
                 if(this.$.ajax.response.status==true)
                 {
                     this.employees = this.$.ajax.response.data;

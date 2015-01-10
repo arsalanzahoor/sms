@@ -1,16 +1,25 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/polymer-filters/polymer-filters.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
 
 <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
 <link rel="import" href="/pages/app-ajax.html">
+<script src="/bower_components/moment/moment.js"></script>
 
 
-<polymer-element name="attendance-view-page" router="{{router}}" attributes="employeeattendance todate fromdate EmployeeID">
+<polymer-element name="attendance-view-page" router="{{router}}" attributes="employeeattendance employeename todate fromdate employeeid ">
     <template>
         <baasic-globals id="globals"></baasic-globals>
+
         <sidebar-layout selected="attendance-view">
             <div class="title">Attendance Overview</div>
+            <div>
+                <u><b>Employee Name: <i>{{employeename}}</i></b></u>
+            </div>
+            <br>
+            <!--for Date between <i>{{fromdate}}</i> and <i>{{todate}}</i>-->
             <div>
                 <table style="alignment-baseline: baseline;
                        alignment-adjust: central;  
@@ -23,17 +32,24 @@
                        padding: 2%;
                        width: 44%"> 
                     <tr>
-                        <th>Attendance Id</th>
-                        <th>Employee Id</th>
-                        <th>Attendance</th>
+                        <th>Attendance Date</th>
+                        <th>CheckIn Time</th>
+                        <th>CheckOut Time</th>
                     </tr>
                     <template repeat="{{attendance in employeeattendance}}">
-                        <tr >
-                            <td>{{attendance.AttendenceID}}</td>
-                            <td>{{attendance.EmployeeID}}</td>
-                            <td>{{attendance.Attendence}}</td>
+                        <tr>
+                            <td>{{attendance.Attendence | date (yyyy/mm/dd)}}</td>
+                            <td>{{attendance.timein | date('hh-mm-ss')}}</td>
+                            <td>{{attendance.timeout | date('hh-mm-ss')}}</td>
                         </tr>
                     </template>
+                    <!--                    <template repeat="{{attendance in employeeattendance}}">
+                                            <tr>
+                                                <td>{{attendance.AttendenceID}}</td>
+                                                <td>{{attendance.EmployeeID}}</td>
+                                                <td>{{attendance.Attendence | date('yyyy/MM/dd hh-mm-ss')}}</td>
+                                            </tr>
+                                        </template>-->
                 </table>
             </div>
             <!--            <div>
@@ -49,6 +65,14 @@
                   content-type="application/json"
                   handleAs="json">
         </app-ajax>
+        <app-ajax id="ajax1"
+                  url="/api/employee/:EmployeeID"
+                  method="GET"
+                  on-core-response="{{employeeResponse}}"
+                  content-type="application/json"
+                  handleAs="json">
+        </app-ajax>
+
     </template>
     <script>
         Polymer('attendance-view-page', {
@@ -57,22 +81,41 @@
                 this.emploeeattendance = this.employeeattendance || [];
                 var fromdate = this.fromdate;
                 var todate = this.todate;
-                var EmployeeID = this.EmployeeID;
-                //                                console.log(EmployeeID);
+                var EmployeeID = this.employeeid;
+                var employeeid = this.employeeid;
+                //                console.log(this.employeeid);
+                //                console.log(EmployeeID);
+                this.$.ajax1.data = {employeeid:employeeid};
+                this.$.ajax1.go();
+                
                 this.access_token = this.$.globals.baasicUser.accessToken;
                 this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
-//                this.$.ajax.data = {EmployeeID:EmployeeID};
+                //                this.$.ajax.data = {EmployeeID:EmployeeID};
                 ////                    console.log(this.$.ajax.body);
                 this.$.ajax.go();
             
             },
             reportResponse : function(){
-//                console.log(this.$.ajax.response.status)
-                console.log(this.$.ajax.response);
+                //                console.log(this.$.ajax.response.status)
+                //                console.log(this.$.ajax.response);
                 if(this.$.ajax.response.status==true)
                 {
+                    //                    console.log(this.$.ajax.response.data);
+                    for(var i=0;i<this.$.ajax.response.data.length;i++)
+                    {
+                        if(this.$.ajax.response.data[i].timein == this.$.ajax.response.data[i].timeout)
+                        {
+//                            console.log(moment().duration().get(this.$.ajax.response.data[i].timein));
+                            this.$.ajax.response.data[i].timeout  = null;
+                        }
+                        else
+                        {
+                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
+                        }
+                    }
                     this.employeeattendance  = this.$.ajax.response.data;
-                
+
+
                     //                   {attendanceid:"387",employeeid:"6",attendance:"2014-11-26 15:39:29"},
                     //                    {attendanceid:"388",employeeid:"5",attendance:"2014-11-26 17:16:47"},   
                     //                    {attendanceid:"389",employeeid:"9",attendance:"2014-11-26 17:21:35"},
@@ -84,18 +127,35 @@
                     //                    {attendanceid:"395",employeeid:"8",attendance:"2014-11-26 09:14:17"},
                     //                 
                 }
-                else
-                {
-                    this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
-                    this.$.toast1.opened="true";
-                }
-                
-            },
-            dataResponse : function(el)
+            else
             {
-                el.show();
+                this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
+                this.$.toast1.opened="true";
             }
+                
+        },
+        employeeResponse: function()
+        {
+            //                console.log(this.$.ajax1.response.data[0]);
+            if(this.$.ajax1.response.status==true)
+            {
+                //                    var fname = this.$.ajax1.response.data[0].FirstName;
+                //                    var lname = this.$.ajax1.response.data[0].LastName;
+                //                    console.log(fname);
+                this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
+                //                    this.employees=employees;
+            }
+            else
+            {
+                this.$.toast1.text="There is an Error on Employees Request/Response";
+                this.$.toast1.opened="true";
+            }
+        },
+        dataResponse : function(el)
+        {
+            el.show();
+        }
             
-        });
+    });
     </script>
 </polymer-element>
