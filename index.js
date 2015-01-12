@@ -455,7 +455,9 @@ var fromdate = req.query.fromdate;
 var todate = req.query.todate;
 if(employeeid != '' && fromdate != '' && todate != '')
 {
-        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) as records group by Date(Attendence)",[employeeid,fromdate,todate], function(err, rows){
+        connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[employeeid,fromdate,todate], function(err, rows){
+//        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) as records group by Date(Attendence)",[employeeid,fromdate,todate], function(err, rows){
+        
         if(err){
   
             res.json({ message: err });
@@ -471,7 +473,8 @@ if(employeeid != '' && fromdate != '' && todate != '')
 }
 else if(employeeid == '' && fromdate != '' && todate != '')
     {
-        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where Attendence between ? and ?) as records group by Date(Attendence)",[fromdate,todate], function(err, rows){
+        connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where Attendence between ? and ?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[fromdate,todate], function(err, rows){
+//        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where Attendence between ? and ?) as records group by Date(Attendence)",[fromdate,todate], function(err, rows){
 //        console.log(err,rows);
         if(err){
   
@@ -485,7 +488,7 @@ else if(employeeid == '' && fromdate != '' && todate != '')
     }
     else if(fromdate == '' && todate == '' && employeeid !='')
         {
-        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where EmployeeID=?) as records group by Date(Attendence)",[employeeid], function(err, rows){
+        connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where EmployeeID=?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[employeeid], function(err, rows){
         if(err){
   
             res.json({ message: err });
@@ -498,7 +501,7 @@ else if(employeeid == '' && fromdate != '' && todate != '')
         }
         else
             {
-                connection.query("SELECT * FROM employeeattendence", function(err, rows){
+                connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName", function(err, rows){
         if(err){
   
             res.json({ message: err });

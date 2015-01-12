@@ -27,7 +27,7 @@
     </head>
     <body unresolved>
 
-    <polymer-element name="index-app" attribute="appPath">
+    <polymer-element name="index-app" attribute="appPath session">
         <template>
             <!--<baasic-login id="log"></baasic-login>-->
             <baasic-globals id="globals"></baasic-globals>
@@ -45,6 +45,7 @@
                 <app-route path="/attendance/report/:employeeid/:fromdate/:todate" bindRouter import="/pages/attendance-view-page.html" ></app-route>
                 <app-route path="/employees/update/:employeeid" bindRouter import="/pages/update-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
+                <!--<app-route path="/test" bindRouter import="/pages/pager-test.html" ></app-route>-->
                 <app-route path="/signout" bindRouter on-activate-route-start="{{logOut}}" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>
@@ -64,6 +65,8 @@
                     if(this.$.globals.baasicUser && this.$.globals.baasicUser.accessToken){
                         this.session=true;
                         console.log(newpath);
+                        if(newpath == '')
+                            this.$.router.go('/signin');
                         this.$.router.go(newpath);
                     }
 
@@ -123,7 +126,7 @@
             var newpath = path.substring(23,path.length);
             console.log(path.indexOf('#'),newpath);
             
-//            var a = '/attendance'
+            //            var a = '/attendance'
             app.init(newpath);
         });
     </script>

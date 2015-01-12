@@ -16,6 +16,7 @@
 <polymer-element name="attendance-page" router="{{router}}" attributes="pathArg1 queryParam1">
     <template>
         <sidebar-layout selected="attendance">
+            
             <div class="title">Employees Attendance</div>
             <div>
                 <ul><b>Please Select Employee and Dates to View Attendance Report</b></ul>
@@ -51,7 +52,7 @@
                     </tr>
                     <tr>
                         <td><core-item icon="view-agenda" label="View Report" title="View Attendance Report" width="20%" text-align="right">
-                        <a is="pushstate-anchor" href="/#/attendance/report/{{employee}}/{{fromdate| urlencode}}/{{todate | urlencode}}"></a>
+                        <a is="pushstate-anchor" href="/#/attendance/report/{{employee}}/{{fromdate | urlencode}}/{{todate | urlencode}}"></a>
                     </core-item>
                     <!--fromdate={{fromdate}}&todate={{todate}}&EmployeeID={{employee}}-->
                     </td>
@@ -133,10 +134,12 @@
             {
                 var fromdate = this.fromdate;
                 var todate = this.todate;
-                if(fromdate == '' || todate == '')
+                if(!moment(fromdate).isValid() || !moment(todate).isValid())
                 {
+                    console.log("attendance validation");
                     this.$.toast1.text="There is an Error on Employees Request/Response";
                     this.$.toast1.opened="true";
+                    this.$.router.go('/attendance');
                 }
             },
             

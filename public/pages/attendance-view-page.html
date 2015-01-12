@@ -1,28 +1,29 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/page-er/page-er.html">
 <!--<link rel="import" href="/bower_components/polymer-filters/polymer-filters.html">-->
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
-
-<!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
+<link rel="import" href="/bower_components/core-label/core-label.html">
 <link rel="import" href="/layouts/sidebar-layout.html">
 <link rel="import" href="/pages/app-ajax.html">
 <script src="/bower_components/moment/moment.js"></script>
 <script src="/pages/date.js"></script>
 
-
-<polymer-element name="attendance-view-page" router="{{router}}" attributes="employeeattendance employeename todate fromdate employeeid">
+<polymer-element name="attendance-view-page" router="{{router}}" attributes="employeeattendance employeeheaders todate fromdate employeeid">
     <template>
         <baasic-globals id="globals"></baasic-globals>
-
         <sidebar-layout selected="attendance-view">
             <div class="title">Attendance Overview</div>
             <div>
-                <u><b>Employee Name: <i>{{employeename}}</i></b></u>
+                <b><i>Attendance Report List</i></b><br>
+                <!--<core-label for="{{this.employeeid}}">Employee Name:{{employeename}}</core-label>-->
+                <label type="hidden" id="empname" name="Employee Name:"><u><b>{{employeename}}</b></u></label>
             </div>
             <br>
             <!--for Date between <i>{{fromdate}}</i> and <i>{{todate}}</i>-->
-            <div>
-                <table style="alignment-baseline: baseline;
+            <div class="container">
+                <page-er perpage="5"></page-er>
+                <table id="mytable"  style="alignment-baseline: baseline;
                        alignment-adjust: central;  
                        text-align: center; 
                        font-style: oblique;
@@ -31,33 +32,40 @@
                        border: 2px solid #006;
                        border-collapse: collapse; 
                        padding: 2%;
-                       width: 44%"> 
-                    <tr>
-                        <th>Attendance Date</th>
-                        <th>CheckIn Time</th>
-                        <th>CheckOut Time</th>
-                    </tr>
-                    <template repeat="{{attendance in employeeattendance}}">
-                        <tr>
+                       width: 60%">
+                    <thead><tr>
+                    <template if ="{{!employeeid}}" >
+                        <th>Employee First Name</th>
+                        <th>Employee Last Name</th>
+                    </template>
+                    <th>Attendance Date</th>
+                    <th>CheckIn Time</th>
+                    <th>CheckOut Time</th>
+                    </tr></thead>
+                    <tbody>
+                    <!--<template id="attendance" repeat="{{attendance in employeeattendance}}">-->
+                        <template id="attendance" repeat="{{attendance}}">
+                            <tr>
+                            <template if ="{{!employeeid}}">
+                                <td>{{attendance.FirstName}}</td>
+                                <td>{{attendance.LastName}}</td>
+                            </template>
                             <td>{{attendance.Attendence | date (yyyy/mm/dd)}}</td>
                             <td>{{attendance.timein | date('HH-mm-ss')}}</td>
                             <td> {{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</td> 
-                            <!--<td>{{attendance.timeout | date('hh-mm-ss')}}</td>-->
-                            <!--<td>{{(attendence.timein == attendence.timeout) ? attendence.timeout='' : attendance.timeout | date('hh-mm-ss')}}</td>-->
-                        </tr>
-                    </template>
-                    <!--                    <template repeat="{{attendance in employeeattendance}}">
-                                            <tr>
-                                                <td>{{attendance.AttendenceID}}</td>
-                                                <td>{{attendance.EmployeeID}}</td>
-                                                <td>{{attendance.Attendence | date('yyyy/MM/dd hh-mm-ss')}}</td>
-                                            </tr>
-                                        </template>-->
+                            </tr>
+                        </template>
+                        </tbody>
                 </table>
+                <select name="options" id="options">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                </select>
+                <span>per page</span>
             </div>
-            <!--            <div>
-                            <paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>
-                        </div>-->
             <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
 
         </sidebar-layout>
@@ -81,30 +89,26 @@
         Polymer('attendance-view-page', {
             domReady : function(){
                 
-//                console.log(date('d-m-Y'));
-                this.emploeeattendance = this.employeeattendance || [];
+                this.employeeattendance = this.employeeattendance || [];
                 var fromdate = this.fromdate;
                 var todate = this.todate;
                 var EmployeeID = this.employeeid;
                 var employeeid = this.employeeid;
-                //                console.log(this.employeeid);
-                //                console.log(EmployeeID);
-                this.$.ajax1.data = {employeeid:employeeid};
-                this.$.ajax1.go();
+                if(employeeid != '') {
+                    this.$.ajax1.data = {employeeid:employeeid};
+                    this.$.ajax1.go();
+                    this.$.empname.type=true;
                 
+                }
                 this.access_token = this.$.globals.baasicUser.accessToken;
                 this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
-                //                this.$.ajax.data = {EmployeeID:EmployeeID};
-//                                console.log(this.$.ajax.body);
                 this.$.ajax.go();
             
             },
             reportResponse : function(){
-                //                console.log(this.$.ajax.response.status)
-//                                console.log(this.$.ajax.response.data);
                 if(this.$.ajax.response.status==true)
                 {
-                    //                    console.log(this.$.ajax.response.data);
+                    console.log(this.$.ajax.response.data);
                     //                    for(var i=0;i<this.$.ajax.response.data.length;i++)
                     //                    {
                     //                        if(this.$.ajax.response.data[i].timein == this.$.ajax.response.data[i].timeout)
@@ -117,8 +121,55 @@
                     //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
                     //                        }
                     //                    }
-                    this.employeeattendance  = this.$.ajax.response.data;
+                    // Select the grid/table where your main data will appear
+                    
+                    // Select the grid/table where your main data will appear
+                    var t = document.querySelector("#items");
 
+                    // Select the paginator to use with this element
+                    var m = document.querySelector("page-er");
+
+                    // Select options
+                    var s = document.querySelector("#options");
+
+                    // Create a model we will populate with data
+                    //                    var model = {
+                    //                        items: []
+                    //                    };
+                    //
+                    //                    // As this is an example, populate some sample data inside
+                    //                    for (var i = 1; i < 50; i++) {
+                    //                        model.items.push({
+                    //                            id: i,
+                    //                            name: "Item "+ i,
+                    //                            description: "description " + i
+                    //                        });
+                    //                    }
+
+                    document.addEventListener('polymer-ready', function() {
+                        // 1. Pass as `data` the set of data we want the
+                        // paginator to paginate
+                        m.data = this.employeeattendance;
+                    });
+
+                    document.addEventListener('pager-data', function(e) {
+                        // 2. Update the current template/view with our
+                        // paginated set of data. `pager-data` is fired
+                        // when this has completed
+                        t.model = { attendance: e.detail.data };
+                    });
+
+                    // 3. Anytime our paged set changes, update the view
+                    document.addEventListener('pager-change', function(e) {
+                        t.model = { attendance: e.detail.data };
+                    });
+
+                    this.$.options.addEventListener('change', function(e){
+                        m.perpage = parseInt(this.options[this.selectedIndex].value, 10);
+                        m.currentpage = 0;
+                    });
+                    
+                    
                 }
                 else
                 {
@@ -129,14 +180,9 @@
             },
             employeeResponse: function()
             {
-                //                console.log(this.$.ajax1.response.data[0]);
                 if(this.$.ajax1.response.status==true)
                 {
-                    //                    var fname = this.$.ajax1.response.data[0].FirstName;
-                    //                    var lname = this.$.ajax1.response.data[0].LastName;
-                    //                    console.log(fname);
                     this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
-                    //                    this.employees=employees;
                 }
                 else
                 {
@@ -151,4 +197,5 @@
             
         });
     </script>
+
 </polymer-element>

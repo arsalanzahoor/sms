@@ -148,6 +148,10 @@ button1
 {
     color: blue;
 }
-.cl {
-    background-color: blue;
+
+th.emphide {
+    display: none;
+}
+th.empshow {
+    display: table-cell;
 }
