@@ -45,7 +45,7 @@
                 <app-route path="/attendance/report/:employeeid/:fromdate/:todate" bindRouter import="/pages/attendance-view-page.html" ></app-route>
                 <app-route path="/employees/update/:employeeid" bindRouter import="/pages/update-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
-                <!--<app-route path="/test" bindRouter import="/pages/pager-test.html" ></app-route>-->
+                <app-route path="/test" bindRouter import="/pages/list-test.html"  on-before-data-binding="{{bindSession}}" ></app-route>
                 <app-route path="/signout" bindRouter on-activate-route-start="{{logOut}}" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>
@@ -96,7 +96,8 @@
                     //var appSession = this.$.localstorage.session.value;
                     // update the route's model before it's bound to the home-page or login-page
                     //console.log(this.$.session);
-                    event.detail.model.session = this.$.session;
+                    //event.detail.model.session = this.$.session;
+                    
                 },
                 logOut : function(){
                     this.$.globals.logOut();

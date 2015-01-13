@@ -45,7 +45,7 @@ function saveToken(error, result) {
 //app.get('/', function (req, res) {
 //  res.send('Hello<br><a href="/auth">Log in with Github</a>');
 //});
-console.log('Express server started on port 3000');
+console.log('Express server started on port 3001');
 var token;
 
 // Show login
@@ -200,6 +200,12 @@ app.get('/', function (req, res) {
 //console.log("hello!");
 res.sendFile(__dirname + '/public/pages/index.html');
 });
+
+//app.get('/list', function (req, res) {
+//// Will require a valid access_token
+////console.log("hello!");
+//res.sendFile(__dirname + '/public/pages/list-test.html');
+//});
 
 var total_records=null;
 var total_attenedence=null;
@@ -520,4 +526,4 @@ else if(employeeid == '' && fromdate != '' && todate != '')
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
-app.listen(3000);
+app.listen(3001);

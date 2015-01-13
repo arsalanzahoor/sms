@@ -1,9 +1,9 @@
 <link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/page-er/page-er.html">
 <!--<link rel="import" href="/bower_components/polymer-filters/polymer-filters.html">-->
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/core-label/core-label.html">
+<!--<link rel="import" href="/bower_components/core-scroll-threshold/core-scroll-threshold.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
 <link rel="import" href="/pages/app-ajax.html">
 <script src="/bower_components/moment/moment.js"></script>
@@ -21,8 +21,7 @@
             </div>
             <br>
             <!--for Date between <i>{{fromdate}}</i> and <i>{{todate}}</i>-->
-            <div class="container">
-                <page-er perpage="5"></page-er>
+            <div>
                 <table id="mytable"  style="alignment-baseline: baseline;
                        alignment-adjust: central;  
                        text-align: center; 
@@ -32,7 +31,7 @@
                        border: 2px solid #006;
                        border-collapse: collapse; 
                        padding: 2%;
-                       width: 60%">
+                       width: 80%">
                     <thead><tr>
                     <template if ="{{!employeeid}}" >
                         <th>Employee First Name</th>
@@ -43,28 +42,28 @@
                     <th>CheckOut Time</th>
                     </tr></thead>
                     <tbody>
-                    <!--<template id="attendance" repeat="{{attendance in employeeattendance}}">-->
-                        <template id="attendance" repeat="{{attendance}}">
-                            <tr>
-                            <template if ="{{!employeeid}}">
-                                <td>{{attendance.FirstName}}</td>
-                                <td>{{attendance.LastName}}</td>
+                    <!--<template is="auto-binding">-->
+                        <!--<core-scroll-threshold id="threshold" scrollTarget="{{$.scroller}}" lowerThreshold="50" on-lower-trigger="{{loadMore}}" fit></core-scroll-threshold>-->
+                        <!--<div id="scroller" fit>-->
+                            <template id="attendance" repeat="{{attendance in employeeattendance}}">
+                                <tr>
+                                <template if ="{{!employeeid}}">
+                                    <td>{{attendance.FirstName}}</td>
+                                    <td>{{attendance.LastName}}</td>
+                                </template>
+                                <td>{{attendance.Attendence | date (yyyy/mm/dd)}}</td>
+                                <td>{{attendance.timein | date('HH-mm-ss')}}</td>
+                                <td> {{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</td> 
+                                </tr>
                             </template>
-                            <td>{{attendance.Attendence | date (yyyy/mm/dd)}}</td>
-                            <td>{{attendance.timein | date('HH-mm-ss')}}</td>
-                            <td> {{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</td> 
-                            </tr>
-                        </template>
-                        </tbody>
+                            <!--<div hidden?="{{!$.threshold.lowerTriggered}}">Please wait...</div>-->
+                        <!--</div>--> 
+<!--                    </template>-->
+
+                    <!--<template id="attendance" repeat="{{attendance in employeeattendance}}">-->
+
+                    </tbody>
                 </table>
-                <select name="options" id="options">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                </select>
-                <span>per page</span>
             </div>
             <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
 
@@ -121,55 +120,8 @@
                     //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
                     //                        }
                     //                    }
-                    // Select the grid/table where your main data will appear
                     
-                    // Select the grid/table where your main data will appear
-                    var t = document.querySelector("#items");
-
-                    // Select the paginator to use with this element
-                    var m = document.querySelector("page-er");
-
-                    // Select options
-                    var s = document.querySelector("#options");
-
-                    // Create a model we will populate with data
-                    //                    var model = {
-                    //                        items: []
-                    //                    };
-                    //
-                    //                    // As this is an example, populate some sample data inside
-                    //                    for (var i = 1; i < 50; i++) {
-                    //                        model.items.push({
-                    //                            id: i,
-                    //                            name: "Item "+ i,
-                    //                            description: "description " + i
-                    //                        });
-                    //                    }
-
-                    document.addEventListener('polymer-ready', function() {
-                        // 1. Pass as `data` the set of data we want the
-                        // paginator to paginate
-                        m.data = this.employeeattendance;
-                    });
-
-                    document.addEventListener('pager-data', function(e) {
-                        // 2. Update the current template/view with our
-                        // paginated set of data. `pager-data` is fired
-                        // when this has completed
-                        t.model = { attendance: e.detail.data };
-                    });
-
-                    // 3. Anytime our paged set changes, update the view
-                    document.addEventListener('pager-change', function(e) {
-                        t.model = { attendance: e.detail.data };
-                    });
-
-                    this.$.options.addEventListener('change', function(e){
-                        m.perpage = parseInt(this.options[this.selectedIndex].value, 10);
-                        m.currentpage = 0;
-                    });
-                    
-                    
+                    this.employeeattendance = this.$.ajax.response.data;
                 }
                 else
                 {

@@ -1,3 +1,4 @@
+
 <!doctype html>
 <!--
 Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
@@ -7,38 +8,16 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<html>
-<head>
-  <title>core-list</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <script src="../webcomponentsjs/webcomponents.js"></script>
-  <link rel="import" href="../polymer/polymer.html">
-  <link rel="import" href="core-list.html">
-  <style>
-    html, body {
-      margin: 0;
-      -webkit-tap-highlight-color: transparent;
-      overflow: hidden;
-    }
-    
-    list-test {
-      display: block;
-      height: 100%;
-      margin: 0 auto;
-    }
+<!--<html>-->
+    <!--<head>-->
+        <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">-->
+        <!--<script src="/bower_components/webcomponentsjs/webcomponents.js"></script>-->
+        <link rel="import" href="/bower_components/polymer/polymer.html">
+        <link rel="import" href="/bower_components/core-list/core-list.html">
+       
+        <list-test></list-test>
 
-    .stuff {
-      min-height: 60px;
-      background: red !important;
-      border-bottom: 1px solid black;
-    }
-  </style>
-</head>
-<body fit>
-
-<list-test></list-test>
-
-<polymer-element name="list-test" layout vertical>
+<polymer-element name="list-test" layout horizontal>
 <template>
   <style>
     .item {
@@ -91,9 +70,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     .narrow {
       width: 40px;
     }
+    .mylist {
+        height: 300px;
+    }
 
   </style>
-
+  <sidebar-layout selected="test">
   <div class="spaced">
     <button on-tap="{{addRecord}}">Add row at index:</button>
     <input value="{{addIdx}}" class="narrow" type="number">
@@ -118,10 +100,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="selection-display">Id {{id}}: {{checked}} {{value}} {{['a','b','c'][type]}}</div>
     </template>
   </div>
-  <core-list id="list" data="{{data}}" selectionEnabled="{{selectionEnabled}}"
+  <core-list class="mylist" id="list" data="{{data}}" selectionEnabled="{{selectionEnabled}}"
     selection="{{selection}}" height="80" flex multi?={{multi}}>
     <template>
-      <div class="item {{ {selected: selected} | tokenList }}">
+      <div  class="item {{ {selected: selected} | tokenList }}">
         <div class="message" style="background-image: url(images/{{model.image}}.png);">
           <span class="from">{{model.name}}</span>
           <div class="subject">Row: {{index}}, Record ID: {{model.id}}</div>
@@ -133,7 +115,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </template>
   </core-list>
-
+  </sidebar-layout>
 </template>
 <script>
 (function() {
@@ -231,6 +213,3 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 })();  
 </script>
 </polymer-element>
-
-</body>
-</html>
