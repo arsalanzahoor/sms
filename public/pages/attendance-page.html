@@ -31,11 +31,11 @@
                        border-collapse: collapse; 
                        width: 45%">
                     <tr>
-                        <th>Date:</th>
+                        <th style="text-align: center; margin-left: 50%; padding-left: 110px; padding-top: 10px;">Date Range:</th>
                     </tr>
                     <tr>
-                        <td><paper-input id="fromdate" label="Date From" value="{{fromdate}}" floatinglabel></paper-input></td>
-                    <td><paper-input id="todate" label="Date To" value="{{todate}}" floatinglabel></paper-input></td>
+                        <td><paper-input id="fromdate" label="Date From" type="date" value="{{fromdate}}" floatinglabel></paper-input></td>
+                    <td><paper-input id="todate" label="Date To" type="date" value="{{todate}}" floatinglabel></paper-input></td>
                     </tr>
                     <tr>
                         <td>
@@ -107,8 +107,8 @@
         Polymer('attendance-page',{
             ready : function(){
                 
-                this.$.fromdate.value = moment().startOf('month').format("YYYY/MM/DD");
-                this.$.todate.value = moment().format("YYYY/MM/DD");
+//                this.$.fromdate.value = moment().startOf('month').format("YYYY/MM/DD");
+//                this.$.todate.value = moment().format("YYYY/MM/DD");
                 this.employees = this.employees || [];
                 //                this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
                 //                    console.log(this.$.ajax.body);

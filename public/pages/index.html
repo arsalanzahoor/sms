@@ -45,7 +45,7 @@
                 <app-route path="/attendance/report/:employeeid/:fromdate/:todate" bindRouter import="/pages/attendance-view-page.html" ></app-route>
                 <app-route path="/employees/update/:employeeid" bindRouter import="/pages/update-page.html" ></app-route>
                 <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
-                <app-route path="/test" bindRouter import="/pages/list-test.html"  on-before-data-binding="{{bindSession}}" ></app-route>
+                <app-route path="/test" bindRouter import="/pages/test-page.html"  on-before-data-binding="{{bindSession}}" ></app-route>
                 <app-route path="/signout" bindRouter on-activate-route-start="{{logOut}}" ></app-route>
                 <app-route path="*" import="/pages/not-found-page.html"></app-route>
             </app-router>

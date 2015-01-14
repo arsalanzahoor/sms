@@ -314,6 +314,8 @@ else{res.json({data:'Please Enter Missing Field First',status:false});}
 })
 // get all the employee from record table (accessed at GET http://localhost:8080/api/employee)
 .get(function(req, res) {
+
+console.log("test");
 connection.query('SELECT COUNT(*) AS total FROM employee',function(err,row){
     total_records=row[0].total;});
 
