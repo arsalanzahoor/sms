@@ -13,6 +13,23 @@
     <template>
         <baasic-globals id="globals"></baasic-globals>
         <sidebar-layout selected="attendance-view">
+            <style>
+                #scroller {
+                    height: 300px;
+                    border: 1px solid red;
+                    padding: 20px;
+                    margin-top: 70px;
+                    overflow: auto;
+                    background: #E0E2E4;
+                }
+                .thing {
+                    padding: 5px;
+                    margin: 5px;
+                    background: lightblue;
+                    border-radius: 10px;
+                    font-size: 1.3em;
+                }
+            </style>
             <div class="title">Attendance Overview</div>
             <div>
                 <b><i>Attendance Report List</i></b><br>
@@ -21,52 +38,65 @@
             </div>
             <br>
             <!--for Date between <i>{{fromdate}}</i> and <i>{{todate}}</i>-->
-            <div>
-                <table id="mytable"  style="alignment-baseline: baseline;
-                       alignment-adjust: central;  
-                       text-align: center; 
-                       font-style: oblique;
-                       display: inline-block; 
-                       resize: both; 
-                       border: 2px solid #006;
-                       border-collapse: collapse; 
-                       padding: 2%;
-                       width: 80%">
-                    <thead><tr>
-                    <template if ="{{!employeeid}}" >
-                        <th>Employee First Name</th>
-                        <th>Employee Last Name</th>
-                    </template>
-                    <th>Attendance Date</th>
-                    <th>CheckIn Time</th>
-                    <th>CheckOut Time</th>
-                    </tr></thead>
-                    <tbody>
-                    <!--<template is="auto-binding">-->
-                        <!--<core-scroll-threshold id="threshold" scrollTarget="{{$.scroller}}" lowerThreshold="50" on-lower-trigger="{{loadMore}}" fit></core-scroll-threshold>-->
-                        <!--<div id="scroller" fit>-->
-                            <template id="attendance" repeat="{{attendance in employeeattendance}}">
-                                <tr>
-                                <template if ="{{!employeeid}}">
-                                    <td>{{attendance.FirstName}}</td>
-                                    <td>{{attendance.LastName}}</td>
+            <!--            <div>
+                            <table id="mytable"  style="alignment-baseline: baseline;
+                                   alignment-adjust: central;  
+                                   text-align: center; 
+                                   font-style: oblique;
+                                   display: inline-block; 
+                                   resize: both; 
+                                   border: 2px solid #006;
+                                   border-collapse: collapse; 
+                                   padding: 2%;
+                                   width: 80%">
+                                <thead><tr>
+                                <template if ="{{!employeeid}}" >
+                                    <th>Employee First Name</th>
+                                    <th>Employee Last Name</th>
                                 </template>
-                                <td>{{attendance.Attendence | date (yyyy/mm/dd)}}</td>
-                                <td>{{attendance.timein | date('HH-mm-ss')}}</td>
-                                <td> {{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</td> 
-                                </tr>
-                            </template>
-                            <!--<div hidden?="{{!$.threshold.lowerTriggered}}">Please wait...</div>-->
-                        <!--</div>--> 
-<!--                    </template>-->
+                                <th>Attendance Date</th>
+                                <th>CheckIn Time</th>
+                                <th>CheckOut Time</th>
+                                </tr></thead>
+                                <tbody>
+                                <template is="auto-binding">
+                                    <core-scroll-threshold id="threshold" scrollTarget="{{$.scroller}}" lowerThreshold="50" on-lower-trigger="{{loadMore}}" fit></core-scroll-threshold>
+                                    <div id="scroller" fit>
+                                        <template id="attendance" repeat="{{attendance in employeeattendance}}">
+                                            <tr>
+                                            <template if ="{{!employeeid}}">
+                                                <td>{{attendance.FirstName}}</td>
+                                                <td>{{attendance.LastName}}</td>
+                                            </template>
+                                            <td>{{attendance.Attendence | date (yyyy/mm/dd)}}</td>
+                                            <td>{{attendance.timein | date('HH-mm-ss')}}</td>
+                                            <td> {{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</td> 
+                                            </tr>
+                                        </template>
+                                        <div hidden?="{{!$.threshold.lowerTriggered}}">Please wait...</div>
+                                    </div> 
+                                </template>
+            
+                                <template id="attendance" repeat="{{attendance in employeeattendance}}">
+            
+                                </tbody>
+                            </table>
+                        </div>-->
 
-                    <!--<template id="attendance" repeat="{{attendance in employeeattendance}}">-->
-
-                    </tbody>
-                </table>
+            <div>
+                <core-scroll-threshold id="threshold" scrollTarget="{{$.scroller}}" lowerThreshold="100" on-lower-trigger="{{loadMore}}" fit></core-scroll-threshold>
+                <div id="scroller" fit>
+                    <template repeat="{{attendance in employeeattendance}}">
+                        <div class="thing">
+                            <template if ="{{!employeeid}}"><u>Employee Name:</u><i><b>{{attendance.FirstName}} {{attendance.LastName}}</b></i></template> 
+                            <u>Attendance Date:</u><i><b>{{attendance.Attendence | date(yyyy/mm/dd)}}</b></i><br> 
+                            <u>CheckIn Time:</u><i><b>{{attendance.timein | date('HH-mm-ss')}}</b></i> 
+                            <u>CheckOut Time:</u><i><b>{{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</b></i></div>
+                    </template>
+                    <div hidden?="{{!$.threshold.lowerTriggered}}">Please wait...</div>
+                </div>
+                <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
             </div>
-            <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
-
         </sidebar-layout>
         <app-ajax id="ajax"
                   url="/api/employeeattendence/report"
@@ -74,80 +104,99 @@
                   on-core-response="{{reportResponse}}"
                   content-type="application/json"
                   handleAs="json">
-        </app-ajax>
-        <app-ajax id="ajax1"
-                  url="/api/employee/:EmployeeID"
-                  method="GET"
-                  on-core-response="{{employeeResponse}}"
-                  content-type="application/json"
-                  handleAs="json">
-        </app-ajax>
+          </app-ajax>
+          <app-ajax id="ajax1"
+                    url="/api/employee/:EmployeeID"
+                    method="GET"
+                    on-core-response="{{employeeResponse}}"
+                    content-type="application/json"
+                    handleAs="json">
+          </app-ajax>
 
-    </template>
-    <script>
-        Polymer('attendance-view-page', {
-            domReady : function(){
+        </template>
+        <script>
+            Polymer('attendance-view-page', {
+                domReady : function(){
+                    document.title = "Attendance Report";
+                    this.employeeattendance = this.employeeattendance || [];
+                    var fromdate = this.fromdate;
+                    var todate = this.todate;
+                    var EmployeeID = this.employeeid;
+                    var employeeid = this.employeeid;
+                    if(employeeid != '') {
+                        this.$.ajax1.data = {employeeid:employeeid};
+                        this.$.ajax1.go();
+                        this.$.empname.type=true;
                 
-                this.employeeattendance = this.employeeattendance || [];
-                var fromdate = this.fromdate;
-                var todate = this.todate;
-                var EmployeeID = this.employeeid;
-                var employeeid = this.employeeid;
-                if(employeeid != '') {
-                    this.$.ajax1.data = {employeeid:employeeid};
-                    this.$.ajax1.go();
-                    this.$.empname.type=true;
-                
-                }
-                this.access_token = this.$.globals.baasicUser.accessToken;
-                this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
-                this.$.ajax.go();
+                    }
+                    this.access_token = this.$.globals.baasicUser.accessToken;
+                    this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
+                    this.$.ajax.go();
             
-            },
-            reportResponse : function(){
-                if(this.$.ajax.response.status==true)
-                {
-                    console.log(this.$.ajax.response.data);
-                    //                    for(var i=0;i<this.$.ajax.response.data.length;i++)
-                    //                    {
-                    //                        if(this.$.ajax.response.data[i].timein == this.$.ajax.response.data[i].timeout)
-                    //                        {
-                    //                            console.log(moment().duration().get(this.$.ajax.response.data[i].timein));
-                    //                            this.$.ajax.response.data[i].timeout  = null;
-                    //                        }
-                    //                        else
-                    //                        {
-                    //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
-                    //                        }
-                    //                    }
-                    
-                    this.employeeattendance = this.$.ajax.response.data;
-                }
-                else
-                {
-                    this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
-                    this.$.toast1.opened="true";
-                }
+                },
+                reportResponse : function(){
+                    if(this.$.ajax.response.status==true)
+                    {
+                        console.log(this.$.ajax.response.data);
+                        //                    for(var i=0;i<this.$.ajax.response.data.length;i++)
+                        //                    {
+                        //                        if(this.$.ajax.response.data[i].timein == this.$.ajax.response.data[i].timeout)
+                        //                        {
+                        //                            console.log(moment().duration().get(this.$.ajax.response.data[i].timein));
+                        //                            this.$.ajax.response.data[i].timeout  = null;
+                        //                        }
+                        //                        else
+                        //                        {
+                        //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
+                        //                        }
+                        //                    }
+                        //                    
+                        this.employeeattendance = this.$.ajax.response.data;
+                        //                        var n = this.$.ajax.response.data.length/2;
+                        //                        console.log(n);
+                        //                        var n;
+                        //                        for(n=0;n<20;n++)
+                        //                        {
+                        //                            this.employeeattendance[n] = this.$.ajax.response.data[n];
+                        //
+                        //                        }
+                        //                        
+                        //                        this.employeeattendance.loadMore = function() {
+                        //                            setTimeout(function() {
+                        //                                for (var i=n; i<n+10; i++) {
+                        //                                    this.employeeattendance[i] = this.$.ajax.response.data[i];
+                        //                                }
+                        //                        
+                        //                                n = i;
+                        //                                this.employeeattendance.$.threshold.clearLower();
+                        //                            }, 1000);
+                        //                        };
+                    }
+                    else
+                    {
+                        this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
+                        this.$.toast1.opened="true";
+                    }
                 
-            },
-            employeeResponse: function()
-            {
-                if(this.$.ajax1.response.status==true)
+                },
+                employeeResponse: function()
                 {
-                    this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
-                }
-                else
+                    if(this.$.ajax1.response.status==true)
+                    {
+                        this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
+                    }
+                    else
+                    {
+                        this.$.toast1.text="There is an Error on Employees Request/Response";
+                        this.$.toast1.opened="true";
+                    }
+                },
+                dataResponse : function(el)
                 {
-                    this.$.toast1.text="There is an Error on Employees Request/Response";
-                    this.$.toast1.opened="true";
+                    el.show();
                 }
-            },
-            dataResponse : function(el)
-            {
-                el.show();
-            }
             
-        });
-    </script>
+            });
+        </script>
 
-</polymer-element>
+    </polymer-element>

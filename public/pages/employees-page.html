@@ -179,6 +179,7 @@
     <script>
         Polymer('employees-page', {
             ready : function(){
+                document.title = "Esajeesolutions Employees";
                 //                console.log("Employees Test");
                 this.employees = this.employees || [];
                 this.$.ajax.go();
