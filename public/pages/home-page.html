@@ -1,3 +1,6 @@
+
+<script src="/bower_components/chartjs/Chart.js"></script>
+<script src="/bower_components/moment/moment.js"></script>
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
@@ -13,14 +16,22 @@
 <link rel="import" href="/pages/app-ajax.html">
 
 <!--<link rel="stylesheet" href="/pages/signin.css">-->
-<polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token">    
+<polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token data">    
     <template>
         <baasic-globals id="globals"></baasic-globals>
         <!--<baasic-login id="log"></baasic-login>-->
         <sidebar-layout selected="home">
-
+            <div class="title">Home</div>
             <form id="form" action="/Home" method="post" enctype="multipart/form-data">
-
+                <!--                <style>
+                                    div {
+                
+                                        margin-left: 20px;
+                                        text-align: center; 
+                                        padding-left: 50px;
+                                        
+                                    }
+                                </style>-->
                 <!--<core-scaffold>-->
                 <!--
                                 <core-header-panel navigation flex mode="seamed">
@@ -35,23 +46,22 @@
                                     </core-menu>
                                 </core-header-panel>-->
 
-                <div>Welcome To Home Page</div>
-                <!--<h6><paper-button on-click="{{signOut}}" id="sign-out" name="signout">Sign Out</paper-button></h6></div>-->
-
-                <div id="home-div">
-                    <br><br>
-                    <img src="/pages/test1.jpg" width="300" height="150" alt="Today's Lecture">
-                    <img src="/pages/test2.gif" width="300" height="150" alt="Today's Lecture">
-                    <p>
-                        Today is 18th of December and we have 6 Lectures in total
-                        <br> But the most important Lectures as mention above in 
-                        <br> todays images will be conducted in afternoon by professor
-                        <br> P.K Smith.<br>
-                    </p>
-                    <br><br>
-                </div>
-                <!--                <div class="administrator" id="administrator-div">
-                                    <h3>Please Insert,Update or Delete Users records from here!</h3>                
+                <!--                <h6><paper-button on-click="{{signOut}}" id="sign-out" name="signout">Sign Out</paper-button></h6></div>
+                    
+                                <div id="home-div">
+                                    <br><br>
+                                    <img src="/pages/test1.jpg" width="300" height="150" alt="Today's Lecture">
+                                    <img src="/pages/test2.gif" width="300" height="150" alt="Today's Lecture">
+                                    <p>
+                                        Today is 18th of December and we have 6 Lectures in total
+                                        <br> But the most important Lectures as mention above in 
+                                        <br> todays images will be conducted in afternoon by professor
+                                        <br> P.K Smith.<br>
+                                    </p>
+                                    <br><br>
+                                </div>
+                                                <div class="administrator" id="administrator-div">
+                                                    <h3>Please Insert,Update or Delete Users records from here!</h3>                
                                     User Name:<br>
                                     <input type="text" id="newusername" name="new-username">
                                     <br>
@@ -70,42 +80,51 @@
                                     <paper-button on-click="{{sty}}" class="my-action-button" id="my-button" name="delete">Delete</paper-button>
                                     <br>
                                 </div>-->
-                <div>
-                    <p>An `app-chart` looks like this:</p>
-                    <app-chart type="stack" responsive>
-                        <app-chart-axis type="y"></app-chart-axis>
-                        <app-chart-axis type="time"></app-chart-axis>
-                        <app-chart-series name="test1" color="red">
-                            <!--<app-chart-data x="0" y="100"></app-chart-data>-->
-                            <app-chart-data x="Jan" y="60 Percent"></app-chart-data>
-                            <app-chart-data x="Feb" y="40 Percent"></app-chart-data>
-                            <app-chart-data x="Mar" y="30 Percent"></app-chart-data>
-                            <app-chart-data x="Apr" y="70 Percent"></app-chart-data>
-                            <app-chart-data x="May" y="80 Percent"></app-chart-data>
-                            <app-chart-data x="Jun" y="40 Percent"></app-chart-data>
-                            <app-chart-data x="Jul" y="50 Percent"></app-chart-data>
-                            <app-chart-data x="Aug" y="60 Percent"></app-chart-data>
-                            <app-chart-data x="Sep" y="70 Percent"></app-chart-data>
-                            <app-chart-data x="Oct" y="80 Percent"></app-chart-data>
-                            <app-chart-data x="Nov" y="90 Percent"></app-chart-data>
-                            <app-chart-data x="Dec" y="100 Percent"></app-chart-data>
-                        </app-chart-series>
-                        <!--                        <app-chart-series name="test2" color="blue">
-                                                    <app-chart-data x="-1893456000" y="7082086"></app-chart-data>
-                                                    <app-chart-data x="-1577923200" y="9213920"></app-chart-data>
-                                                    <app-chart-data x="-1262304000" y="12323836"></app-chart-data>
-                                                    <app-chart-data x="-946771200" y="14379119"></app-chart-data>
-                                                    <app-chart-data x="-631152000" y="20189962"></app-chart-data>
-                                                    <app-chart-data x="-315619200" y="28053104"></app-chart-data>
-                                                    <app-chart-data x="0" y="34804193"></app-chart-data>
-                                                </app-chart-series>-->
-                    </app-chart>
-                </div>
+                <!--                <div>
+                                    <p>An Attendance Graph for Months</p>
+                                    <app-chart type="scatterplot" responsive>
+                                        <app-chart-axis type="y"></app-chart-axis>
+                                        <app-chart-axis type=""></app-chart-axis>
+                                        <app-chart-series name="test1" color="red">
+                                            <app-chart-data x="0" y="100"></app-chart-data>
+                                            <app-chart-data x="01" y="60 Percent"></app-chart-data>
+                                            <app-chart-data x="02" y="40 Percent"></app-chart-data>
+                                            <app-chart-data x="03" y="30 Percent"></app-chart-data>
+                                            <app-chart-data x="04" y="70 Percent"></app-chart-data>
+                                            <app-chart-data x="06" y="80 Percent"></app-chart-data>
+                                            <app-chart-data x="07" y="40 Percent"></app-chart-data>
+                                            <app-chart-data x="08" y="50 Percent"></app-chart-data>
+                                            <app-chart-data x="09" y="60 Percent"></app-chart-data>
+                                            <app-chart-data x="10" y="70 Percent"></app-chart-data>
+                                            <app-chart-data x="11" y="80 Percent"></app-chart-data>
+                                            <app-chart-data x="12" y="90 Percent"></app-chart-data>
+                                            <app-chart-data x="Dec" y="100 Percent"></app-chart-data>
+                                        </app-chart-series>
+                                                                <app-chart-series name="test2" color="blue">
+                                                                    <app-chart-data x="-1893456000" y="7082086"></app-chart-data>
+                                                                    <app-chart-data x="-1577923200" y="9213920"></app-chart-data>
+                                                                    <app-chart-data x="-1262304000" y="12323836"></app-chart-data>
+                                                                    <app-chart-data x="-946771200" y="14379119"></app-chart-data>
+                                                                    <app-chart-data x="-631152000" y="20189962"></app-chart-data>
+                                                                    <app-chart-data x="-315619200" y="28053104"></app-chart-data>
+                                                                    <app-chart-data x="0" y="34804193"></app-chart-data>
+                                                                </app-chart-series>
+                                    </app-chart>
+                                </div>-->
                 <!--<div tool>Home</div>-->
                 <!--</core-scaffold>-->
+                <!--                <div>
+                                    <paper-toast id="toast1" text="Database is Updated Successfully!" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+                                    <p><b><u>Graph Showing No Of Attendance Marked In Each Month</u></b></p><br><br>
+                                    <canvas id="myChart" width="700" height="500"></canvas>
+                                </div>-->
+                <div>
+                    <p><b><u>Graph Showing No Of Attendance Marked In Each Month</u></b></p><br><br>
+                    <canvas id="myGraph" width="700" height="500"></canvas>
+                </div>
                 <app-ajax id="ajax"
-                          url="/home"
-                          method="POST"
+                          url="/api/employeeattendence"
+                          method="GEt"
                           on-core-response="{{homeResponse}}"
                           content-type="application/json"
                           access_token="{{access_token}}"
@@ -118,41 +137,81 @@
     <script>
         Polymer('home-page', {
                 
-            sty: function (e, detail, sender) {
-                //                console.log(this.$.newusername.value);
-
-                var newusername = this.$.newusername.value;
-                var newpassword = this.$.newpassword.value;
-                if(newusername == '' || newpassword == '')
-                {
-                    this.$.toast1.text="Username or Password Field Is Empty. Please Fill All Fields!";
-                    this.$.toast1.opened="true";
-                    //                    console.log("not submit");
-                        
-                    //this.redirect('/signin-page');
-                }
-                else
-                {
-                        
-                    var name = e.target.getAttribute('name');
-                    this.$.action.value = name;
-                    //                form.submit();
-                    this.$.ajax.data = {newusername:newusername, newpassword:newpassword,action:name};
-                    //                    console.log(this.$.ajax.body);
-                    this.$.ajax.go();
-
-                }
-            },
+            //            sty: function (e, detail, sender) {
+            //                //                console.log(this.$.newusername.value);
+            //
+            //                var newusername = this.$.newusername.value;
+            //                var newpassword = this.$.newpassword.value;
+            //                if(newusername == '' || newpassword == '')
+            //                {
+            //                    this.$.toast1.text="Username or Password Field Is Empty. Please Fill All Fields!";
+            //                    this.$.toast1.opened="true";
+            //                    //                    console.log("not submit");
+            //                        
+            //                    //this.redirect('/signin-page');
+            //                }
+            //                else
+            //                {
+            //                        
+            //                    var name = e.target.getAttribute('name');
+            //                    this.$.action.value = name;
+            //                    //                form.submit();
+            //                    this.$.ajax.data = {newusername:newusername, newpassword:newpassword,action:name};
+            //                    //                    console.log(this.$.ajax.body);
+            //                    this.$.ajax.go();
+            //
+            //                }
+            //            },
             homeResponse: function()
             {
-                //                console.log(this.$.ajax.response.data);
+                console.log(moment().month(this.$.ajax.response.data[0].Month).subtract(5,'months').format('MMMM'));
+                console.log(moment().subtract(5,'months').month(),moment().add(6,'months').month(),moment().month(7).format('MMMM'));
                 if(this.$.ajax.response.status==true)
                 {
                     //                    this.$.toast1.text="DataBase Updated!!!"
-                    this.$.toast1.opened="true";
-                    var app = document.querySelector("index-app");
+                    //                                        this.$.toast1.opened="true";
+                    var length = this.$.ajax.response.data.length;
+                    console.log(length);
+                    var data = {
+                        labels: [
+                            moment().subtract(5,'months').format('MMMM YYYY'),
+                            moment().subtract(4,'months').format('MMMM YYYY'),
+                            moment().subtract(3,'months').format('MMMM YYYY'),
+                            moment().subtract(2,'months').format('MMMM YYYY'),
+                            moment().subtract(1,'months').format('MMMM YYYY'),
+                            moment().format('MMMM YYYY'), 
+                            moment().add(1,'months').format('MMMM YYYY'), 
+                            moment().add(2,'months').format('MMMM YYYY'), 
+                            moment().add(3,'months').format('MMMM YYYY'), 
+                            moment().add(4,'months').format('MMMM YYYY'), 
+                            moment().add(5,'months').format('MMMM YYYY'), 
+                            moment().add(6,'months').format('MMMM YYYY')], 
+                        datasets: [
+                            {
+                                label: "My Second dataset",
+                                fillColor: "rgba(151,187,205,0.2)",
+                                strokeColor: "rgba(151,187,205,1)",
+                                pointColor: "rgba(151,187,205,1)",
+                                pointStrokeColor: "#fff",
+                                pointHighlightFill: "#fff",
+                                pointHighlightStroke: "rgba(151,187,205,1)",
+                                data: [
+                                    0, 0, 
+                                    this.$.ajax.response.data[length-4].totalattendance, 
+                                    this.$.ajax.response.data[length-3].totalattendance, 
+                                    this.$.ajax.response.data[length-2].totalattendance, 
+                                    this.$.ajax.response.data[length-1].totalattendance, 
+                                    0, 0, 0, 0, 0, 0]
+                            }
+                        ]
+                    };
+
+                    this.data = this.$.ajax.response.data;
+                    var ctx = this.$.myGraph.getContext("2d");
+                    var myLineChart = new Chart(ctx).Line(data);
+                    //                    var app = document.querySelector("index-app");
                     //                        console.log(this.router);
-                    app.session=true;
+                    //                    app.session=true;
                     
                     //                    this.router.go('/home', {replace:true});
                     //res.send();
@@ -189,24 +248,43 @@
             //                //                this.$.toast1.text="Sign Out Successfully";
             //                //                this.$.toast1.opened="true";
             //            },
-            adminCall : function()
-            {
-                var app = document.querySelector('index-app');
-
-                if(app.session)
-                {
-                    this.router.go('/admin');
-                    //                    app.session=true;
-                }
-                else
-                {
-                    this.router.go('/signin');
-                }
-            },
+            //            adminCall : function()
+            //            {
+            //                var app = document.querySelector('index-app');
+            //
+            //                if(app.session)
+            //                {
+            //                    this.router.go('/admin');
+            //                    //                    app.session=true;
+            //                }
+            //                else
+            //                {
+            //                    this.router.go('/signin');
+            //                }
+            //            },
             ready: function(){
                 //                console.log(this.$.globals.baasicUser)
                 document.title = "Home";
+                //                this.data = this.data || [];
+                //                var data = {
+                //                    labels: ["February 2014", "March 2014", "April 2014", "May 2014", "June 2014", "July 2014", "August 2014", "September 2014", "October 2014", "November 2014", "December 2014", "January 2015"],
+                //                    datasets: [
+                //                        {
+                //                            label: "My Second dataset",
+                //                            fillColor: "rgba(151,187,205,0.2)",
+                //                            strokeColor: "rgba(151,187,205,1)",
+                //                            pointColor: "rgba(151,187,205,1)",
+                //                            pointStrokeColor: "#fff",
+                //                            pointHighlightFill: "#fff",
+                //                            pointHighlightStroke: "rgba(151,187,205,1)",
+                //                            data: [0, 0, 0, 0, 0, 0, 0, 0, 201, 215, 243, 23]
+                //                        }
+                //                    ]
+                //                };
+                //                var ctx = this.$.myChart.getContext("2d");
+                //                var myLineChart = new Chart(ctx).Line(data);
                 this.access_token = this.$.globals.baasicUser.accessToken;
+                this.$.ajax.go();
             }
             
            

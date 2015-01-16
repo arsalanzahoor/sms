@@ -22,24 +22,24 @@ var authorization_uri = oauth2.authCode.authorizeURL({
 
 // Initial page redirecting to Github
 app.get('/auth', function (req, res) {
-res.redirect(authorization_uri);
+    res.redirect(authorization_uri);
 });
 
 // Callback service parsing the authorization token and asking for the access token
 app.get('/callback', function (req, res) {
-var code = req.query.code;
-console.log('/callback');
-oauth2.authCode.getToken({
-    code: code,
-    redirect_uri: 'http://localhost:3000'
-}, saveToken);
+    var code = req.query.code;
+    console.log('/callback');
+    oauth2.authCode.getToken({
+        code: code,
+        redirect_uri: 'http://localhost:3000'
+    }, saveToken);
 
-function saveToken(error, result) {
-    if (error) {
-        console.log('Access Token Error', error.message);
+    function saveToken(error, result) {
+        if (error) {
+            console.log('Access Token Error', error.message);
+        }
+        token = oauth2.accessToken.create(result);
     }
-    token = oauth2.accessToken.create(result);
-}
 });
 
 //app.get('/', function (req, res) {
@@ -315,7 +315,6 @@ else{res.json({data:'Please Enter Missing Field First',status:false});}
 // get all the employee from record table (accessed at GET http://localhost:8080/api/employee)
 .get(function(req, res) {
 
-console.log("test");
 connection.query('SELECT COUNT(*) AS total FROM employee',function(err,row){
     total_records=row[0].total;});
 
@@ -422,26 +421,37 @@ else{res.json({message:'Please Enter EmployeeID First',status:'false'});}
 })
 // get all the employeeattendence from record table (accessed at GET http://localhost:8080/api/eemployeeattendence)
 .get(function(req, res) {
-        
-connection.query('SELECT COUNT(*) AS total FROM employeeattendence',function(err,row){
-    total_attenedence=row[0].total;});
-
-var record_start=req.query.page_start;
-var record_limit=req.query.page_limit;
-
-if(record_start===''&&record_limit===''){
-    connection.query('SELECT * FROM employeeattendence LIMIT 10', function(err, rows){
-        res.json({data : rows,total_records:total_attenedence,status:true});
-    });}
-else{
-
-    connection.query("SELECT * FROM employeeattendence LIMIT ? OFFSET ?",[parseInt(req.query.page_limit),parseInt(req.query.page_start)], function(err, rows){
-        res.json({data : rows,total_records:total_attenedence,status:true});
+    
+    connection.query('select Year(Attendence) as Year,MonthName(Attendence) as Month,Count(*) as totalattendance from employeeattendence group by Year(Attendence),Month(attendence)',function(err,rows){
+         console.log(rows);   
+        if(rows) {
+            res.json({data : rows,status : true});
+        }
+        else
+        {
+            res.json({data : null,status : false})
+        }
     });
 
-
-}
 });
+
+
+
+//var record_start=req.query.page_start;
+//var record_limit=req.query.page_limit;
+//
+//if(record_start===''&&record_limit===''){
+//    connection.query('SELECT * FROM employeeattendence LIMIT 10', function(err, rows){
+//        res.json({data : rows,total_records:total_attenedence,status:true});
+//    });}
+//else{
+//console.log("else");
+//    connection.query("SELECT * FROM employeeattendence LIMIT ? OFFSET ?",[parseInt(req.query.page_limit),parseInt(req.query.page_start)], function(err, rows){
+//        res.json({data : rows,total_records:total_attenedence,status:true});
+//    });
+//
+//
+//}
 
 
 // =============================================================================
@@ -463,63 +473,63 @@ var fromdate = req.query.fromdate;
 var todate = req.query.todate;
 if(employeeid != '' && fromdate != '' && todate != '')
 {
-        connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[employeeid,fromdate,todate], function(err, rows){
-//        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) as records group by Date(Attendence)",[employeeid,fromdate,todate], function(err, rows){
+connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[employeeid,fromdate,todate], function(err, rows){
+    //        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) as records group by Date(Attendence)",[employeeid,fromdate,todate], function(err, rows){
         
-        if(err){
+    if(err){
   
-            res.json({ message: err });
+        res.json({ message: err });
             
-        }
+    }
 
         
-        else if(rows.length>0){res.json( {data : rows,status:true});}
-        else{res.json({data : 'Person Does not exsist ! ',status:false});}
-    });
+    else if(rows.length>0){res.json( {data : rows,status:true});}
+    else{res.json({data : 'Person Does not exsist ! ',status:false});}
+});
 
-    //console.log(a.sql);
+//console.log(a.sql);
 }
 else if(employeeid == '' && fromdate != '' && todate != '')
-    {
-        connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where Attendence between ? and ?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[fromdate,todate], function(err, rows){
-//        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where Attendence between ? and ?) as records group by Date(Attendence)",[fromdate,todate], function(err, rows){
-//        console.log(err,rows);
-        if(err){
+{
+connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where Attendence between ? and ?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[fromdate,todate], function(err, rows){
+    //        connection.query("SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where Attendence between ? and ?) as records group by Date(Attendence)",[fromdate,todate], function(err, rows){
+    //        console.log(err,rows);
+    if(err){
   
-            res.json({ message: err });
+        res.json({ message: err });
       
-        }
-        
-        else if(rows.length>0){res.json( {data : rows,status:true});}
-        else{res.json({data : 'Person Does not exsist ! ',status:false});}
-    });
     }
-    else if(fromdate == '' && todate == '' && employeeid !='')
-        {
-        connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where EmployeeID=?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[employeeid], function(err, rows){
-        if(err){
+        
+    else if(rows.length>0){res.json( {data : rows,status:true});}
+    else{res.json({data : 'Person Does not exsist ! ',status:false});}
+});
+}
+else if(fromdate == '' && todate == '' && employeeid !='')
+{
+connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence where EmployeeID=?) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName",[employeeid], function(err, rows){
+    if(err){
   
-            res.json({ message: err });
+        res.json({ message: err });
       
-        }
+    }
 
-        else if(rows.length>0){res.json( {data : rows,status:true});}
-        else{res.json({data : 'Person Does not exsist ! ',status:false});}
-    });
-        }
-        else
-            {
-                connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName", function(err, rows){
-        if(err){
+    else if(rows.length>0){res.json( {data : rows,status:true});}
+    else{res.json({data : 'Person Does not exsist ! ',status:false});}
+});
+}
+else
+{
+connection.query("SELECT e.FirstName,e.LastName,a.Attendence,min(a.Attendence) as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeeattendence) a where e.EmployeeID=a.EmployeeID group by Date(Attendence),FirstName,LastName", function(err, rows){
+    if(err){
   
-            res.json({ message: err });
+        res.json({ message: err });
       
-        }
+    }
 
-        else if(rows.length>0){res.json( {data : rows,status:true});}
-        else{res.json({data : 'Person Does not exsist ! ',status:false});}
-    });
-            }
+    else if(rows.length>0){res.json( {data : rows,status:true});}
+    else{res.json({data : 'Person Does not exsist ! ',status:false});}
+});
+}
 
 });
 
