@@ -34,6 +34,7 @@ app.all('/oauth/access_token', app.oauth.grant());
 app.get('/oauth/authorise', app.oauth.authorise(),
     function (req, res) 
     {
+//        console.log("request");
         res.send({
             status: true
         }); 
@@ -41,6 +42,7 @@ app.get('/oauth/authorise', app.oauth.authorise(),
 
 // Handle authorise
 app.post('/oauth/authorise', function (req, res, next) {
+//    console.log(req);
     if (!req.session.user) {
         return res.redirect('/login?client_id=' + req.query.client_id +
             '&redirect_uri=' + req.query.redirect_uri);
@@ -48,6 +50,7 @@ app.post('/oauth/authorise', function (req, res, next) {
 
     next();
 }, app.oauth.authCodeGrant(function (req, next) {
+    console.log(req);
     // The first param should to indicate an error
     // The second param should a bool to indicate if the user did authorise the app
     // The third param should for the user/uid (only used for passing to saveAuthCode)
@@ -56,6 +59,7 @@ app.post('/oauth/authorise', function (req, res, next) {
 
 // Show login
 app.get('/login', function (req, res, next) {
+console.log(req,res,next);
     res.render('login', {
         redirect: req.query.redirect,
         client_id: req.query.client_id,
@@ -65,6 +69,7 @@ app.get('/login', function (req, res, next) {
 
 // Handle login
 app.post('/login', function (req, res, next) {
+console.log(req,res,next);
     // Insert your own login mechanism
     if (req.body.email !== 'thom@nightworld.com') {
         res.render('login', {

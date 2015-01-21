@@ -14,11 +14,11 @@ The `baasic-globals` element provides support for storing global settings and lo
 @homepage www.baasic.com
 -->
 
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="globals-import.html">
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/baasic-globals/globals-import.html">
+<!--<link rel="import" href="/app-ajax.html"-->
 
-
-<polymer-element name="baasic-globals" hidden>
+<polymer-element name="app-globals" hidden>
     <template>
         <baasic-ajax id="axRoles"
                      url="{{config.baseUrl}}/{{config.version}}/{{config.application}}/role/?rpp=100&sort=Name|asc"
@@ -33,6 +33,13 @@ The `baasic-globals` element provides support for storing global settings and lo
                      contenttype="application/json"
                      method="GET"
                      ></baasic-ajax>
+        <app-ajax id="logAjax"
+                  url="/signout"
+                  handleas="json"
+                  contenttype="application/json"
+                  method="GET"
+                  on-core-response="{{resetUser}}"
+                  ></app-ajax>
 
     </template>
     <script>
@@ -53,7 +60,7 @@ The `baasic-globals` element provides support for storing global settings and lo
                 //cache expiration time for lookup storage in seconds
                 cacheExpiration: 7200
             };
-            Polymer('baasic-globals', {
+            Polymer('app-globals', {
                 ready: function () {
                     //assignment of the global singleton variable to the object instance variable per http://stackoverflow.com/questions/24867741/polymer-global-variables that fixes the behavior from http://www.polymer-project.org/docs/polymer/polymer.html#global
                     this.config = config;
@@ -98,21 +105,29 @@ The `baasic-globals` element provides support for storing global settings and lo
                         this.resetUser();
                     }
                 },
-                resetUser: function () {
-                    this.baasicUser = {};
-                    Baasic.Cache.removeItem('baasicUser');
-//                    this.toggleView();
-                    var app = document.querySelector("index-app");
-                    //                        console.log(this.router);
-                    app.session=false;
-                    // this.$.toast1.opened="true";
-                    app.$.router.go('/signin');
+                resetUser: function (req,res) {
+//                    if(this.$.logAjax.response.status == true) {
+                        
+                    
+                        this.baasicUser = {};
+                        Baasic.Cache.removeItem('baasicUser');
+                        //                    this.toggleView();
+                        var app = document.querySelector("index-app");
+                        //                        console.log(this.router);
+                        app.session=false;
+                        // this.$.toast1.opened="true";
+                        app.$.router.go('/signin');
+//                    }
+//                    else {
+//                        console.log("Not Logout");
+//                    }
                 },
                 logOut: function () {
                     //signal that user has logged out, so other modules could switch views acordingly
                     //this.fire('core-signal', { name: 'user-login', data: { baasicUser: {} } });
                     this.resetUser();
-//                    this.logajax.go();
+                    //                this.$.logAjax.data = {access_token:this.baasicUser.accessToken};
+                    //                this.$.logAjax.go();
                     
                 }
             });

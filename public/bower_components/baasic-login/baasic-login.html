@@ -207,22 +207,33 @@ The `baasic-login` element provides support for authenticating users and logging
                 app.$.router.go('/signin');
             },
             ajaxPostResponse: function (e) {
-                this.baasicUser.accessToken = e.detail.response.access_token;
-                this.baasicUser.tokenType = e.detail.response.token_type;
-                this.baasicUser.userName = this.username;
-                this.baasicUser.expiresIn = e.detail.response.expires_in;
-                //before storing the user to the cache, perform an additional GET call on the same login API endpoint to retrieve additional user data - groups, id, etc.
-                var ajaxGet = this.$.ajaxGet;
-                var headers = ajaxGet.headers || {};
-                headers['Authorization'] = this.baasicUser.tokenType + ' ' + this.baasicUser.accessToken;
-                ajaxGet.headers = headers;
-                this.$.ajaxGet.go();
+//                console.log(e.detail.response.code);
+                if(e.detail.response.code != '400')
+                {
+                    this.baasicUser.accessToken = e.detail.response.access_token;
+                    this.baasicUser.tokenType = e.detail.response.token_type;
+                    this.baasicUser.userName = this.username;
+                    this.baasicUser.expiresIn = e.detail.response.expires_in;
+                    //before storing the user to the cache, perform an additional GET call on the same login API endpoint to retrieve additional user data - groups, id, etc.
+                    var ajaxGet = this.$.ajaxGet;
+                    var headers = ajaxGet.headers || {};
+                    headers['Authorization'] = this.baasicUser.tokenType + ' ' + this.baasicUser.accessToken;
+                    ajaxGet.headers = headers;
+                    this.$.ajaxGet.go();
+                }
+                else {
+                    this.ajaxPostError();
+                }
             },
             ajaxPostError: function (e) {
-                this.loginInProgress = false;
+//                console.log("Post Ajax Error");
                 this.$.toastError.show();
+                this.loginInProgress = false;
+
+                //                this.toggleView();
             },
             ajaxGetResponse: function (e) {
+                console.log
                 this.baasicUser.roles = e.detail.response.roles;
                 this.baasicUser.id = e.detail.response.id;
                 this.baasicUser.expiresAbsolute = new Date(new Date().getTime() + (this.baasicUser.expiresIn * 1000));
@@ -264,7 +275,7 @@ The `baasic-login` element provides support for authenticating users and logging
                     //                        console.log(this.router);
                     app.session=true;
                     // this.$.toast1.opened="true";
-                    console.log(this.redirectUrl);
+//                    console.log(this.redirectUrl);
                     if(this.redirectUrl) {
                         app.$.router.go(this.redirectUrl, {replace:true});
                     }else {
@@ -273,8 +284,12 @@ The `baasic-login` element provides support for authenticating users and logging
 
                         
                 }
-                else
+                else {
+//                    console.log("Test");
                     this.isLoggedIn = false;
+//                    var app = document.querySelector("index-app");
+//                    app.$.router.go('/signin');
+                }
             },
             discardToast: function (el) {
                 el.dismiss();

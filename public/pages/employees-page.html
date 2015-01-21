@@ -18,7 +18,7 @@
                 border-bottom: 1px solid #ddd;
                 padding: 4px;
                 cursor: default;
-                background-color: white;
+                background-color: lightblue;
                 overflow: hidden;
                 text-align: left;
             }
@@ -64,6 +64,7 @@
             }
             .mylist {
                 height: 300px;
+                
             }
             .text {
                 text-align: left;
@@ -76,7 +77,7 @@
 
         </style>
         <sidebar-layout selected="employee">
-            <div class="title">Employees</div>
+            <div class="title">Manage Employees</div>
             <div layout horizontal class="text">
                 <ul><b>Esajeesolutions Employees List</b></ul>
                  <core-item class="message" icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update/"></a>Add Employee</core-item>
@@ -186,7 +187,7 @@
             }, 
             employeeResponse: function()
             {
-                console.log(this.$.ajax.response.data);
+//                console.log(this.$.ajax.response.data);
                 if(this.$.ajax.response.status==true)
                 {
                     this.employees = this.$.ajax.response.data;

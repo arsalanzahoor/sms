@@ -15,21 +15,29 @@
 
 <polymer-element name="attendance-page" router="{{router}}" attributes="pathArg1 queryParam1">
     <template>
+        <style>
+            .table {
+                background-color: lightblue;
+                text-align: center; 
+                font-style: oblique;
+                display: inline-block; 
+                resize: both; 
+                border: 2px solid #008;
+                border-collapse: collapse; 
+                width: 45%;
+            }
+            .dropdown {
+                background-color: lightblue;
+            }
+        </style>
         <sidebar-layout selected="attendance">
-            
-            <div class="title">Employees Attendance</div>
+
+            <div class="title">View Attendance</div>
             <div>
                 <ul><b>Please Select Employee and Dates to View Attendance Report</b></ul>
             </div>
             <div>
-                <table style="
-                       text-align: center; 
-                       font-style: oblique;
-                       display: inline-block; 
-                       resize: both; 
-                       border: 2px solid #008;
-                       border-collapse: collapse; 
-                       width: 45%">
+                <table class="table">
                     <tr>
                         <th style="text-align: center; margin-left: 50%; padding-left: 110px; padding-top: 10px;">Date Range:</th>
                     </tr>
@@ -39,7 +47,7 @@
                     </tr>
                     <tr>
                         <td>
-                    <core-dropdown-menu label="Employees" closedIcon="arrow-drop-down" openedIcon="arrow-drop-up" relative="" layout="" inline="" horizontal="" center="" tabindex="0">
+                    <core-dropdown-menu class="dropdown" label="Employees" closedIcon="arrow-drop-down" openedIcon="arrow-drop-up" relative="" layout="" inline="" horizontal="" center="" tabindex="0">
                         <core-dropdown class="dropdown">
                             <core-selector valueattr="employee"  selected="{{employee}}">
                                 <template repeat="{{employee in employees}}">
@@ -65,35 +73,35 @@
                 <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
 
             </div>
-<!--            <div>
-                <paper-calendar></paper-calendar>
-            </div>-->
-<!--            <div>
-
-                <input id="trigger" value="{{selectedDate}}" 
-                       on-click="{{$.datePicker.toggle}}" 
-                       readonly class="date"/>
-                <polymer-date-picker 
-                    id="datePicker"
-                    selectedDate="{{selectedDate}}" 
-                    relatedTarget="{{$.trigger}}" 
-                    opened="false" />
-            </div>
-            <div>
-
-                <input id="triggerRange" 
-                       value="{{startDate}} to {{endDate}}" 
-                       on-click="{{$.datePicker.toggle}}" readonly/>
-                <polymer-date-picker 
-                    id="datePicker" 
-                    range 
-                    startDate="{{startDate}}" 
-                    endDate="{{endDate}}" 
-                    relatedTarget="{{$.triggerRange}}" 
-                    opened="true"
-                    halign="right" />
-                <polymer-date-picker range="true"></polymer-date-picker>
-            </div>-->
+            <!--            <div>
+                            <paper-calendar></paper-calendar>
+                        </div>-->
+            <!--            <div>
+            
+                            <input id="trigger" value="{{selectedDate}}" 
+                                   on-click="{{$.datePicker.toggle}}" 
+                                   readonly class="date"/>
+                            <polymer-date-picker 
+                                id="datePicker"
+                                selectedDate="{{selectedDate}}" 
+                                relatedTarget="{{$.trigger}}" 
+                                opened="false" />
+                        </div>
+                        <div>
+            
+                            <input id="triggerRange" 
+                                   value="{{startDate}} to {{endDate}}" 
+                                   on-click="{{$.datePicker.toggle}}" readonly/>
+                            <polymer-date-picker 
+                                id="datePicker" 
+                                range 
+                                startDate="{{startDate}}" 
+                                endDate="{{endDate}}" 
+                                relatedTarget="{{$.triggerRange}}" 
+                                opened="true"
+                                halign="right" />
+                            <polymer-date-picker range="true"></polymer-date-picker>
+                        </div>-->
             <app-ajax id="ajax"
                       url="/api/employee"
                       method="GET"
@@ -106,9 +114,9 @@
     <script>
         Polymer('attendance-page',{
             ready : function(){
-                document.title = "Attendance Overview";
-//                this.$.fromdate.value = moment().startOf('month').format("YYYY/MM/DD");
-//                this.$.todate.value = moment().format("YYYY/MM/DD");
+                document.title = "View Attendance";
+                //                this.$.fromdate.value = moment().startOf('month').format("YYYY/MM/DD");
+                //                this.$.todate.value = moment().format("YYYY/MM/DD");
                 this.employees = this.employees || [];
                 //                this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
                 //                    console.log(this.$.ajax.body);

@@ -64,7 +64,7 @@
                     this.$.router.init();
                     if(this.$.globals.baasicUser && this.$.globals.baasicUser.accessToken){
                         this.session=true;
-                        console.log(newpath);
+//                        console.log(newpath);
                         if(newpath == '')
                             this.$.router.go('/signin');
                         this.$.router.go(newpath);
@@ -77,7 +77,7 @@
                     
                     this.appPath = ''+ event.detail.path;
                     //                    this.$.storage.value = event.detail.path;
-                    console.log(this.appPath);
+//                    console.log(this.appPath);
                     // redirect to the login page if not signed in
                     if (!this.session && event.detail.path !== '/signin') {
                         event.preventDefault();
@@ -125,7 +125,7 @@
             ////            //            console.log(app.$.appPath);
             var path = document.location.href;
             var newpath = path.substring(23,path.length);
-            console.log(path.indexOf('#'),newpath);
+//            console.log(path.indexOf('#'),newpath);
             
             //            var a = '/attendance'
             app.init(newpath);

@@ -18,6 +18,11 @@
 <!--<link rel="stylesheet" href="/pages/signin.css">-->
 <polymer-element name="home-page" router="{{router}}" attributes="pathArg1 queryParam1 access_token data">    
     <template>
+        <style>
+            .graph {
+                 background-color: lightblue;
+            }
+        </style>
         <baasic-globals id="globals"></baasic-globals>
         <!--<baasic-login id="log"></baasic-login>-->
         <sidebar-layout selected="home">
@@ -120,11 +125,11 @@
                                 </div>-->
                 <div>
                     <p><b><u>Graph Showing No Of Attendance Marked In Each Month</u></b></p><br><br>
-                    <canvas id="myGraph" width="700" height="500"></canvas>
+                    <canvas class="graph" id="myGraph" width="700" height="500"></canvas>
                 </div>
                 <app-ajax id="ajax"
                           url="/api/employeeattendence"
-                          method="GEt"
+                          method="GET"
                           on-core-response="{{homeResponse}}"
                           content-type="application/json"
                           access_token="{{access_token}}"
@@ -164,51 +169,82 @@
             //            },
             homeResponse: function()
             {
-                console.log(moment().month(this.$.ajax.response.data[0].Month).subtract(5,'months').format('MMMM'));
-                console.log(moment().subtract(5,'months').month(),moment().add(6,'months').month(),moment().month(7).format('MMMM'));
+                //                console.log(moment().month(this.$.ajax.response.data[0].Month).subtract(5,'months').format('MMMM'));
+                //                console.log(moment().subtract(5,'months').month(),moment().add(6,'months').month(),moment().month(7).format('MMMM'));
                 if(this.$.ajax.response.status==true)
                 {
                     //                    this.$.toast1.text="DataBase Updated!!!"
                     //                                        this.$.toast1.opened="true";
-                    var length = this.$.ajax.response.data.length;
-                    console.log(length);
+//                    var length = this.$.ajax.response.data.length;
+                    //                    console.log(length);
+                    var n;
+
+                    
+                    //                    this.data = this.$.ajax.response.data;
+                    //                    console.log(this.data)
+                    var ctx = this.$.myGraph.getContext("2d");
+                    var range = [];
+                    var monthArray = [];
+                    var valuesArray = [];
+                    var val;
+                   
+                    var data2 = this.$.ajax.response.data;
+                    for(var i=0; i < data2.length; i++){
+                        val = data2[i].Month  + ' ' + data2[i].Year ;//moment().subtract(i,'months').format('MMMM YYYY');
+                        range[i] = val;
+                    }
+                    
+                    
+                    
+                    var i=0;
+                    for(n=11;n >= 0;n--)
+                    {
+                        
+                        var month =  moment().subtract(n,'months').format('MMMM YYYY');
+                        var index = range.indexOf(month);
+                        var v = 0;
+                        //console.log(month,  this.$.ajax.response.data[n])
+                        if( index >= 0 ){
+                            v = this.$.ajax.response.data[index].totalattendance;
+                        }
+                       
+                        monthArray[i] = month;
+                        valuesArray[i++] = v;
+                        //                         myLineChart.addData([v], month);
+                        //                        if(n>this.$.ajax.response.data.length)
+                        //                        {
+                        //                           
+                        //                        }
+                        //                        else
+                        //                        {
+                        //                            myLineChart.addData([this.$.ajax.response.data[length-n].totalattendance], moment().subtract(n-1,'months').format('MMMM YYYY'));
+                        //                        }
+                    }
+                    
                     var data = {
-                        labels: [
-                            moment().subtract(5,'months').format('MMMM YYYY'),
-                            moment().subtract(4,'months').format('MMMM YYYY'),
-                            moment().subtract(3,'months').format('MMMM YYYY'),
-                            moment().subtract(2,'months').format('MMMM YYYY'),
-                            moment().subtract(1,'months').format('MMMM YYYY'),
-                            moment().format('MMMM YYYY'), 
-                            moment().add(1,'months').format('MMMM YYYY'), 
-                            moment().add(2,'months').format('MMMM YYYY'), 
-                            moment().add(3,'months').format('MMMM YYYY'), 
-                            moment().add(4,'months').format('MMMM YYYY'), 
-                            moment().add(5,'months').format('MMMM YYYY'), 
-                            moment().add(6,'months').format('MMMM YYYY')], 
+                        labels: monthArray, 
                         datasets: [
                             {
                                 label: "My Second dataset",
-                                fillColor: "rgba(151,187,205,0.2)",
-                                strokeColor: "rgba(151,187,205,1)",
-                                pointColor: "rgba(151,187,205,1)",
-                                pointStrokeColor: "#fff",
-                                pointHighlightFill: "#fff",
-                                pointHighlightStroke: "rgba(151,187,205,1)",
-                                data: [
-                                    0, 0, 
-                                    this.$.ajax.response.data[length-4].totalattendance, 
-                                    this.$.ajax.response.data[length-3].totalattendance, 
-                                    this.$.ajax.response.data[length-2].totalattendance, 
-                                    this.$.ajax.response.data[length-1].totalattendance, 
-                                    0, 0, 0, 0, 0, 0]
+                                fillColor: "#ffff",
+                                strokeColor: "#f5f5f5",
+                                pointColor: "darkblue",
+                                pointStrokeColor: "darkblue",
+                                pointHighlightFill: "darkblue",
+                                pointHighlightStroke: "darkblue",
+                                data: valuesArray
                             }
                         ]
                     };
-
-                    this.data = this.$.ajax.response.data;
-                    var ctx = this.$.myGraph.getContext("2d");
                     var myLineChart = new Chart(ctx).Line(data);
+                   
+                    /*myLineChart.addData([0], moment().add(1,'months').format('MMMM YYYY'));
+                    myLineChart.addData([0], moment().add(2,'months').format('MMMM YYYY'));
+                    myLineChart.addData([0], moment().add(3,'months').format('MMMM YYYY'));
+                    myLineChart.addData([0], moment().add(4,'months').format('MMMM YYYY'));
+                    myLineChart.addData([0], moment().add(5,'months').format('MMMM YYYY'));
+                    myLineChart.addData([0], moment().add(6,'months').format('MMMM YYYY'));*/
+                    
                     //                    var app = document.querySelector("index-app");
                     //                        console.log(this.router);
                     //                    app.session=true;

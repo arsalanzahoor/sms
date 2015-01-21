@@ -3,6 +3,7 @@
 <!--<link rel="import" href="/bower_components/polymer-filters/polymer-filters.html">-->
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/core-label/core-label.html">
+<link rel="import" href="/bower_components/core-list/core-list.html">
 <!--<link rel="import" href="/bower_components/core-scroll-threshold/core-scroll-threshold.html">-->
 <link rel="import" href="/layouts/sidebar-layout.html">
 <link rel="import" href="/pages/app-ajax.html">
@@ -14,27 +15,73 @@
         <baasic-globals id="globals"></baasic-globals>
         <sidebar-layout selected="attendance-view">
             <style>
-                #scroller {
-                    height: 300px;
-                    border: 1px solid red;
-                    padding: 20px;
-                    margin-top: 70px;
-                    overflow: auto;
-                    background: #E0E2E4;
+                .item {
+                    box-sizing: border-box;
+                    height: 100px;
+                    border-bottom: 1px solid #ddd;
+                    padding: 4px;
+                    cursor: default;
+                    background-color: lightblue;
+                    overflow: hidden;
+                    text-align: left;
                 }
-                .thing {
-                    padding: 5px;
-                    margin: 5px;
-                    background: lightblue;
-                    border-radius: 10px;
-                    font-size: 1.3em;
+
+                .selected {
+                    background: silver;
+                }
+
+                .message {
+                    padding-left: 400px;
+                    background-repeat: no-repeat;
+                    background-position: 5px 5px;
+
+                }
+
+                .from {
+                    display: inline;
+                    font-weight: bold;
+                }
+
+                .timestamp {
+                    margin-left: 10px;
+                    font-size: 12px;
+                    opacity: 0.8;
+                }
+
+                .body {
+                    font-size: 12px;
+                }
+
+                .spaced {
+                    margin: 10px;
+                }
+
+                .selection-display {
+                    background: lightgray;
+                    padding: 0 5px;
+                    margin: 0 5px;
+                }
+
+                .narrow {
+                    width: 40px;
+                }
+                .mylist {
+                    height: 300px;
+                }
+                .text {
+                    text-align: left;
+                }
+                .image {
+                    width: 25px;
+                    height: 25px;
+                    margin-left: 90%;
                 }
             </style>
-            <div class="title">Attendance Overview</div>
+            <div class="title">Attendance Report</div>
             <div>
-                <b><i>Attendance Report List</i></b><br>
+                <b><i><u>Attendance Report List</u></i></b><br><br>
                 <!--<core-label for="{{this.employeeid}}">Employee Name:{{employeename}}</core-label>-->
-                <label type="hidden" id="empname" name="Employee Name:"><u><b>{{employeename}}</b></u></label>
+                <label type="hidden" id="empname" name="employeename"><b><u>{{employeename}}</u></b></label>
             </div>
             <br>
             <!--for Date between <i>{{fromdate}}</i> and <i>{{todate}}</i>-->
@@ -83,18 +130,45 @@
                             </table>
                         </div>-->
 
+            <core-list class="mylist" id="list" data="{{employeeattendance}}" selectionEnabled="{{selectionEnabled}}" selection="{{selection}}" height="80" flex multi?={{multi}}>
+                       <template>
+                    <!--                    <table style=" text-align: left; 
+                                               font-style: italic;
+                                               display: inline-block; 
+                                               resize: both; 
+                    /*                           border: 1px solid #008;*/
+                                               /*border-collapse: collapse;*/ 
+                                               width: 100%">
+                                            <tr>
+                                                <td style="width: 80%">-->
+                    <div  class="item {{ {selected: selected} | tokenList }}">
+                        <core-icon src="/images/4.png" style="width: 35px;height: 35px;"></core-icon>
+                        <!--<div class="message" style="background-image: url(images/{{model.image}}.png);">-->
+                        <template if="{{!employeeid}}">
+                        <span class="from">{{model.FirstName}}</span>
+                        <span class="from">{{model.LastName}}</span>
+                        </template>
+                        <!--<span class="from">{{model.CompanyName}}</span>-->
+                        <!--<span class="from">{{model.MainID}}</span>-->
+                        <!--<span class="from">{{model.RegistrationDate}}</span>-->
+                        <div class="subject">Attendance Date: {{model.Attendence | date('yyyy/MM/dd')}}</div>
+                        <!--<input type="checkbox" checked="{{model.checked}}">-->
+                        <!--<input type="number" value="{{model.value}}" class="narrow">-->
+                        <!--<select selectedIndex="{{model.type}}"><option>a</option><option>b</option><option>c</option></select>-->
+                        <span class="body">CheckIn Time:{{model.timein | date('HH-mm-ss')}}</span>
+                        <div><span class="body">CheckOut Time:{{(model.timein === model.timeout) ? '' : model.timeout | date('HH-mm-ss')}}</span></div>
+
+                    </div>
+                    </div>
+                    <!--                            </td>
+                                                <td style="width: 20%">
+                                                    <span class="message"><core-item icon="arrow-forward" title="Update-Employee" name="update" style="width: min-content;height: fit-content"><a is="pushstate-anchor" href="/#/employees/update/{{employee.EmployeeID}}"></a></core-item></span>
+                                                </td>-->
+                    <!--                        </tr>
+                                        </table>-->
+                </template>
+            </core-list>
             <div>
-                <core-scroll-threshold id="threshold" scrollTarget="{{$.scroller}}" lowerThreshold="100" on-lower-trigger="{{loadMore}}" fit></core-scroll-threshold>
-                <div id="scroller" fit>
-                    <template repeat="{{attendance in employeeattendance}}">
-                        <div class="thing">
-                            <template if ="{{!employeeid}}"><u>Employee Name:</u><i><b>{{attendance.FirstName}} {{attendance.LastName}}</b></i></template> 
-                            <u>Attendance Date:</u><i><b>{{attendance.Attendence | date(yyyy/mm/dd)}}</b></i><br> 
-                            <u>CheckIn Time:</u><i><b>{{attendance.timein | date('HH-mm-ss')}}</b></i> 
-                            <u>CheckOut Time:</u><i><b>{{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</b></i></div>
-                    </template>
-                    <div hidden?="{{!$.threshold.lowerTriggered}}">Please wait...</div>
-                </div>
                 <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
             </div>
         </sidebar-layout>
@@ -104,99 +178,99 @@
                   on-core-response="{{reportResponse}}"
                   content-type="application/json"
                   handleAs="json">
-          </app-ajax>
-          <app-ajax id="ajax1"
-                    url="/api/employee/:EmployeeID"
-                    method="GET"
-                    on-core-response="{{employeeResponse}}"
-                    content-type="application/json"
-                    handleAs="json">
-          </app-ajax>
+        </app-ajax>
+        <app-ajax id="ajax1"
+                  url="/api/employee/:EmployeeID"
+                  method="GET"
+                  on-core-response="{{employeeResponse}}"
+                  content-type="application/json"
+                  handleAs="json">
+        </app-ajax>
 
-        </template>
-        <script>
-            Polymer('attendance-view-page', {
-                domReady : function(){
-                    document.title = "Attendance Report";
-                    this.employeeattendance = this.employeeattendance || [];
-                    var fromdate = this.fromdate;
-                    var todate = this.todate;
-                    var EmployeeID = this.employeeid;
-                    var employeeid = this.employeeid;
-                    if(employeeid != '') {
-                        this.$.ajax1.data = {employeeid:employeeid};
-                        this.$.ajax1.go();
-                        this.$.empname.type=true;
+    </template>
+    <script>
+        Polymer('attendance-view-page', {
+            domReady : function(){
+                document.title = "Attendance Report";
+                this.employeeattendance = this.employeeattendance || [];
+                var fromdate = this.fromdate;
+                var todate = this.todate;
+                var EmployeeID = this.employeeid;
+                var employeeid = this.employeeid;
+                if(employeeid != '') {
+                    this.$.ajax1.data = {employeeid:employeeid};
+                    this.$.ajax1.go();
+                    this.$.empname.type=true;
                 
-                    }
-                    this.access_token = this.$.globals.baasicUser.accessToken;
-                    this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
-                    this.$.ajax.go();
-            
-                },
-                reportResponse : function(){
-                    if(this.$.ajax.response.status==true)
-                    {
-                        console.log(this.$.ajax.response.data);
-                        //                    for(var i=0;i<this.$.ajax.response.data.length;i++)
-                        //                    {
-                        //                        if(this.$.ajax.response.data[i].timein == this.$.ajax.response.data[i].timeout)
-                        //                        {
-                        //                            console.log(moment().duration().get(this.$.ajax.response.data[i].timein));
-                        //                            this.$.ajax.response.data[i].timeout  = null;
-                        //                        }
-                        //                        else
-                        //                        {
-                        //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
-                        //                        }
-                        //                    }
-                        //                    
-                        this.employeeattendance = this.$.ajax.response.data;
-                        //                        var n = this.$.ajax.response.data.length/2;
-                        //                        console.log(n);
-                        //                        var n;
-                        //                        for(n=0;n<20;n++)
-                        //                        {
-                        //                            this.employeeattendance[n] = this.$.ajax.response.data[n];
-                        //
-                        //                        }
-                        //                        
-                        //                        this.employeeattendance.loadMore = function() {
-                        //                            setTimeout(function() {
-                        //                                for (var i=n; i<n+10; i++) {
-                        //                                    this.employeeattendance[i] = this.$.ajax.response.data[i];
-                        //                                }
-                        //                        
-                        //                                n = i;
-                        //                                this.employeeattendance.$.threshold.clearLower();
-                        //                            }, 1000);
-                        //                        };
-                    }
-                    else
-                    {
-                        this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
-                        this.$.toast1.opened="true";
-                    }
-                
-                },
-                employeeResponse: function()
-                {
-                    if(this.$.ajax1.response.status==true)
-                    {
-                        this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
-                    }
-                    else
-                    {
-                        this.$.toast1.text="There is an Error on Employees Request/Response";
-                        this.$.toast1.opened="true";
-                    }
-                },
-                dataResponse : function(el)
-                {
-                    el.show();
                 }
+                this.access_token = this.$.globals.baasicUser.accessToken;
+                this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
+                this.$.ajax.go();
             
-            });
-        </script>
+            },
+            reportResponse : function(){
+                if(this.$.ajax.response.status==true)
+                {
+                    console.log(this.$.ajax.response.data);
+                    //                    for(var i=0;i<this.$.ajax.response.data.length;i++)
+                    //                    {
+                    //                        if(this.$.ajax.response.data[i].timein == this.$.ajax.response.data[i].timeout)
+                    //                        {
+                    //                            console.log(moment().duration().get(this.$.ajax.response.data[i].timein));
+                    //                            this.$.ajax.response.data[i].timeout  = null;
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
+                    //                        }
+                    //                    }
+                    //                    
+                    this.employeeattendance = this.$.ajax.response.data;
+                    //                        var n = this.$.ajax.response.data.length/2;
+                    //                        console.log(n);
+                    //                        var n;
+                    //                        for(n=0;n<20;n++)
+                    //                        {
+                    //                            this.employeeattendance[n] = this.$.ajax.response.data[n];
+                    //
+                    //                        }
+                    //                        
+                    //                        this.employeeattendance.loadMore = function() {
+                    //                            setTimeout(function() {
+                    //                                for (var i=n; i<n+10; i++) {
+                    //                                    this.employeeattendance[i] = this.$.ajax.response.data[i];
+                    //                                }
+                    //                        
+                    //                                n = i;
+                    //                                this.employeeattendance.$.threshold.clearLower();
+                    //                            }, 1000);
+                    //                        };
+                }
+                else
+                {
+                    this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
+                    this.$.toast1.opened="true";
+                }
+                
+            },
+            employeeResponse: function()
+            {
+                if(this.$.ajax1.response.status==true)
+                {
+                    this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            },
+            dataResponse : function(el)
+            {
+                el.show();
+            }
+            
+        });
+    </script>
 
-    </polymer-element>
+</polymer-element>
