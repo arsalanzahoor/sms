@@ -24,11 +24,7 @@ var authorization_uri = oauth2.authCode.authorizeURL({
 app.get('/auth', function (req, res) {
     res.redirect(authorization_uri);
 });
-var token = {
-    'access_token': '<access-token>',
-    'refresh_token': '<refresh-token>',
-    'expires_in': '3600'
-};
+var token;
 // Callback service parsing the authorization token and asking for the access token
 app.get('/callback', function (req, res) {
     var code = req.query.code;
@@ -56,7 +52,9 @@ console.log('Express server started on port 3001');
 app.get('/roles',function (req, res, next){
     oauth2.api('GET','/oauth/authorise',{
         access_token: token.token.access_token
+        
     },function (err, data) {
+        console.log(token.token.access_token);
         console.log("Error on your next call",err, data);
         if(err)
             res.send(err);
@@ -82,7 +80,7 @@ app.post('/signin',  function(req, res){
         username: username,
         password: password 
     }, saveToken);
-    console.log(token);
+//    console.log(token.token);
     // Save the access token
     function saveToken(error, result) {
         if (error) {

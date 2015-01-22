@@ -33,6 +33,13 @@ The `baasic-globals` element provides support for storing global settings and lo
                      contenttype="application/json"
                      method="GET"
                      ></baasic-ajax>
+        <baasic-ajax id="axLogout"
+                     url="/signout"
+                     method="GET"
+                     on-baasic-response="logoutResponse"
+                     handleas="json"
+                     contenttype="application/json"
+                     ></baasic-ajax>
 
     </template>
     <script>
@@ -92,6 +99,16 @@ The `baasic-globals` element provides support for storing global settings and lo
                         }
                     });
                 },
+                logoutResponse: function() {
+                    if(this.$.axLogout.response.status === true)
+                    {
+                        this.resetUser();
+                    }
+                    else
+                    {
+                        console.log("Not Logout");
+                    }
+                },
                 loginChanged: function (data) {
                     if (data.detail && data.detail.baasicUser && !data.detail.baasicUser.accessToken) {
                         
@@ -101,7 +118,7 @@ The `baasic-globals` element provides support for storing global settings and lo
                 resetUser: function () {
                     this.baasicUser = {};
                     Baasic.Cache.removeItem('baasicUser');
-//                    this.toggleView();
+                    //                    this.toggleView();
                     var app = document.querySelector("index-app");
                     //                        console.log(this.router);
                     app.session=false;
@@ -112,7 +129,7 @@ The `baasic-globals` element provides support for storing global settings and lo
                     //signal that user has logged out, so other modules could switch views acordingly
                     //this.fire('core-signal', { name: 'user-login', data: { baasicUser: {} } });
                     this.resetUser();
-//                    this.logajax.go();
+                    //                this.$.axLogout.go();
                     
                 }
             });
