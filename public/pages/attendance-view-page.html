@@ -145,18 +145,18 @@
                         <core-icon src="/images/4.png" style="width: 35px;height: 35px;"></core-icon>
                         <!--<div class="message" style="background-image: url(images/{{model.image}}.png);">-->
                         <template if="{{!employeeid}}">
-                        <span class="from">{{model.FirstName}}</span>
-                        <span class="from">{{model.LastName}}</span>
+                        <span class="from">{{model.value.employeename}}</span>
+                        <!--<span class="from">{{model.LastName}}</span>-->
                         </template>
                         <!--<span class="from">{{model.CompanyName}}</span>-->
                         <!--<span class="from">{{model.MainID}}</span>-->
                         <!--<span class="from">{{model.RegistrationDate}}</span>-->
-                        <div class="subject">Attendance Date: {{model.Attendence | date('yyyy/MM/dd')}}</div>
+                        <div class="subject">Attendance Date: {{model.value.attendancedate | date('yyyy/MM/dd')}}</div>
                         <!--<input type="checkbox" checked="{{model.checked}}">-->
                         <!--<input type="number" value="{{model.value}}" class="narrow">-->
                         <!--<select selectedIndex="{{model.type}}"><option>a</option><option>b</option><option>c</option></select>-->
-                        <span class="body">CheckIn Time:{{model.timein | date('HH-mm-ss')}}</span>
-                        <div><span class="body">CheckOut Time:{{(model.timein === model.timeout) ? '' : model.timeout | date('HH-mm-ss')}}</span></div>
+                        <span class="body">CheckIn Time:{{model.value.timein | date('HH-mm-ss')}}</span>
+                        <div><span class="body">CheckOut Time:{{(model.value.timein === model.value.timeout) ? '' : model.value.timeout | date('HH-mm-ss')}}</span></div>
 
                     </div>
                     </div>
@@ -197,12 +197,12 @@
                 var todate = this.todate;
                 var EmployeeID = this.employeeid;
                 var employeeid = this.employeeid;
-                if(employeeid != '') {
-                    this.$.ajax1.data = {employeeid:employeeid};
-                    this.$.ajax1.go();
-                    this.$.empname.type=true;
+//                if(employeeid != '') {
+//                    this.$.ajax1.data = {employeeid:employeeid};
+//                    this.$.ajax1.go();
+//                    this.$.empname.type=true;
                 
-                }
+//                }
                 this.access_token = this.$.globals.baasicUser.accessToken;
                 this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
                 this.$.ajax.go();

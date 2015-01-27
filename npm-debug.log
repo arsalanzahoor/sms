@@ -1,31 +1,91 @@
 0 info it worked if it ends with ok
 1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
-1 verbose cli   'start' ]
+1 verbose cli   'install',
+1 verbose cli   'ViewQuery' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.33
 4 verbose node symlink C:\Program Files\nodejs\\node.exe
-5 verbose run-script [ 'prestart', 'start', 'poststart' ]
-6 info prestart arsalan@1.0.0
-7 info start arsalan@1.0.0
-8 verbose unsafe-perm in lifecycle true
-9 info arsalan@1.0.0 Failed to exec start script
-10 error arsalan@1.0.0 start: `node server.js`
-10 error spawn ENOENT
-11 error Failed at the arsalan@1.0.0 start script.
-11 error This is most likely a problem with the arsalan package,
-11 error not with npm itself.
-11 error Tell the author that this fails on your system:
-11 error     node server.js
-11 error You can get their info via:
-11 error     npm owner ls arsalan
-11 error There is likely additional logging output above.
-12 error System Windows_NT 6.1.7601
-13 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
-14 error cwd D:\Arsalan Zahoor
-15 error node -v v0.10.33
-16 error npm -v 1.4.28
-17 error syscall spawn
-18 error code ELIFECYCLE
-19 error errno ENOENT
-20 verbose exit [ 1, true ]
+5 warn package.json Polymer@0.5.1 No repository field.
+6 warn package.json has-binary-data@0.1.5 No repository field.
+7 warn package.json parseqs@0.0.3 No README data
+8 verbose readDependencies using package.json deps
+9 verbose cache add [ 'ViewQuery', null ]
+10 verbose cache add name=undefined spec="ViewQuery" args=["ViewQuery",null]
+11 verbose parsed url { protocol: null,
+11 verbose parsed url   slashes: null,
+11 verbose parsed url   auth: null,
+11 verbose parsed url   host: null,
+11 verbose parsed url   port: null,
+11 verbose parsed url   hostname: null,
+11 verbose parsed url   hash: null,
+11 verbose parsed url   search: null,
+11 verbose parsed url   query: null,
+11 verbose parsed url   pathname: 'ViewQuery',
+11 verbose parsed url   path: 'ViewQuery',
+11 verbose parsed url   href: 'ViewQuery' }
+12 silly lockFile ea6657d2-ViewQuery ViewQuery
+13 verbose lock ViewQuery C:\Users\Administrator\AppData\Roaming\npm-cache\ea6657d2-ViewQuery.lock
+14 silly lockFile ea6657d2-ViewQuery ViewQuery
+15 silly lockFile ea6657d2-ViewQuery ViewQuery
+16 verbose addNamed [ 'ViewQuery', '' ]
+17 verbose addNamed [ null, '*' ]
+18 silly lockFile a7f9e697-ViewQuery ViewQuery@
+19 verbose lock ViewQuery@ C:\Users\Administrator\AppData\Roaming\npm-cache\a7f9e697-ViewQuery.lock
+20 silly addNameRange { name: 'ViewQuery', range: '*', hasData: false }
+21 verbose request where is /ViewQuery
+22 verbose request registry https://registry.npmjs.org/
+23 verbose request id f10d70d71956ec45
+24 verbose url raw /ViewQuery
+25 verbose url resolving [ 'https://registry.npmjs.org/', './ViewQuery' ]
+26 verbose url resolved https://registry.npmjs.org/ViewQuery
+27 verbose request where is https://registry.npmjs.org/ViewQuery
+28 info trying registry request attempt 1 at 09:47:17
+29 http GET https://registry.npmjs.org/ViewQuery
+30 http 404 https://registry.npmjs.org/ViewQuery
+31 verbose headers { date: 'Tue, 27 Jan 2015 04:47:18 GMT',
+31 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+31 verbose headers   'content-type': 'application/json',
+31 verbose headers   'cache-control': 'max-age=0',
+31 verbose headers   'content-length': '52',
+31 verbose headers   'accept-ranges': 'bytes',
+31 verbose headers   via: '1.1 varnish',
+31 verbose headers   age: '0',
+31 verbose headers   'x-served-by': 'cache-ams4121-AMS',
+31 verbose headers   'x-cache': 'MISS',
+31 verbose headers   'x-cache-hits': '0',
+31 verbose headers   'x-timer': 'S1422334038.141338,VS0,VE763',
+31 verbose headers   'keep-alive': 'timeout=10, max=50',
+31 verbose headers   connection: 'Keep-Alive' }
+32 silly registry.get cb [ 404,
+32 silly registry.get   { date: 'Tue, 27 Jan 2015 04:47:18 GMT',
+32 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+32 silly registry.get     'content-type': 'application/json',
+32 silly registry.get     'cache-control': 'max-age=0',
+32 silly registry.get     'content-length': '52',
+32 silly registry.get     'accept-ranges': 'bytes',
+32 silly registry.get     via: '1.1 varnish',
+32 silly registry.get     age: '0',
+32 silly registry.get     'x-served-by': 'cache-ams4121-AMS',
+32 silly registry.get     'x-cache': 'MISS',
+32 silly registry.get     'x-cache-hits': '0',
+32 silly registry.get     'x-timer': 'S1422334038.141338,VS0,VE763',
+32 silly registry.get     'keep-alive': 'timeout=10, max=50',
+32 silly registry.get     connection: 'Keep-Alive' } ]
+33 silly lockFile a7f9e697-ViewQuery ViewQuery@
+34 silly lockFile a7f9e697-ViewQuery ViewQuery@
+35 error 404 404 Not Found: ViewQuery
+35 error 404
+35 error 404 'ViewQuery' is not in the npm registry.
+35 error 404 You should bug the author to publish it
+35 error 404 It was specified as a dependency of 'arsalan'
+35 error 404
+35 error 404 Note that you can also install from a
+35 error 404 tarball, folder, or http url, or git url.
+36 error System Windows_NT 6.1.7601
+37 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "ViewQuery"
+38 error cwd D:\Arsalan Zahoor
+39 error node -v v0.10.33
+40 error npm -v 1.4.28
+41 error code E404
+42 verbose exit [ 1, true ]

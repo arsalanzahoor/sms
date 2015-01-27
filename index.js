@@ -48,7 +48,7 @@ app.get('/callback', function (req, res) {
 console.log('Express server started on port 3001');
 
 
-// Show login
+// Show login and verify Roles/Access
 app.get('/roles',function (req, res, next){
     oauth2.api('GET','/oauth/authorise',{
         access_token: token.token.access_token
@@ -115,7 +115,7 @@ app.post('/signin',  function(req, res){
 //connection.end();
 });
 
-
+// Handle Logout
 app.get('/signout',function (req, res){
     token.revoke('access_token', function(error) {
         // Session ended. But the refresh_token is still valid.
@@ -129,8 +129,7 @@ app.get('/signout',function (req, res){
     });
 });
 
-
-
+// Home Get For Initial version
 app.get('/home', function (req, res, next) {
     if (!req.session.user) {
         // If they aren't logged in, send them to your own login implementation
@@ -145,8 +144,8 @@ app.get('/home', function (req, res, next) {
     });
 });
 
+//Home Page Initial Database Connection Test with Basic Queries
 
-       
 app.post('/home', function (req, res){
     //console.log(req.query)
     //    console.log(req.body.newusername);

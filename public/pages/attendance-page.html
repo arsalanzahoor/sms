@@ -51,7 +51,7 @@
                         <core-dropdown class="dropdown">
                             <core-selector valueattr="employee"  selected="{{employee}}">
                                 <template repeat="{{employee in employees}}">
-                                    <core-item employee="{{employee.EmployeeID}}">{{employee.FirstName}} {{employee.LastName}}</core-item>
+                                    <core-item employee="{{employee.value.id}}">{{employee.value.employeename}}</core-item>
                                 </template>
                             </core-selector>
                         </core-dropdown>
@@ -124,7 +124,7 @@
             },
             employeeResponse: function()
             {
-                //                console.log(this.$.ajax.response.data[0]);
+                                console.log(this.$.ajax.response.data);
                 //                console.log(this.$.ajax.response.status);
                 if(this.$.ajax.response.status==true)
                 {
