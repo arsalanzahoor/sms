@@ -19,7 +19,7 @@
             <div><paper-input id="companyname" label="CompanyName" value="{{companyname}}" floatinglabel></paper-input></div>
             <div><paper-input id="registrationdate" label="RegisterationDate" value="{{registrationdate}}" floatinglabel></paper-input></div>
             <!--<paper-input id="fmd" label="FMD" value="{{fmd}}" floatinglabel></paper-input>-->
-            <div><paper-input id="mainid" label="MainID" value="{{mainid}}" floatinglabel></paper-input></div>
+            <!--<div><paper-input id="mainid" label="MainID" value="{{mainid}}" floatinglabel></paper-input></div>-->
             <div>
                 <paper-button on-click="{{submit}}" id="submit-button">Save</paper-button>
                 <!--<paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>-->
@@ -57,12 +57,12 @@
                 var firstname = this.$.firstname.value;
                 var lastname = this.$.lastname.value;
                 var companyname = this.$.companyname.value;
-//                this.$.registration.value = moment();
+                //                this.$.registration.value = moment();
                 var registrationdate = this.$.registrationdate.value;
-                var mainid = this.$.mainid.value;
+//                var mainid = this.$.mainid.value;
                 
-//                console.log(registrationdate);
-                if(firstname == '' || lastname == '' || companyname == '' || registrationdate == '' || mainid == '')
+                //                console.log(registrationdate);
+                if(firstname == '' || lastname == '' || companyname == '' || registrationdate == '')
                 {
                     this.$.toast1.text="Some of User Input Field Is Empty. Please Fill All Fields!";
                     this.$.toast1.opened="true";                        
@@ -72,86 +72,90 @@
                     if(employeeid)
                     {
                         //                        console.log("ajax with id");
-                        this.$.ajax2.data = {employeeid:employeeid,firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registrationdate, mainid:mainid};
+                        this.$.ajax2.data = {employeeid:employeeid,firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registrationdate};
                         this.$.ajax2.go();
                         
                     }
                     else
                     {
                         //                        console.log("ajax without id");
-                        this.$.ajax1.data = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registrationdate, mainid:mainid};
+                        this.$.ajax1.data = {firstname:firstname,lastname:lastname, companyname:companyname, registerationdate:registrationdate};
                         this.$.ajax1.go();
                         //                        this.$.toast1.text="Invalid Action Performed";
                         //                        this.$.toast1.opened="true";
                     }
                 }
-        },
-        updateResponse: function()
-        {
-//            console.log(this.$.ajax2.response.data);
-            if(this.$.ajax2.response.status==true)
+            },
+            updateResponse: function()
             {
-                this.$.toast1.opened="true";
-            }
-            else
+                //            console.log(this.$.ajax2.response.data);
+                if(this.$.ajax2.response.status==true)
+                {
+                    this.$.toast1.opened="true";
+                }
+                else
+                {
+                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                    this.$.toast1.opened="true";
+                }
+            },
+            insertResponse: function()
             {
-                this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
-                this.$.toast1.opened="true";
-            }
-        },
-        insertResponse: function()
-        {
-            //                console.log(this.$.ajax1.response.data);
-            if(this.$.ajax1.response.status==true)
-            {
-                this.$.toast1.opened="true";
-            }
-            else
-            {
-                this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
-                this.$.toast1.opened="true";
-            }
-        },
-        domReady : function(){
-            document.title = "Employee Record";
-            //                console.log("Employees Test");
-            if(this.employeeid)
-            {
-                var employeeid = this.employeeid;
-                //                this.employeeid = this.employeeid;
-                //                console.log(employeeid);
+                //                console.log(this.$.ajax1.response.data);
+                if(this.$.ajax1.response.status==true)
+                {
+                    this.$.toast1.opened="true";
+                }
+                else
+                {
+                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                    this.$.toast1.opened="true";
+                }
+            },
+            domReady : function(){
+                document.title = "Employee Record";
+                //                console.log("Employees Test");
+                console.log(this.employeeid);
+                if(this.employeeid)
+                {
+                    var employeeid = this.employeeid;
+                    //                this.employeeid = this.employeeid;
+                    //                console.log(employeeid);
                 
-                this.employees = this.employees || [];
-                this.$.ajax.data = {employeeid:employeeid};
-                this.$.ajax.go();
-            }
-            this.$.registrationdate.value = moment().format('YYYY/MM/DD');
+                    this.employees = this.employees || [];
+                    this.$.ajax.data = {employeeid:employeeid};
+                    this.$.ajax.go();
+                }
+                else
+                {
+                    this.$.registrationdate.value = moment().format('YYYY/MM/DD');
+                }
                 
-        }, 
-        employeeResponse: function()
-        {
-            //                console.log(this.$.ajax.response.data);
-            if(this.$.ajax.response.status==true)
+            }, 
+            employeeResponse: function()
             {
-                this.employees = this.$.ajax.response.data;
-                //                    this.employees=employees;
-                this.$.firstname.value = this.employees[0].FirstName;
-                this.$.lastname.value = this.employees[0].LastName;
-                this.$.companyname.value = this.employees[0].CompanyName;
-                this.$.registrationdate.value = moment(this.employees[0].RegistrationDate).format('YYYY/MM/DD');
-                this.$.mainid.value = this.employees[0].MainID;
-            }
-            else
+                console.log(this.$.ajax.response.data);
+                if(this.$.ajax.response.status==true)
+                {
+                    this.employees = this.$.ajax.response.data;
+                    //                    this.employees=employees;
+                    this.$.firstname.value = this.employees[0].firstName;
+                    this.$.lastname.value = this.employees[0].lastName;
+                    this.$.companyname.value = this.employees[0].companyName;
+                    this.$.registrationdate.value = moment(this.employees[0].registrationDate).format('YYYY/MM/DD');
+//                    this.$.mainid.value = this.employees[0].MainID;
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            },
+            dataResponse : function(el)
             {
-                this.$.toast1.text="There is an Error on Employees Request/Response";
-                this.$.toast1.opened="true";
+                el.show();
             }
-        },
-        dataResponse : function(el)
-        {
-            el.show();
-        }
            
-    });
+        });
     </script>
 </polymer-element>

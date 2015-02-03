@@ -20,7 +20,7 @@
     <template>
         <style>
             .graph {
-                 background-color: lightblue;
+                background-color: lightblue;
             }
         </style>
         <baasic-globals id="globals"></baasic-globals>
@@ -175,22 +175,27 @@
                 {
                     //                    this.$.toast1.text="DataBase Updated!!!"
                     //                                        this.$.toast1.opened="true";
-//                    var length = this.$.ajax.response.data.length;
+                    //                    var length = this.$.ajax.response.data.length;
                     //                    console.log(length);
                     var n;
 
                     
-                    //                    this.data = this.$.ajax.response.data;
-                    //                    console.log(this.data)
+                    //                                        this.data = this.$.ajax.response.data;
                     var ctx = this.$.myGraph.getContext("2d");
                     var range = [];
                     var monthArray = [];
                     var valuesArray = [];
                     var val;
-                   
                     var data2 = this.$.ajax.response.data;
+//                    console.log(moment(data2[1].key.Month.toString()).format('MMMM'));
+//                    console.log(moment(10).format('MMMM'));
+//                    console.log(moment(11).format('MMMM'));
+//                    console.log(moment(12).format('MMMM'));
+                    
+                    //                    console.log(data2[0].key.Month);
                     for(var i=0; i < data2.length; i++){
-                        val = data2[i].Month  + ' ' + data2[i].Year ;//moment().subtract(i,'months').format('MMMM YYYY');
+                        //                        console.log(data2[i].key.Month);
+                        val = moment(data2[i].key.Month.toString()).format('MMMM') + ' ' + data2[i].key.Year ;//moment().subtract(i,'months').format('MMMM YYYY');
                         range[i] = val;
                     }
                     
@@ -201,13 +206,13 @@
                     {
                         
                         var month =  moment().subtract(n,'months').format('MMMM YYYY');
+                        //                        console.log(month,range.indexOf(month));
                         var index = range.indexOf(month);
                         var v = 0;
                         //console.log(month,  this.$.ajax.response.data[n])
                         if( index >= 0 ){
-                            v = this.$.ajax.response.data[index].totalattendance;
+                            v = this.$.ajax.response.data[index].value;
                         }
-                       
                         monthArray[i] = month;
                         valuesArray[i++] = v;
                         //                         myLineChart.addData([v], month);
