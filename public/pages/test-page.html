@@ -147,7 +147,7 @@
                 //                }
                 //                this.access_token = this.$.globals.baasicUser.accessToken;
                 console.log(fromdate,todate,EmployeeID);
-                this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
+                this.$.ajax.data = {fromdate:fromdate, todate:todate, employeeid:this.employeeid};
                 this.$.ajax.go();
             
             },
@@ -167,7 +167,7 @@
                     //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
                     //                        }
                     //                    }
-                    this.employeename = this.$.ajax.response.data[0].FirstName+' '+this.$.ajax.response.data[0].LastName;
+                    this.employeename = this.$.ajax.response.data[0].value.employeename;
                     this.$.empname.type=true;
                     this.employeeattendance = this.$.ajax.response.data;
                 }

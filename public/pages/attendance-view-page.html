@@ -197,14 +197,16 @@
                 var todate = this.todate;
                 var EmployeeID = this.employeeid;
                 var employeeid = this.employeeid;
-                //                if(employeeid != '') {
-                //                    this.$.ajax1.data = {employeeid:employeeid};
-                //                    this.$.ajax1.go();
-                //                    this.$.empname.type=true;
+                if(employeeid != '') {
+                    employeeid = 'attendance::user::6::'+this.employeeid;
+                    console.log(employeeid);
+                    this.$.ajax1.data = {employeeid:employeeid};
+                    this.$.ajax1.go();
+                    this.$.empname.type=true;
                 
-                //                }
+                }
                 this.access_token = this.$.globals.baasicUser.accessToken;
-                this.$.ajax.data = {fromdate:fromdate, todate:todate, EmployeeID:EmployeeID};
+                this.$.ajax.data = {fromdate:fromdate, todate:todate, employeeid:employeeid};
                 this.$.ajax.go();
             
             },
@@ -212,7 +214,7 @@
                 if(this.$.ajax.response.status==true)
                 {
                     console.log(this.$.ajax.response.data);
-//                    console.log(this.$.ajax.response.data[1]);
+                    //                    console.log(this.$.ajax.response.data[1]);
 
                     //                    for(var i=0;i<this.$.ajax.response.data.length;i++)
                     //                    {
@@ -260,7 +262,7 @@
             {
                 if(this.$.ajax1.response.status==true)
                 {
-                    this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
+                    this.employeename = (this.$.ajax1.response.data[0].firstName +' '+ this.$.ajax1.response.data[0].lastName);
                 }
                 else
                 {

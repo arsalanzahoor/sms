@@ -224,26 +224,49 @@ myBucket.get(id, function(err, res) {
 ////query = N1qlQuery.fromString("SELECT firstName,lastName from default where id='attendance::user::6::1'" );
 ////var data = [];
 ////data = 
-var firstname = 'sadiq';
-var lastname = 'Ahmad';
-var empid = 'test';
-var companyname = 'EsajeeSolutions';
-var registrationdate = '01/30/2015';
+//var firstname = 'sadiq';
+//var lastname = 'Ahmad';
+//var key = "attendance::user::6::1";
+//var fromdate = '12/01/2014';
+//var todate = '12/31/2014';
+//var companyname = 'EsajeeSolutions';
+//var registrationdate = '01/30/2015';
+//var value = "demo_value"
+//var values = {
+//    'firstName':'testing', 
+//    'lastName':'testing', 
+//    'companyName':'Esajeesolutions', 
+//    'registrationDate':'01/30/2015',
+//    'fmd': 'null',
+//    'status': '1',
+//    'locatoin': '6',
+//    'doctype': 'user',
+//    'channels': ['attendance'],
+//    'client': 'Esajee'
+//}
+
+//myBucket.insert(key, values, function(err, result) {
+//    if(err)
+//        console.log(err);
+//    console.log('New Record: ',result);
+//});
 
 ////
 //query = N1qlQuery.fromString("UPDATE default use keys 'testing' set firstName='"+firstname+"',lastName='"+lastname+"'" );
 //query = N1qlQuery.fromString("INSERT INTO default(KEY, VALUE) VALUES('"+empid+"',{firstName:'"+firstname+"', lastName:'"+lastname+"', companyName:'"+companyname+"', registrationDate:'"+registrationdate+"'}");
-query = N1qlQuery.fromString("INSERT INTO default(KEY, VALUE) VALUES('test',{'firstName':'testing', 'lastName':'testing', 'companyName':'Esajeesolutions', 'registrationDate':'01/30/2015'}");
-myBucket.query(query, function(err, results1) {
-    if(err)
-        console.log(err);
-    console.log(results1);
-    for(i in results1) {
-        //        var date = results1[i].date;
-        //        var datearray = dateToArray(date);
-        console.log('User:'+results1[i]);
-    }
-});
+//query = N1qlQuery.fromString("INSERT into default(key,value) VALUES('test',{'firstName':'testing', 'lastName':'testing', 'companyName':'Esajeesolutions', 'registrationDate':'01/30/2015','fmd': 'null','status': '1','locatoin': '6','doctype': 'user','channels': ['attendance'],'client': 'Esajee'}");
+//query = N1qlQuery.fromString("SELECT location from default where doctype='user' INTERSECT SELECT location from default where doctype='user_attendance'");
+//query = N1qlQuery.fromString("SELECT user_id,date,time_in,time_out from default where doctype='user_attendance' and user_id='"+key+"' and date between '"+fromdate+"' and '"+todate+"'order by date");
+//myBucket.query(query, function(err, results1) {
+//    if(err)
+//        console.log(err);
+////    console.log(results1);
+//    for(i in results1) {
+//        //        var date = results1[i].date;
+//        //        var datearray = dateToArray(date);
+//        console.log('User:'+results1[i].date+' '+results1[i].time_in+' '+results1[i].time_out);
+//    }
+//});
 //
 //id = 'test';
 //myBucket.get(id, function(err, res) {
@@ -305,14 +328,16 @@ app.get('/roles',function (req, res, next){
 });
 
 
-app.get('/api/employee', function (req, res) {
+//GETTING MONTHLY AVERAGE ATTENDANCE OF ALL EMPLOYEES FOR GRAPH ON HOME PAGE**********
 
-    query = ViewQuery.from('dev_employee', 'basic_list');
+app.get('/api/employeeattendance', function (req, res) {
+
+    query = ViewQuery.from('dev_attendance', 'average_attendance').group(true);
     myBucket.query(query, function(err, results) {
         if(err)
             console.log(err);
         for(i in results) {
-            console.log('Employee:', results[i].value);
+            console.log('Employee:', results[i]);
             
         }
         var data = results || [];
@@ -399,12 +424,25 @@ app.put('/api/employee/:EmployeeID', function (req, res) {
 
 //INSERT NEW EMPLOYEE RECORD
 
-app.put('/api/employee', function (req, res) {
+app.post('/api/employee', function (req, res) {
     console.log(req.body);
     //    var employeeid = req.query.employeeid;
-    query = N1qlQuery.fromString("INSERT INTO default(key, value) VALUES('test',{firstName:'"+req.body.firstname+"',lastName:'"+req.body.lastname+"',companyName:'"+req.body.companyname+"',registrationDate:'"+req.body.registrationdate+"'}");
-    myBucket.query(query, function(err, results) {
-        var data = results || [];
+    var key = 'test'
+    var values = {
+        'firstName':req.body.firstname, 
+        'lastName':req.body.lastname, 
+        'companyName':req.body.companyname, 
+        'registrationDate':req.body.registrationdate,
+        'fmd': 'null',
+        'status': '1',
+        'locatoin': '6',
+        'doctype': 'user',
+        'channels': ['attendance'],
+        'client': 'Esajee'
+    }
+
+    myBucket.insert(key, values, function(err, result) {
+        var data = result || [];
         if(err)
         {
             console.log(err);
@@ -415,29 +453,39 @@ app.put('/api/employee', function (req, res) {
         }
         else 
         {
+            console.log(result);
             res.json({
                 data : data,
                 status:true
             });
         }
     });
-
 });
+
 
 //EMPLOYEES ATTENDANCE REPORT ON BASIS OF RANGE OF DATES AND WITHOUT DATES EXCLUDING EMPLOYEE NAMES***********
 
 app.get('/api/employeeattendence/report', function (req, res) {
-    console.log(req.query);
+//    console.log(req.query);
     var fromdate = moment(req.query.fromdate).format('MM/DD/YYYY');
     var todate = moment(req.query.todate).format('MM/DD/YYYY');
-    console.log(fromdate,todate);
-    if(fromdate!='Invalid date' && todate!='Invalid date')
+    var employeeid = req.query.employeeid;
+//        console.log(employeeid,fromdate,todate);
+    if(employeeid != '' && fromdate!='Invalid date' && todate!='Invalid date')
+        {
+         query = N1qlQuery.fromString("SELECT user_id,date,time_in,time_out from default where doctype='user_attendance' and user_id='"+employeeid+"' and date between '"+fromdate+"' and '"+todate+"'order by date");   
+        }
+    else if(fromdate!='Invalid date' && todate!='Invalid date')
     {
         query = N1qlQuery.fromString("SELECT user_id,date,time_in,time_out from default where doctype='user_attendance' and date between '"+fromdate+"' and '"+todate+"'order by date");
     }
+    else if(employeeid != '')
+        {
+            query = N1qlQuery.fromString("SELECT user_id,date,time_in,time_out from default where doctype='user_attendance' and user_id='"+employeeid+"' order by date"); 
+        }
     else
     {
-        console.log("test")
+        //        console.log("test")
         query = N1qlQuery.fromString("SELECT user_id,date,time_in,time_out from default where doctype='user_attendance' Order by date" );
     }
     //    query = N1qlQuery.fromString("SELECT e.firstName,e.lastName,a.date,min(a.date) as timein,max(a.date) as timeout from default e,(SELECT * FROM default where doctype='user_attendance') a where e.user_id=a.user_id order by date" );

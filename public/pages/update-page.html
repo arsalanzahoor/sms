@@ -13,6 +13,7 @@
 
             <!--                <paper-input id="employeeid" label="Employee ID" value="{{employeeid}}" floatinglabel></paper-input>
                         </div><div>-->
+            <!--<div><paper-input id="empid" label="Employee ID" value="{{employeeid}}" floatinglabel></paper-input></div>-->
             <div><paper-input id="firstname" label="First Name" value="{{firstname}}" floatinglabel></paper-input></div>
             <div><paper-input id="lastname" label="Last Name" value="{{lastname}}" floatinglabel></paper-input></div>
 
@@ -23,7 +24,7 @@
             <div>
                 <paper-button on-click="{{submit}}" id="submit-button">Save</paper-button>
                 <!--<paper-button id="cancelbutton" on-click="{{cancel}}">Cancel</paper-button>-->
-                <paper-toast id="toast1" text="Employee Record Is Updated Successfully." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+                <paper-toast id="toast1" text="Database Is Updated Successfully." on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
             </div>
 
             <app-ajax id="ajax"
@@ -59,7 +60,7 @@
                 var companyname = this.$.companyname.value;
                 //                this.$.registration.value = moment();
                 var registrationdate = this.$.registrationdate.value;
-//                var mainid = this.$.mainid.value;
+                //                var mainid = this.$.mainid.value;
                 
                 //                console.log(registrationdate);
                 if(firstname == '' || lastname == '' || companyname == '' || registrationdate == '')
@@ -86,76 +87,78 @@
                     }
                 }
             },
-            updateResponse: function()
+        updateResponse: function()
+        {
+            //            console.log(this.$.ajax2.response.data);
+            if(this.$.ajax2.response.status==true)
             {
-                //            console.log(this.$.ajax2.response.data);
-                if(this.$.ajax2.response.status==true)
-                {
-                    this.$.toast1.opened="true";
-                }
-                else
-                {
-                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
-                    this.$.toast1.opened="true";
-                }
-            },
-            insertResponse: function()
-            {
-                //                console.log(this.$.ajax1.response.data);
-                if(this.$.ajax1.response.status==true)
-                {
-                    this.$.toast1.opened="true";
-                }
-                else
-                {
-                    this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
-                    this.$.toast1.opened="true";
-                }
-            },
-            domReady : function(){
-                document.title = "Employee Record";
-                //                console.log("Employees Test");
-                console.log(this.employeeid);
-                if(this.employeeid)
-                {
-                    var employeeid = this.employeeid;
-                    //                this.employeeid = this.employeeid;
-                    //                console.log(employeeid);
-                
-                    this.employees = this.employees || [];
-                    this.$.ajax.data = {employeeid:employeeid};
-                    this.$.ajax.go();
-                }
-                else
-                {
-                    this.$.registrationdate.value = moment().format('YYYY/MM/DD');
-                }
-                
-            }, 
-            employeeResponse: function()
-            {
-                console.log(this.$.ajax.response.data);
-                if(this.$.ajax.response.status==true)
-                {
-                    this.employees = this.$.ajax.response.data;
-                    //                    this.employees=employees;
-                    this.$.firstname.value = this.employees[0].firstName;
-                    this.$.lastname.value = this.employees[0].lastName;
-                    this.$.companyname.value = this.employees[0].companyName;
-                    this.$.registrationdate.value = moment(this.employees[0].registrationDate).format('YYYY/MM/DD');
-//                    this.$.mainid.value = this.employees[0].MainID;
-                }
-                else
-                {
-                    this.$.toast1.text="There is an Error on Employees Request/Response";
-                    this.$.toast1.opened="true";
-                }
-            },
-            dataResponse : function(el)
-            {
-                el.show();
+                this.$.toast1.opened="true";
+//                var app = document.querySelector('index-app');
+//                app.$.router.go('/employees');
             }
+            else
+            {
+                this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                this.$.toast1.opened="true";
+            }
+        },
+        insertResponse: function()
+        {
+            //                console.log(this.$.ajax1.response.data);
+            if(this.$.ajax1.response.status==true)
+            {
+                this.$.toast1.opened="true";
+            }
+            else
+            {
+                this.$.toast1.text="Database is not Updated!!! Please Verify Your Details";
+                this.$.toast1.opened="true";
+            }
+        },
+        domReady : function(){
+            document.title = "Employee Record";
+            //                console.log("Employees Test");
+            console.log(this.employeeid);
+            if(this.employeeid)
+            {
+                var employeeid = this.employeeid;
+                //                this.employeeid = this.employeeid;
+                //                console.log(employeeid);
+                
+                this.employees = this.employees || [];
+                this.$.ajax.data = {employeeid:employeeid};
+                this.$.ajax.go();
+            }
+            else
+            {
+                this.$.registrationdate.value = moment().format('YYYY/MM/DD');
+            }
+                
+        }, 
+        employeeResponse: function()
+        {
+            console.log(this.$.ajax.response.data);
+            if(this.$.ajax.response.status==true)
+            {
+                this.employees = this.$.ajax.response.data;
+                //                    this.employees=employees;
+                this.$.firstname.value = this.employees[0].firstName;
+                this.$.lastname.value = this.employees[0].lastName;
+                this.$.companyname.value = this.employees[0].companyName;
+                this.$.registrationdate.value = moment(this.employees[0].registrationDate).format('YYYY/MM/DD');
+                //                    this.$.mainid.value = this.employees[0].MainID;
+            }
+            else
+            {
+                this.$.toast1.text="There is an Error on Employees Request/Response";
+                this.$.toast1.opened="true";
+            }
+        },
+        dataResponse : function(el)
+        {
+            el.show();
+        }
            
-        });
+    });
     </script>
 </polymer-element>
