@@ -198,9 +198,10 @@ var N1qlQuery = couchbase.N1qlQuery;
 var myCluster = new couchbase.Cluster(config.connstr);
 var myBucket = myCluster.openBucket(config.bucket);
 myBucket.enableN1ql(config.queryhosts);
-var id = 'testing';
+var id = 'attendance::user::6::7';
 myBucket.get(id, function(err, res) {
-    console.log('Name: ', res.value.firstName+' '+res.value.lastName);
+    var data = JSON.parse(res.value);
+    console.log('Name: ', data.firstName+' '+data.lastName);
 //    console.log(res.value.registrationDate);
 //    console.log(mydate);
 //  console.log('Value: ', res);
