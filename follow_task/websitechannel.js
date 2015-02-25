@@ -54,7 +54,7 @@ var q = async.queue(function (task, callback) {
 
         request({
         method: 'POST',
-        url:'http://esajeecom.esajee.com/quickstart/index.php/links/index/stockupdate?sku='+encodeURIComponent(task.data.item_barcode)+'&qty='+ encodeURIComponent(qty)+'&processType='+ encodeURIComponent(task.processType), 
+        url:'http://esajeecom.esajee.com/quickstart/index.php/links/index/stockupdate?sku='+encodeURIComponent(task.data.item_barcode)+'&qty='+ encodeURIComponent(qty)+'&processType='+ encodeURIComponent(task.processType)+'&itemName='+ encodeURIComponent(task.data.item_description), 
         form:(task)
 //        json:true
         
