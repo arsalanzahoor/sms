@@ -25,7 +25,11 @@ var request = require('request');
  
 
 // You can also set values directly. 
+<<<<<<< HEAD
 feed.db = "http://website:website@192.168.1.40:4984/db";
+=======
+feed.db            = "http://website:website@192.168.1.40:4984/db";
+>>>>>>> 032b2e58d13f194314cfc29e48b49943bdfb8e3b
 feed.include_docs = true;
 //feed.since         = 'now';
 //feed.heartbeat     = 30    * 1000

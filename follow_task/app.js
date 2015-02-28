@@ -11,6 +11,10 @@ var bodyParser = require('body-parser');
 //var mysql   = require('mysql');
 var total_records=null;
 var async = require('async');
+<<<<<<< HEAD
+=======
+var total_attenedence=null;
+>>>>>>> 032b2e58d13f194314cfc29e48b49943bdfb8e3b
 var request = require('request');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -19,7 +23,11 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+<<<<<<< HEAD
 var port = process.env.PORT || 3001;        // set our port
+=======
+var port = process.env.PORT || 8080;        // set our port
+>>>>>>> 032b2e58d13f194314cfc29e48b49943bdfb8e3b
 
 var router = express.Router();              // get an instance of the express Router
 router.use(function(req, res, next) {
