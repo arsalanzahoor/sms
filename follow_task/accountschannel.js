@@ -23,7 +23,7 @@ var request = require('request');
 //    }
 //})
  
-  url: 'http://accounts.esajee.com/accounts_test//pos_common_entry.php?username=system admin&type=invoice_voucher&invoiceid=26778&supplierid=1191&invoice_amount=&billnumber=asd&invdate=26-02-2015&due_date=26-02-2015&postiong_date=26-02-2015&location=0'}
+//  url: 'http://accounts.esajee.com/accounts_test//pos_common_entry.php?username=system admin&type=invoice_voucher&invoiceid=26778&supplierid=1191&invoice_amount=&billnumber=asd&invdate=26-02-2015&due_date=26-02-2015&postiong_date=26-02-2015&location=0'}
 // You can also set values directly. 
 feed.db            = "http://accounts:accounts@192.168.1.40:4984/db";
 feed.include_docs = true;
