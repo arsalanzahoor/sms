@@ -1,0 +1,45 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/core-scaffold/core-scaffold.html">
+<link rel="import" href="/bower_components/core-header-panel/core-header-panel.html">
+<link rel="import" href="/bower_components/core-toolbar/core-toolbar.html">
+<link rel="import" href="/bower_components/core-item/core-item.html">
+
+
+<polymer-element name="sidebar-layout" attributes="selected">
+    <template>
+        <link rel="stylesheet" href="sidebar-layout.css">
+        <core-scaffold>
+            <core-header-panel navigation flex mode="seamed">
+                <core-toolbar style="background-color: #526E9C; color: #fff;">WELCOME TO ESAJEESOLUTIONS</core-toolbar>
+                <core-menu>
+                    <core-item icon="home" label="Home" active?="{{selected == 'home'}}"><a is="pushstate-anchor" href="/#/home"></a>
+                    </core-item>
+                    <core-item icon="accessibility" label="Manage Employees" active?="{{selected == 'employee'}}"><a is="pushstate-anchor" href="/#/employees"></a>
+                    </core-item>
+                    <core-item icon="view-module" label="View Attendance" active?="{{selected == 'attendance'}}"><a is="pushstate-anchor" href="/#/attendance"></a>
+                    </core-item>
+                    <!--<core-item icon="account-child" label="Administration" active?="{{selected == 'admin'}}"><a is="pushstate-anchor" href="/#/admin"></a>-->
+                        <!--<a href="/pages/admin-page.html"></a>--> 
+                    <!--</core-item>-->
+                    <core-item icon="settings" label="Pager Test" active?="{{selected == 'test'}}"><a is="pushstate-anchor" href="/#/test"></a></core-item>
+                    <core-item icon="settings" label="Sign Out" active?="{{selected == 'signout'}}"><a is="pushstate-anchor" href="/#/signout"></a></core-item>
+                    <!--<a is="pushstate-anchor" href="/#/signout"></a>-->
+                </core-menu>
+            </core-header-panel>
+            <div tool>
+                <content select=".title"></content>
+            </div>
+            <div class="content">
+                <content></content>
+            </div>
+        </core-scaffold>
+    </template>
+    <script>
+        Polymer('sidebar-layout',{
+            signOut : function()
+            {
+                this.$.login.logOut();
+            }
+        });
+    </script>
+</polymer-element>

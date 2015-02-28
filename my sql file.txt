@@ -1,0 +1,23 @@
+MYSQL Quiries;
+
+SELECT Attendence,min(Attendence) as timein,max(Attendence) as timeout from (SELECT * FROM employeeattendence where EmployeeID=? and Attendence between ? and ?) as records group by Date(Attendence)";
+
+
+
+mysql> SELECT e.EmployeeID,e.FirstName,e.LastName,a.AttendenceID,a.Attendence from employee e,employeeattendence a 
+where e.EmployeeID=a.EmployeeID and a.Attendence between 
+'2014/12/01' and '2015/01/01';
+
+
+
+mysql> SELECT e.EmployeeID,e.FirstName,e.LastName,Attendence,min(Attendence) as
+timein,max(Attendence) as timeout from employee e,(SELECT * FROM employeeattende
+nce where Attendence between '2014/01/01' and '2015/01/01') as records group by
+Date(Attendence);
+
+
+
+mysql> SELECT e.EmployeeID,e.FirstName,e.LastName,a.Attendence,min(a.Attendence)
+ as timein,max(a.Attendence) as timeout from employee e,(SELECT * FROM employeea
+ttendence where Attendence between '2014/01/01' and '2015/01/01') a where e.Empl
+oyeeID=a.EmployeeID group by Date(Attendence),EmployeeID;

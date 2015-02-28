@@ -1,0 +1,213 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/core-item/core-item.html">
+<link rel="import" href="/bower_components/core-list/core-list.html">
+<link rel="import" href="/bower_components/polymer-filters/polymer-filters.html">
+
+<!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
+<link rel="import" href="/layouts/sidebar-layout.html">
+<link rel="import" href="/pages/app-ajax.html">
+
+<polymer-element name="employees-page" router="{{router}}" attributes="employees" layout horizontal>
+    <template>
+        <style>
+            .item {
+                box-sizing: border-box;
+                height: 100px;
+                border-bottom: 1px solid #ddd;
+                padding: 4px;
+                cursor: default;
+                background-color: lightblue;
+                overflow: hidden;
+                text-align: left;
+            }
+
+            .selected {
+                background: silver;
+            }
+
+            .message {
+                padding-left: 400px;
+                background-repeat: no-repeat;
+                background-position: 5px 5px;
+                
+            }
+
+            .from {
+                display: inline;
+                font-weight: bold;
+            }
+
+            .timestamp {
+                margin-left: 10px;
+                font-size: 12px;
+                opacity: 0.8;
+            }
+
+            .body {
+                font-size: 12px;
+            }
+
+            .spaced {
+                margin: 10px;
+            }
+
+            .selection-display {
+                background: lightgray;
+                padding: 0 5px;
+                margin: 0 5px;
+            }
+
+            .narrow {
+                width: 40px;
+            }
+            .mylist {
+                height: 300px;
+                
+            }
+            .text {
+                text-align: left;
+            }
+            .image {
+                width: 25px;
+                height: 25px;
+                margin-left: 90%;
+            }
+
+        </style>
+        <sidebar-layout selected="employee">
+            <div class="title">Manage Employees</div>
+            <div layout horizontal class="text">
+                <ul><b>Esajeesolutions Employees List</b></ul>
+                 <core-item class="message" icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update/"></a>Add Employee</core-item>
+                
+            </div>
+            
+            <!--            <table style=" text-align: center; 
+                               font-style: italic;
+                               display: inline-block; 
+                               resize: both; 
+                               border: 1px solid #008;
+                               border-collapse: collapse; 
+                               width: 80%"> 
+                            <tr>
+                                <th>Employee Id</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Company Name</th>
+                                <th>Registration Date</th>
+                                <th>FMD</th>
+                                <th>MainID</th>
+                                <th>
+                            <core-item icon="add-circle" title="Add-Employee" name="insert"><a is="pushstate-anchor" href="/#/employees/update/"></a></core-item>
+                            <paper-button id="insert-button" on-click="{{insert}}" raised>Insert</paper-button>
+                            </th></tr>
+                            <template repeat="{{employee in employees}}">
+                                <tr>
+                                    <td>{{employee.EmployeeID}}</td>
+                                    <td>{{employee.FirstName}}</td>
+                                    <td>{{employee.LastName}}</td>
+                                    <td>{{employee.CompanyName}}</td>
+                                    <td>{{employee.RegistrationDate | date('yyyy/MM/dd')}}</td>
+                                    <td>{{employee.FMD}}</td>
+                                    <td>{{employee.MainID}}</td>
+                                    <td>
+                                <core-item icon="arrow-forward" title="Update-Employee" name="update"><a is="pushstate-anchor" href="/#/employees/update/{{employee.EmployeeID}}"></a></core-item>  
+                                &firstname={{employee.FirstName}}&lastname={{employee.LastName}}&companyname={{employee.CompanyName}}&registrationdate={{employee.RegistrationDate}}&mainid={{employee.MainID}}
+                                <paper-button id="update-button" on-click="update" width="20px" height="10px" raised>Update</paper-button></td>
+                                </tr>
+                            </template>
+                        </table>-->
+            <div>
+                <!--<input type="hidden" name="action" id="action">-->
+                <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+
+            </div>
+            
+            <!--            <div layout horizontal wrap class="spaced">
+                            Selected Employees: 
+                                            <template repeat="{{multi ? selection: [selection]}}">
+                                                <div class="selection-display">Id {{model.EmployeeID}}: {{checked}} {{value}} {{['a','b','c'][type]}}</div>
+                                            </template>
+                        </div>-->
+            <core-list class="mylist" id="list" data="{{employees}}" selectionEnabled="{{selectionEnabled}}" selection="{{selection}}" height="80" flex multi?={{multi}}>
+                       <template>
+                           <!--                    <table style=" text-align: left; 
+                                                      font-style: italic;
+                                                      display: inline-block; 
+                                                      resize: both; 
+                           /*                           border: 1px solid #008;*/
+                                                      /*border-collapse: collapse;*/ 
+                                                      width: 100%">
+                                                   <tr>
+                                                       <td style="width: 80%">-->
+                                <div  class="item {{ {selected: selected} | tokenList }}">
+                                    <core-icon src="/images/4.png" style="width: 35px;height: 35px;"></core-icon>
+                                    <!--<div class="message" style="background-image: url(images/{{model.image}}.png);">-->
+                                    <span class="from">{{model.value.employeename}}</span>
+                                    <!--<span class="from">{{model.LastName}}</span>-->
+                                    <a is="pushstate-anchor" href="/#/employees/update/{{model.id}}"><core-icon class="image" src="/images/update.png" title="Update-Employee" name="update"></core-icon></a>
+                                    <!--<span class="from">{{model.CompanyName}}</span>-->
+                                    <!--<span class="from">{{model.MainID}}</span>-->
+                                    <!--<span class="from">{{model.RegistrationDate}}</span>-->
+                                    <div class="subject"><b>Employee ID:</b> {{model.value.id}}</div>
+                                    <!--<input type="checkbox" checked="{{model.checked}}">-->
+                                    <!--<input type="number" value="{{model.value}}" class="narrow">-->
+                                    <!--<select selectedIndex="{{model.type}}"><option>a</option><option>b</option><option>c</option></select>-->
+                                    <span class="body"><b>Company Name:</b> {{model.value.companyname}},</span>
+                                    <!--<span class="body">Main ID:{{model.MainID}},</span>-->
+                                    <span class="body"><b>Registration Date:</b> {{model.value.registrationdate | date('yyyy/MM/dd')}}.</span>
+                                </div>
+                                </div>
+<!--                            </td>
+                            <td style="width: 20%">
+                                <span class="message"><core-item icon="arrow-forward" title="Update-Employee" name="update" style="width: min-content;height: fit-content"><a is="pushstate-anchor" href="/#/employees/update/{{employee.EmployeeID}}"></a></core-item></span>
+                            </td>-->
+<!--                        </tr>
+                    </table>-->
+                </template>
+            </core-list>
+            <app-ajax id="ajax"
+                      url="/api/employee"
+                      method="GET"
+                      on-core-response="{{employeeResponse}}"
+                      content-type="application/json"
+                      handleAs="json">
+            </app-ajax>
+        </sidebar-layout>
+    </template>
+    <script>
+        Polymer('employees-page', {
+            ready : function(){
+                document.title = "Esajeesolutions Employees";
+                //                console.log("Employees Test");
+                this.employees = this.employees || [];
+                this.$.ajax.go();
+            }, 
+            employeeResponse: function()
+            {
+//                console.log(this.$.ajax.response.data);
+                if(this.$.ajax.response.status==true)
+                {
+                    this.employees = this.$.ajax.response.data;
+                    //                    this.employees=employees;
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            },
+            update : function()
+            {
+                console.log("Update");
+            },
+            dataResponse : function(el)
+            {
+                el.show();
+            } 
+            
+        });
+    </script>
+</polymer-element>

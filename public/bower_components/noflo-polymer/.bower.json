@@ -1,0 +1,29 @@
+{
+  "name": "noflo-polymer",
+  "main": "index.js",
+  "authors": [
+    "Henri Bergius <henri.bergius@iki.fi>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "0.4.0"
+  },
+  "homepage": "https://github.com/noflo/noflo-polymer",
+  "_release": "7e5ceacda4",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "7e5ceacda4ad18a68eeba5c2c793ca06d517fe32"
+  },
+  "_source": "git://github.com/noflo/noflo-polymer.git",
+  "_target": "*",
+  "_originalSource": "noflo/noflo-polymer",
+  "_direct": true
+}

@@ -1,0 +1,163 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<!--<link rel="import" href="/bower_components/polymer-date-picker/polymer-date-picker.html">-->
+<link rel="import" href="/layouts/sidebar-layout.html">
+<link rel="import" href="/bower_components/core-dropdown/core-dropdown.html">
+<link rel="import" href="/bower_components/core-dropdown-menu/core-dropdown-menu.html">
+<link rel="import" href="/bower_components/core-menu/core-menu.html">
+<link rel="import" href="/bower_components/core-item/core-item.html">
+<link rel="import" href="/bower_components/core-selector/core-selector.html">
+<link rel="import" href="/pages/app-ajax.html">
+<script src="/bower_components/moment/moment.js"></script>
+
+
+
+<polymer-element name="attendance-page" router="{{router}}" attributes="pathArg1 queryParam1">
+    <template>
+        <style>
+            .table {
+                background-color: lightblue;
+                text-align: center; 
+                font-style: oblique;
+                display: inline-block; 
+                resize: both; 
+                border: 2px solid #008;
+                border-collapse: collapse; 
+                width: 45%;
+            }
+            .dropdown {
+                background-color: lightblue;
+            }
+        </style>
+        <sidebar-layout selected="attendance">
+
+            <div class="title">View Attendance</div>
+            <div>
+                <ul><b>Please Select Employee and Dates to View Attendance Report</b></ul>
+            </div>
+            <div>
+                <table class="table">
+                    <tr>
+                        <th style="text-align: center; margin-left: 50%; padding-left: 110px; padding-top: 10px;">Date Range:</th>
+                    </tr>
+                    <tr>
+                        <td><paper-input id="fromdate" label="Date From" type="date" value="{{fromdate}}" floatinglabel></paper-input></td>
+                    <td><paper-input id="todate" label="Date To" type="date" value="{{todate}}" floatinglabel></paper-input></td>
+                    </tr>
+                    <tr>
+                        <td>
+                    <core-dropdown-menu class="dropdown" label="Employees" closedIcon="arrow-drop-down" openedIcon="arrow-drop-up" relative="" layout="" inline="" horizontal="" center="" tabindex="0">
+                        <core-dropdown class="dropdown">
+                            <core-selector valueattr="employee"  selected="{{employee}}">
+                                <template repeat="{{employee in employees}}">
+                                    <core-item employee="{{employee.value.id}}">{{employee.value.employeename}}</core-item>
+                                </template>
+                            </core-selector>
+                        </core-dropdown>
+                    </core-dropdown-menu>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td><core-item icon="view-agenda" label="View Report" title="View Attendance Report" width="20%" text-align="right">
+                        <a is="pushstate-anchor" href="/#/attendance/report/{{employee}}/{{fromdate | urlencode}}/{{todate | urlencode}}"></a>
+                    </core-item>
+                    <!--fromdate={{fromdate}}&todate={{todate}}&EmployeeID={{employee}}-->
+                    </td>
+                    </tr>
+                </table>
+                <!--                </div>
+                                <div>-->
+                <!--<paper-button id="viewbutton" on-click="{{view}}">View</paper-button>-->
+
+                <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+
+            </div>
+            <!--            <div>
+                            <paper-calendar></paper-calendar>
+                        </div>-->
+            <!--            <div>
+            
+                            <input id="trigger" value="{{selectedDate}}" 
+                                   on-click="{{$.datePicker.toggle}}" 
+                                   readonly class="date"/>
+                            <polymer-date-picker 
+                                id="datePicker"
+                                selectedDate="{{selectedDate}}" 
+                                relatedTarget="{{$.trigger}}" 
+                                opened="false" />
+                        </div>
+                        <div>
+            
+                            <input id="triggerRange" 
+                                   value="{{startDate}} to {{endDate}}" 
+                                   on-click="{{$.datePicker.toggle}}" readonly/>
+                            <polymer-date-picker 
+                                id="datePicker" 
+                                range 
+                                startDate="{{startDate}}" 
+                                endDate="{{endDate}}" 
+                                relatedTarget="{{$.triggerRange}}" 
+                                opened="true"
+                                halign="right" />
+                            <polymer-date-picker range="true"></polymer-date-picker>
+                        </div>-->
+            <app-ajax id="ajax"
+                      url="/api/employee"
+                      method="GET"
+                      on-core-response="{{employeeResponse}}"
+                      content-type="application/json"
+                      handleAs="json">
+            </app-ajax>
+        </sidebar-layout>
+    </template>
+    <script>
+        Polymer('attendance-page',{
+            ready : function(){
+                document.title = "View Attendance";
+                //                this.$.fromdate.value = moment().startOf('month').format("YYYY/MM/DD");
+                //                this.$.todate.value = moment().format("YYYY/MM/DD");
+                this.employees = this.employees || [];
+                //                this.$.ajax.body = {newusername:newusername, newpassword:newpassword,action:name};
+                //                    console.log(this.$.ajax.body);
+                this.$.ajax.go();
+            },
+            employeeResponse: function()
+            {
+                                console.log(this.$.ajax.response.data);
+                //                console.log(this.$.ajax.response.status);
+                if(this.$.ajax.response.status==true)
+                {
+                    this.employees = this.$.ajax.response.data;
+                    //                    console.log(this.$.ajax.response.status);
+                    //                    this.employees=employees;
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            },
+            validate : function()
+            {
+                var fromdate = this.fromdate;
+                var todate = this.todate;
+                if(!moment(fromdate).isValid() || !moment(todate).isValid())
+                {
+                    console.log("attendance validation");
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                    this.$.router.go('/attendance');
+                }
+            },
+            
+            dataResponse : function(el)
+            {
+                el.show();
+            }
+        });
+        PolymerExpressions.prototype.urlencode = function(input) {
+            return encodeURIComponent(input);
+        };
+    </script>
+</polymer-element>

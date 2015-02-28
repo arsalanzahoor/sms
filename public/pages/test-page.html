@@ -1,0 +1,200 @@
+
+
+
+<!--<link rel="import" href="/bower_components/polymer/polymer.html">-->
+<link rel="import" href="/bower_components/core-scroll-threshold/core-scroll-threshold.html">
+
+<link rel="import" href="/pages/app-ajax.html">
+<script src="/pages/date.js"></script>
+
+
+<polymer-element name="test-page" layout vertical attribute="employeeattendance employeename employeeid">
+    <template>
+        <sidebar-layout selected="test">
+            <style>
+                #scroller {
+                    height: 300px;
+                    border: 1px solid blue;
+                    padding: 10px;
+                    margin-top: 8%;
+                    overflow: auto;
+                }
+                .thing {
+                    text-align: left;
+                    padding-left: 20px;
+                    margin-left: 10px;
+                    background: lightblue;
+                    border-radius: 40px;
+                    font-size: 1.1em;
+                    width: 100%;
+                }
+                .header {
+                    text-align: left;
+                    padding-left: 20px;
+                    margin-left: 10px;
+                    margin-right: 0px;
+                    background: lightblue;
+                    border-radius: 10px;
+                    font-size: 1.1em;
+
+                }
+                .table {
+                    alignment-adjust: initial;  
+                    text-align: left; 
+                    font-style: oblique;
+                    display: inline-block;  
+                    /*border: 1px solid red;*/
+                    border-spacing: 100px;
+                    border-collapse: collapse; 
+                    padding: 20px;
+                    width: auto;
+                    margin-left: 5px;
+                    column-width: 50px;
+                }
+                .tabledata {
+                    text-align: left; 
+                    font-style: oblique;
+                    display: inline-block;  
+                    border: 1px solid red;
+                    border-spacing: 100px;
+                    border-collapse: collapse; 
+                    padding: 10px;
+                    width: auto;
+                }
+                .span {
+                    padding-left: 5px;
+                    margin-left: 5px;
+                }
+            </style>
+            <div class="title">Pager Test</div>
+            <div>
+                <b><i><u>Attendance Report List</u></i></b><br><br>
+                <!--<core-label for="{{this.employeeid}}">Employee Name:{{employeename}}</core-label>-->
+                <label type="hidden" id="empname" name="employeename"><b>{{employeename}}</b></label>
+            </div>
+            <br>
+            <div>
+                <core-scroll-threshold id="threshold" scrollTarget="{{$.scroller}}" lowerThreshold="100" on-lower-trigger="{{loadMore}}" fit></core-scroll-threshold>
+                <div id="scroller" fit>
+                    <table class="thing">
+                        <!--                    <div class="header">
+                                                <template if ="{{!employeeid}}">
+                                                <b><i>Employee Name</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </template> 
+                                                <b><i>Attendance Date</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                                <b><i>CheckIn Time</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                                <b><i>CheckOut Time</i></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            </div>-->
+                        <template repeat="{{attendance in employeeattendance}}">
+                            <tr>
+                                <!--<div class="thing">-->
+                            <template if ="{{!employeeid}}">
+                                <td><b><i>Employee Name:</i></b>&nbsp;{{attendance.FirstName}} {{attendance.LastName}}</td>
+                            </template> 
+                            <td><b><i>Attendance Date:</i></b>&nbsp;{{attendance.Attendence | date(yyyy/mm/dd)}}</td> 
+                            <td><b><i>CheckIn Time:</i></b>&nbsp;{{attendance.timein | date('HH-mm-ss')}}</td> 
+                            <td><b><i>CheckOut Time:</i></b>&nbsp;{{(attendance.timein === attendance.timeout) ? '' : attendance.timeout | date('HH-mm-ss') }}</td>
+                            <!--</div>-->
+                            </tr>
+                        </template>
+                    </table>
+                    <paper-toast id="toast1" text="" on-click="{{dataResponse(el)}}" opened="false"></paper-toast>
+                </div>
+        </sidebar-layout>
+        <app-ajax id="ajax"
+                  url="/api/employeeattendence/report"
+                  method="GET"
+                  on-core-response="{{reportResponse}}"
+                  content-type="application/json"
+                  handleAs="json">
+        </app-ajax>
+    </template>
+
+    <script>
+        Polymer('test-page',{
+            //            ready : function() {
+            //                var scope = this;
+            //                var n;
+            //                scope.data = [];
+            //                for (n=0; n<20; n++) {
+            //                    scope.data.push(n);
+            //                }
+            //                console.log(scope.data);
+            //                scope.loadMore = function() {
+            //                    setTimeout(function() {
+            //                        for (var i=n; i<n+10; i++) {
+            //                            scope.data.push(i);
+            //                        }
+            //                            
+            //                        n = i;
+            //                        scope.$.threshold.clearLower();
+            //                    }, 1000);
+            //                };
+            //            },
+            domReady : function(){
+                document.title = "Pager Test";
+                this.employeeattendance = this.employeeattendance || [];
+                var fromdate = '2014/01/01';
+                var todate = '2015/01/01';
+                this.employeeid = '6'
+                var EmployeeID = this.employeeid;
+                //                var employeeid = '4';
+                //                if(employeeid != '') {
+                ////                    this.$.ajax1.data = {employeeid:employeeid};
+                ////                    this.$.ajax1.go();
+                ////                    this.$.empname.type=true;
+                //                
+                //                }
+                //                this.access_token = this.$.globals.baasicUser.accessToken;
+                console.log(fromdate,todate,EmployeeID);
+                this.$.ajax.data = {fromdate:fromdate, todate:todate, employeeid:this.employeeid};
+                this.$.ajax.go();
+            
+            },
+            reportResponse : function(){
+                if(this.$.ajax.response.status==true)
+                {
+                    console.log(this.$.ajax.response.data);
+                    //                    for(var i=0;i<this.$.ajax.response.data.length;i++)
+                    //                    {
+                    //                        if(this.$.ajax.response.data[i].timein == this.$.ajax.response.data[i].timeout)
+                    //                        {
+                    //                            console.log(moment().duration().get(this.$.ajax.response.data[i].timein));
+                    //                            this.$.ajax.response.data[i].timeout  = null;
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            this.$.ajax.response.data[i] = this.$.ajax.response.data[i];
+                    //                        }
+                    //                    }
+                    this.employeename = this.$.ajax.response.data[0].value.employeename;
+                    this.$.empname.type=true;
+                    this.employeeattendance = this.$.ajax.response.data;
+                }
+                else
+                {
+                    this.$.toast1.text="There Is an Error on Attendance Report Request/Response";
+                    this.$.toast1.opened="true";
+                }
+                
+            },
+            employeeResponse: function()
+            {
+                if(this.$.ajax1.response.status==true)
+                {
+                    this.employeename = (this.$.ajax1.response.data[0].FirstName +' '+ this.$.ajax1.response.data[0].LastName);
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            },
+            dataResponse : function(el)
+            {
+                el.show();
+            }
+            
+        });
+    </script>
+</polymer-element>
