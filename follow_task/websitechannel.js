@@ -25,11 +25,7 @@ var request = require('request');
  
 
 // You can also set values directly. 
-<<<<<<< HEAD
-feed.db = "http://website:website@192.168.1.40:4984/db";
-=======
 feed.db            = "http://website:website@192.168.1.40:4984/db";
->>>>>>> 032b2e58d13f194314cfc29e48b49943bdfb8e3b
 feed.include_docs = true;
 //feed.since         = 'now';
 //feed.heartbeat     = 30    * 1000
@@ -58,7 +54,7 @@ var q = async.queue(function (task, callback) {
 
         request({
         method: 'POST',
-        url:'http://esajeecom.esajee.com/quickstart/index.php/links/index/stockupdate?sku='+encodeURIComponent(task.data.item_barcode)+'&qty='+ encodeURIComponent(qty)+'&processType='+ encodeURIComponent(task.processType)+'&itemName='+ encodeURIComponent(task.data.item_description), 
+        url:'http://esajeecom.esajee.com/quickstart/index.php/links/index/stockupdate?sku='+encodeURIComponent(task.data.item_barcode)+'&qty='+ encodeURIComponent(qty)+'&processType='+ encodeURIComponent(task.processType)+'&itemName='+ encodeURIComponent(task.data.item_description)+'&retailPrice='+ encodeURIComponent(task.data.retail_price), 
         form:(task)
 //        json:true
         
@@ -83,7 +79,7 @@ feed.on('change', function(change) {
 
 //console.log(change);
 var doc =change.doc
-//    console.log('Document id ' + change.id + ' is change with sequence id ' + change.seq,  change.doc);
+    console.log('Document id ' + change.id + ' is change with sequence id ' + change.seq);
 //    if(doc){
         
 //            if(doc.data.retail_price){
