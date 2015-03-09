@@ -3,45 +3,21 @@ var async = require('async');
 var opts = {}; // Same options paramters as before 
 var feed = new follow.Feed(opts);
 
- 
-//var obj;
 var request = require('request');
-//request.get('http://localhost:8080/api/log', function (error, response, body) {
-//    if (!error && response.statusCode == 200) {
-//                console.log(body); // Show the HTML for the Google homepage.
-////        console.log(body);
-//        obj = JSON.parse(body);
-//        console.log(obj.data);
-feed.since = 'now';
-//        feed.follow();
 
-/*follow({db:"http://ISE:ISE@192.168.1.15:4984/esajee-sync", include_docs:true,since:'now'}, function(error, change) {
-  if(!error) {
-    console.log("Change " + change.seq + " has " + Object.keys(change.doc).length + " fields");
-  }
-})*/
-//    }
-//})
- 
+feed.since = 'now';
 
 // **********You can also set values directly.**********
 feed.db            = "http://dev:dev@192.168.1.40:4984/db";
 feed.include_docs = true;
-//feed.since         = 'now';
-//feed.heartbeat     = 30    * 1000
-//feed.inactivity_ms = 86400 * 1000;
+
 feed.filter = function(doc, req) {
-    // req.query is the parameters from the _changes request and also feed.query_params. 
-    //  console.log('Filtering for query: ' + JSON.stringify(req.query));
-    //  console.log(doc);
- 
+   
     if(doc.isFinalize)
         return true;
     return false;
 }
-//feed.document = function(doc, req) {
-//    console.log(doc);
-//}
+
 var document;
 var method1;
 var url;
@@ -50,31 +26,7 @@ var q = async.queue(function (task, callback) {
     console.log(task);
     //    callback();
    
-    //    var qty = eval('0' + task.change_qty );
-    // console.log(qty)
     document = task.doctype;
-    /*
-    if(document == 'invoiceStock')
-    {
-        method1 = 'processInvoiceData';
-    }
-    else if(document == 'stockMovement')
-    {
-        method1 = 'processStockMovementData';
-    }
-    else if(document == 'receiveMovement')
-    {
-        method1 = 'processReceiveMovementData';
-    }
-    else if(document == 'demand')
-    {
-        method1 = 'processDemandData';
-    }
-    else if(document == 'stockAdjustment')
-    {
-        method1 = 'processAdjustmentData';
-    }
-    */
   
     switch(document)
     {
@@ -115,7 +67,6 @@ var q = async.queue(function (task, callback) {
             if (!error && response.statusCode == 200) {
                 console.log('Response='+response.statusCode);
                 console.log('Getting body response:'+ body+ '*******Body Response Ended...!*******'); // Show the HTML for the Google homepage. 
-            //        var obj = JSON.parse(body);
             }
         });
     }

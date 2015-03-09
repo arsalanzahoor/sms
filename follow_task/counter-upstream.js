@@ -1,8 +1,5 @@
 
-// app.js
-
-// BASE SETUP
-// =============================================================================
+// counter-upstream.js
 
 // call the packages we need
 var express    = require('express');        // call express
@@ -11,14 +8,37 @@ var bodyParser = require('body-parser');
 //var mysql   = require('mysql');
 var total_records=null;
 var async = require('async');
-
+var total_attenedence=null;
 var request = require('request');
+
+//**************BEGIN OF FOLLOW********************
+var follow = require('follow');
+
+var opts = {}; // Same options paramters as before 
+var feed = new follow.Feed(opts);
+
+feed.since = 'now';
+
+
+// You can also set values directly. 
+feed.db = "http://website:website@192.168.1.40:4984/db";
+feed.include_docs = true;
+
+feed.on('change', function(change) {
+
+    console.log(change.doc,change.seq,change.id);
+
+})
+ 
+//**************END OF FOLLOW********************
+
+
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
+app.use(bodyParser.json());
 
 var port = process.env.PORT || 3001;        // set our port
 
@@ -34,26 +54,21 @@ router.get('/', function(req, res) {
         message: 'hooray! welcome to our api!'
     });   
 });
-
+var localid;
+var serverid = 0;
+var url;
+var data;
+var q2 = async.queue(appFunction, 1);
+q2.pause();
 // more routes for our API will happen here
-var q = async.queue(function (task, callback) {
-    //    callback();
-    var url;
-    var data;
-    if(task.method=='startPosClosing')
-    {
-        url = task.url;
-        data = task.data;
-    }
-    else if(task.method=='getSaleData')
-    {
-        url = task.url;
-        data = task.data;
-    }
+var q = async.queue(appFunction, 1);
+
+function appFunction(task, callback) {
+  
     var ro = {
         method: 'POST',
-        url:url,
-        form: data
+        url:task.url,
+        form: task.data
     //        json:true
         
     };
@@ -61,6 +76,7 @@ var q = async.queue(function (task, callback) {
         callback();
         if (!error && response.statusCode == 200) {
             console.log(body, typeof body); // Show the HTML for the Google homepage. 
+            
             if(task.calbackurl!='')
             {
                 request({
@@ -69,6 +85,11 @@ var q = async.queue(function (task, callback) {
                     method: 'POST'
                 },function(error,response2,body2) {
                     console.log(body2,response2.statusCode);
+                    if(task.method == 'startPosClosing')
+                    {
+                        serverid = body2.serverid;
+                        q2.resume();
+                    }
                     if(task.updatesaleurl)
                     {
                         request({
@@ -85,8 +106,8 @@ var q = async.queue(function (task, callback) {
             }
         }
     });
-       
-}, 1);
+}
+
 router.route('/log')
     
     
@@ -101,7 +122,21 @@ router.route('/log')
         console.log(req.body);
 
         res.send(true);
-        q.push(req.body);
+        var task = req.body;
+        if(task.method=='startPosClosing' )
+        {
+            localid = task.currentid;
+            q.push(task);
+        }
+        else if(task.method=='getSaleData' && serverid == 0)
+        {
+            q2.push(task);
+        }
+        else if(serverid >0){
+       
+            q.push(task);
+        }
+        
     });
 
 //****************************************************************************
@@ -134,3 +169,9 @@ app.use('/api', router);
 // =============================================================================
 app.listen(port);
 console.log('attendence server started at ' + port);
+
+feed.on('error', function(er) {
+    console.error('Since Follow always retries on errors, this must be serious');
+    throw er;
+})
+feed.follow();
