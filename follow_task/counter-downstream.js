@@ -93,3 +93,4 @@ feed.on('error', function(er) {
     throw er;
 })
 feed.follow();
+process.on('uncaughtException', function(err) { console.log('Caught exception: ' + err); });
