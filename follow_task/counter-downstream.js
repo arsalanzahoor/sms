@@ -41,7 +41,7 @@ var failedQueue = async.queue(function (task, callback) {
     };
     request({
         method: 'POST',
-        url:'http://192.168.1.40/v2_gulberg/admin/api.php?method=sendEmail&type=post&user_id=1888', 
+        url:'http://192.168.1.41/v2_gulberg/admin/api.php?method=sendEmail&type=post&user_id=1888', 
         form:(data)
     //        json:true
         
