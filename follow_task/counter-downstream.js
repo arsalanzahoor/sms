@@ -12,7 +12,7 @@ feed.since = 'now';
 feed.db = "http://"+login+":"+login+"@192.168.1.40:4984/db";
 feed.include_docs = true;
 
-//**********Queue For Pushing/Performing Tasks********** 
+//**********Start Queue For Pushing/Performing Tasks********** 
 var q = async.queue(function (task, callback) {
     //    callback();
     request({
@@ -26,6 +26,10 @@ var q = async.queue(function (task, callback) {
         }
     });
 }, 1); 
+
+//**********End Queue For Pushing/Performing Tasks**********
+
+//**********Start Failed Operations Queue For Pushing/Performing Tasks**********
 
 var failedQueue = async.queue(function (task, callback) {
     console.log(task);
@@ -49,6 +53,7 @@ var failedQueue = async.queue(function (task, callback) {
     });
 }, 1); 
 
+//**********End Failed Operations Queue For Pushing/Performing Tasks**********
 
 //**********Monitoring Every Change In Database**********
 feed.on('change', function(change) {
