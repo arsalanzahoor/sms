@@ -7,7 +7,7 @@ app = express();
 
 app.use(bodyParser());
 
-
+//**********Creating Connection**********
 var connection = mysql.createConnection({
     host     : '192.168.1.40',
     user     : 'root',
@@ -22,6 +22,7 @@ var opt = {
     
     json : true
 };
+//**********Queue For Pushing/Performing Tasks********** 
 var q = async.queue(function (data, callback){
   
     data.channels = ['main'];
@@ -31,6 +32,7 @@ var q = async.queue(function (data, callback){
         console.log(e,a.statusCode,b);
     })
 }, 1);
+//**********Queue For Pushing/Performing Tasks********** 
 var q2 = async.queue(function (data2, callback) {
     console.log(data2);
     opt.method = 'PUT';

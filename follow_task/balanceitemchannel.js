@@ -1,3 +1,4 @@
+//balanceitemchannel.js
 var follow = require('follow');
 var async = require('async'); 
 var mysql = require('mysql');
@@ -50,7 +51,7 @@ var q = async.queue(function (task, callback) {
             console.log("Error:",err);
         }
         else {
-//            console.log("Results:",res);
+            //            console.log("Results:",res);
             data = res[0];
             data.usetemplate = 1;
             //        console.log("Results:",res);
@@ -87,4 +88,5 @@ feed.on('error', function(er) {
     console.error('Since Follow always retries on errors, this must be serious');
     throw er;
 })
+//start feed
 feed.follow();

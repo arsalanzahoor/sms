@@ -48,9 +48,7 @@ var q = async.queue(function (task, callback) {
                                 console.log("Document put without rev");
                             }
                     });
-                }
-                
-            
+                }    
         }
         else {
             console.log("Document not get","Error Is:",error,"Response Status Is:",response.statusCode);

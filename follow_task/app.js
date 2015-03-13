@@ -1,9 +1,4 @@
-
 // app.js
-
-// BASE SETUP
-// =============================================================================
-
 // call the packages we need
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
@@ -18,10 +13,7 @@ var request = require('request');
 app.use(bodyParser.urlencoded({
     extended: true
 }));
-
-
 var port = process.env.PORT || 3001;        // set our port
-
 var router = express.Router();              // get an instance of the express Router
 router.use(function(req, res, next) {
     // do logging
@@ -35,7 +27,7 @@ router.get('/', function(req, res) {
     });   
 });
 
-// more routes for our API will happen here
+//**********Queue For Pushing/Performing Tasks**********
 var q = async.queue(function (task, callback) {
     //    callback();
     var url;
@@ -87,6 +79,7 @@ var q = async.queue(function (task, callback) {
     });
        
 }, 1);
+//**********Log Route**********
 router.route('/log')
     
     
@@ -106,7 +99,7 @@ router.route('/log')
 
 //****************************************************************************
 
-
+//**********Test route**********
 router.route('/test')
     
     
@@ -122,9 +115,6 @@ router.route('/test')
     //          json: true
         
     });
-
-
-
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

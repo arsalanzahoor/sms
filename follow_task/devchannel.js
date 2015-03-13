@@ -1,16 +1,14 @@
+//devchannel.js
 var follow = require('follow');
 var async = require('async'); 
 var opts = {}; // Same options paramters as before 
 var feed = new follow.Feed(opts);
-
 var request = require('request');
-
 feed.since = 'now';
-
 // **********You can also set values directly.**********
-feed.db            = "http://dev:dev@192.168.1.40:4984/db";
+feed.db = "http://dev:dev@192.168.1.40:4984/db";
 feed.include_docs = true;
-
+//**********filtering documents for performing task on**********
 feed.filter = function(doc, req) {
    
     if(doc.isFinalize)
@@ -27,7 +25,7 @@ var q = async.queue(function (task, callback) {
     //    callback();
    
     document = task.doctype;
-  
+    //Switch statement for finding the document type case and assigning the right method for POST request  
     switch(document)
     {
         case'invoiceStock':
@@ -90,4 +88,5 @@ feed.on('error', function(er) {
     console.error('Since Follow always retries on errors, this must be serious');
     throw er;
 })
+//start feed
 feed.follow();
