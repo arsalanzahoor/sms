@@ -1,7 +1,7 @@
 var follow = require('follow');
 var async = require('async'); 
 var Datastore = require('nedb');
-var db = new Datastore({ filename: '/var/www/html/node/db', autoload:true });
+var db = new Datastore({ filename: 'db', autoload:true });
 var login = 'gulberg_counter';
 var folder = 'v2_gulberg';
 var opts = {}; // Same options paramters as before 
