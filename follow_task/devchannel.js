@@ -65,6 +65,34 @@ var q = async.queue(function (task, callback) {
             if (!error && response.statusCode == 200) {
                 console.log('Response='+response.statusCode);
                 console.log('Getting body response:'+ body+ '*******Body Response Ended...!*******'); // Show the HTML for the Google homepage. 
+                
+                //**********Post data back to Sync with Update Channel as Archive**********
+                if(body == true) {
+                    request.get('http://dev:dev@192.168.1.40:4984/db/'+task._id, function (err, res, bo) {
+                        data = JSON.parse(bo);
+                        console.log(err,res.statusCode,data.channels);
+                        if (!err && res.statusCode == 200) {
+                            console.log("Archive Testing");
+                            data.channels = ["archive"];
+                            console.log(encodeURIComponent(data._id),data.channels);
+                            request({
+                                method: 'PUT',
+                                url:'http://dev:dev@192.168.1.40:4984/db/'+encodeURIComponent(data._id)+'?_rev='+encodeURIComponent(data._rev), 
+                                body:JSON.stringify(data)
+                            //                                json:true
+        
+                            }, function (error1, response1, body1) {
+                                //                                callback();
+                                console.log('Errors1 response1:'+ error1,response1.statusCode)
+                                if (!error1 && response1.statusCode == 200) {
+                                    console.log('Response1 Status='+response1.statusCode);
+                                    console.log('Response Body1:'+ body1); // Show the HTML for the Google homepage. 
+                                //        var obj = JSON.parse(body);
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
     }
