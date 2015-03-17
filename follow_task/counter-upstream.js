@@ -163,6 +163,14 @@ router.route('/log')
 
         
     });
+    
+//**********Health Route For Service Status**********
+
+router.route('/health')
+      
+    .get(function(req, res){
+        res.send(true);
+    });
 
 //****************************************************************************
 
@@ -207,7 +215,7 @@ process.on('uncaughtException', function(err) {
         //        callback(error, response);
         if (!error && response.statusCode == 200) {
             //        var obj = JSON.parse(body);
-            console.log("body:",body)
+            console.log("Exception Post response body:",body)
         }
     });
 });

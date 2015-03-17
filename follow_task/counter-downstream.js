@@ -7,8 +7,19 @@ var folder = 'v2_gulberg';
 var opts = {}; // Same options paramters as before 
 var feed = new follow.Feed(opts);
 var request = require('request');
-
-
+var port = process.env.PORT || 3002;
+var express    = require('express');        // call express
+var app        = express();                 // define our app using express
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+var router = express.Router();              // get an instance of the express Router
+router.use(function(req, res, next) {
+    // do logging
+    next(); // make sure we go to the next routes and don't stop here
+});
 
 
 // **********You can also set values directly.**********
@@ -131,3 +142,18 @@ process.on('uncaughtException', function(err) {
         }
     });
 });
+
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
+// START THE SERVER
+// =============================================================================
+app.listen(port);
+console.log('sync downstream counter server started at ' + port);
+//**********Health Route For Service Status**********
+
+router.route('/health')
+      
+    .get(function(req, res){
+        res.send(true);
+    });
