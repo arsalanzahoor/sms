@@ -19,7 +19,7 @@ request.get('http://localhost:8080/api/log', function (error, response, body) {
 })
 
 // You can also set values directly. 
-feed.db            = "http://ISE:ISE@192.168.1.15:4984/esajee-sync";
+feed.db = "http://ISE:ISE@192.168.1.15:4984/esajee-sync";
 feed.include_docs = true;
 //**********Queue For Pushing/Performing Tasks********** 
 var q = async.queue(function (task, callback) {
@@ -57,6 +57,9 @@ var doc =change.doc
 //**********Throwing Error/Exceptions in Case of Follow Data Changes********** 
 feed.on('error', function(er) {
     console.error('Since Follow always retries on errors, this must be serious');
-    throw er;
+    //    throw er;
+    setTimeout(function() {
+        feed.follow()
+    }, 5*60*1000);
 })
 //feed.follow();

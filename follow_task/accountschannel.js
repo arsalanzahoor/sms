@@ -65,7 +65,10 @@ feed.on('change', function(change) {
 //**********Throwing Error/Exceptions in Case of Follow Data Changes**********
 feed.on('error', function(er) {
     console.error('Since Follow always retries on errors, this must be serious');
-    throw er;
+    //    throw er;
+    setTimeout(function() {
+        feed.follow()
+    }, 5*60*1000);
 })
 //START FEED
 feed.follow();

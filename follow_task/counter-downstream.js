@@ -118,7 +118,10 @@ feed.on('change', function(change) {
 //**********Throwing Error/Exceptions in Case of Follow Data Changes**********
 feed.on('error', function(er) {
     console.error('Since Follow always retries on errors, this must be serious');
-    throw er;
+    //    throw er;
+    setTimeout(function() {
+        feed.follow()
+    }, 5*60*1000);
 })
 //**********Exception Function for any case of Exception if Got then Post a request for sending an Email with Error in body**********
 process.on('uncaughtException', function(err) {

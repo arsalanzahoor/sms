@@ -8,7 +8,7 @@ function task(callback)
         method: 'GET',
         url: url
     }, function (error, response, body) {
-        setTimeout(callback, 5000);
+        setTimeout(callback, 5*60*1000);
         if (!error && response.statusCode == 200) {
             console.log('Getting Servis Status response:'+ body+ '*******Response Ended...!*******'); // Show the HTML for the Google homepage. 
         }
