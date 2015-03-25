@@ -6,9 +6,9 @@ var feed = new follow.Feed(opts);
 var request = require('request');
 feed.since = 'now';
 var login = 'dev';
-var folder = 'v2_gulberg';
+var channels;
 // **********You can also set values directly.**********
-feed.db = "http://"+login+":"+login+"@192.168.1.40:4984/db";
+feed.db = "http://"+login+":"+login+"@esajeesolutions.com:4984/db";
 feed.include_docs = true;
 //**********filtering documents for performing task on**********
 feed.filter = function(doc, req) {
@@ -27,6 +27,9 @@ var q = async.queue(function (task, callback) {
     //    callback();
    
     document = task.doctype;
+    if(typeof task.channels == 'object') {
+        channel = task.channels[0]
+    }
     //Switch statement for finding the document type case and assigning the right method for POST request  
     switch(document)
     {
@@ -56,29 +59,33 @@ var q = async.queue(function (task, callback) {
     {
         request({
             method: 'POST',
-            url:'http://192.168.1.40/'+folder+'/admin/api.php?method='+method1+'&type=post&user_id=1888', 
+            url:'http://'+channel+'.esajee.com/admin/api.php?method='+method1+'&type=post&user_id=1888', 
             form:(task)
         //        json:true
         
         }, function (error, response, body) {
             callback();
             if (!error && response.statusCode == 200) {
+                console.log('Response='+response.statusCode);
+                console.log('Getting Post body response:'+ body+ '*******Post Body Response Ended...!*******'); // Show the HTML for the Google homepage. 
+                
                 //**********Post data back to Sync with Update Channel as Archive**********
                 if(body > 0) {
-                    request.get('http://'+login+':'+login+'@192.168.1.40:4984/db/'+task._id, function (err, res, bo) {
+                    request.get('http://'+login+':'+login+'@esajeesolutions.com:4984/db/'+task._id, function (err, res, bo) {
                         data = JSON.parse(bo);
+                        console.log(err,res.statusCode,data.channels);
                         if (!err && res.statusCode == 200) {
                             data.channels = ["archive"];
                             request({
                                 method: 'PUT',
-                                url:'http://'+login+':'+login+'@192.168.1.40:4984/db/'+encodeURIComponent(data._id)+'?_rev='+encodeURIComponent(data._rev), 
+                                url:'http://'+login+':'+login+'@esajeesolutions.com:4984/db/'+encodeURIComponent(data._id)+'?_rev='+encodeURIComponent(data._rev), 
                                 body:JSON.stringify(data)
                             //                                json:true
         
                             }, function (error1, response1, body1) {
                                 //                                callback();
                                 if (!error1 && response1.statusCode == 201) {
-                                    console.log('Channel changes as archive succesfully'); // Show the HTML for the Google homepage. 
+                                    console.log('Channel changed to Archive successfully'); // Show the HTML for the Google homepage. 
                                 //        var obj = JSON.parse(body);
                                 }
                             });
@@ -105,7 +112,7 @@ feed.on('change', function(change) {
 })
 //**********Throwing Error/Exceptions in Case of Follow Data Changes**********
 feed.on('error', function(er) {
-    console.error('Since Follow always retries on errors, this must be serious');
+    console.error('Since Follow always retries on errors, It will retry after 5 mints');
     //    throw er;
     setTimeout(function() {
         feed.follow()
@@ -122,7 +129,7 @@ process.on('uncaughtException', function(err) {
     };
     request({
         method: 'POST',
-        url:'http://192.168.1.41/'+folder+'/admin/api.php?method=sendEmail&type=post&user_id=1888', 
+        url:'http://'+channel+'.esajee.com/admin/api.php?method=sendEmail&type=post&user_id=1888', 
         form:(data)
     //        json:true
         
@@ -130,7 +137,6 @@ process.on('uncaughtException', function(err) {
         //        callback(error, response);
         if (!error && response.statusCode == 200) {
             //        var obj = JSON.parse(body);
-            console.log("body:",body)
         }
     });
 });
