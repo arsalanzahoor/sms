@@ -125,7 +125,7 @@ feed.on('error', function(er) {
 })
 //**********Exception Function for any case of Exception if Got then Post a request for sending an Email with Error in body**********
 process.on('uncaughtException', function(err) {
-    console.log('Caught exception: ' + err);
+    console.log('Caught exception: ' , err);
     var data = {
         to : 'notify@esajeesolutions.com', 
         subject : 'Exception At-'+login, 

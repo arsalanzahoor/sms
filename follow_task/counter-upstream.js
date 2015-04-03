@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 //var mysql   = require('mysql');
 var async = require('async');
 var request = require('request');
-
+var trim = require('trim');
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({
@@ -23,7 +23,8 @@ router.use(function(req, res, next) {
 var counter_no = 3;
 var counter_id = 'gulberg_counter';
 var folder = 'v2_gulberg';
-var url = 'http://192.168.1.41/'+folder+'/admin/api.php?type=post&user_id=1888';
+var url_prefix = 'http://192.168.1.41/'+folder+'/admin/';
+var url = url_prefix + 'api.php?type=post&user_id=1888';
 var localid;
 var serverid=0;
 var data;
@@ -74,12 +75,12 @@ q.pause();
 function appFunction(task, callback) {
     var ro = {
         method: 'POST',
-        url:task.url,
+        url:task,
         form: task.data
     //        json:true
 
     };
-    console.log("Server Id2:",serverid,task.method);
+    console.log("Server Id2:",serverid,task);
 
     //Post Request for Task 
     request(ro, function (error, response, body) {
@@ -118,9 +119,54 @@ function appFunction(task, callback) {
                 });
             }
         }
-        callback();
+        console.log("delay:",task.delay);
+        setTimeout(callback,task.delay || 1);
     });
+    
 }
+
+//**********END Of Generic appFunction for queue's performing tasks**********
+
+//**********Queue For Getting Request for Remaining Closing's**********
+
+var q3 = async.queue(QappFunction,1); 
+//q3.pause();
+function QappFunction(data, callback){
+
+data.delay = 10*1000;
+            data.url = url_prefix+'autoclosingprocess.php';
+            data.callbackurl = url_prefix+'autosendclosing.php';
+            
+            appFunction(data, callback);
+
+}
+//**********Start Of getClosings for queue's performing tasks**********
+
+function getClosings() {
+    request.get('http://192.168.1.40/v2_gulberg/admin/api.php?method=getUnSyncedClosings&user_id=1888', function(e, r, b) {
+        if(!e && r.statusCode == 200) {
+           
+            console.log("remaining closings request result",b.indexOf('pkclosingid'),b);
+//            var data = {};
+            data = JSON.parse(b);
+//            console.log("data after trim",data);
+//            data.delay = 30*1000;
+//            data.url = 'http://192.168.1.40/v2_gulberg/admin/autoclosingprocess.php';
+//            data.callbackurl = 'http://192.168.1.40/v2_gulberg/admin/autosendclosing.php';
+//            console.log("data after trim",data);
+            if(data.length > 0) {
+                console.log('pushed');
+                q3.push(data);
+            }
+            else {
+                console.log(e);
+                setTimeout(getClosings, 5*60*1000);
+            }
+        }
+    })
+}
+
+getClosings();
 //Log Route
 router.route('/log')
       
@@ -199,11 +245,13 @@ app.listen(port);
 console.log('sync counter server started at ' + port);
 //**********Exception Function for any case of Exception if Got then Post a request for sending an Email with Error in body**********
 process.on('uncaughtException', function(err) {
-    console.log('Caught exception: ' + err);
+    console.log('Caught exception: ' ,err);
+//     console.log(err.toString());
     var data = {
         to : 'notify@esajeesolutions.com', 
-        subject : 'Exception At-'+counter_id+' '+counter_no, 
-        body : JSON.stringify(err)
+        subject : 'Upstream Exception At-'+counter_id+' '+counter_no, 
+        body : err.toString() + __filename
+        
     };
     request({
         method: 'POST',
@@ -212,10 +260,6 @@ process.on('uncaughtException', function(err) {
     //        json:true
         
     }, function (error, response, body) {
-        //        callback(error, response);
-        if (!error && response.statusCode == 200) {
-            //        var obj = JSON.parse(body);
-            console.log("Exception Post response body:",body)
-        }
+        
     });
 });
