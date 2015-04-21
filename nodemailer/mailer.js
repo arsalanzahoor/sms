@@ -1,8 +1,8 @@
 var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport();
 var options = {
-            from:'arsalanzahoor786@gmail.com',
-            to: 'arsalanzahoor786@gmail.com',
+            from:'arsalan.zahoor@esajeesolutions.com',
+            to: 'arsalan.zahoor@esajeesolutions.com',
             subject: 'Hello Nodemailer From !',
             text:'Testing Nodemailer From Actionhero...!'
         };
