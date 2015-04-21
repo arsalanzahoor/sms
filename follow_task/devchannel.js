@@ -5,7 +5,7 @@ var opts = {}; // Same options paramters as before
 var feed = new follow.Feed(opts);
 var request = require('request');
 feed.since = 'now';
-var login = 'dev';
+var login = 'dev_live';
 var folder = 'v2_gulberg';
 // **********You can also set values directly.**********
 feed.db = "http://"+login+":"+login+"@192.168.1.40:4984/db";
@@ -13,7 +13,7 @@ feed.include_docs = true;
 //**********filtering documents for performing task on**********
 feed.filter = function(doc, req) {
    
-    if(doc.isFinalize)
+    if(doc.isFinalize && !doc.error && !doc.reason)
         return true;
     return false;
 }
@@ -30,6 +30,9 @@ var q = async.queue(function (task, callback) {
     //Switch statement for finding the document type case and assigning the right method for POST request  
     switch(document)
     {
+        case 'packingList':
+            method1 = 'processPackingListData';
+            break;
         case'invoiceStock':
             method1 = 'processInvoiceData';
             break;
@@ -62,9 +65,38 @@ var q = async.queue(function (task, callback) {
         
         }, function (error, response, body) {
             callback();
+            //            console.log(error,response.statusCode);
             if (!error && response.statusCode == 200) {
+                console.log('Getting body response:',body,'*******Body Response Ended...!*******'); // Show the HTML for the Google homepage. 
+                try {
+                    var obj =  JSON.parse(body);
+                }catch(e) {
+                    request.get('http://'+login+':'+login+'@192.168.1.40:4984/db/'+task._id, function (er, re, b) {
+                        data1 = JSON.parse(b);
+                        if (!er && re.statusCode == 200) {
+                            data1.error = 1;
+                            data1.reason = body;
+//                            console.log(data1.error,data1.reason,typeof data1.reason);
+                            request({
+                                method: 'PUT',
+                                url:'http://'+login+':'+login+'@192.168.1.40:4984/db/'+encodeURIComponent(data1._id)+'?_rev='+encodeURIComponent(data1._rev), 
+                                body:JSON.stringify(data1)
+                            //                                json:true
+        
+                            }, function (err1, res1, bod1) {
+//                                                                callback();
+                                if (!err1 && res1.statusCode == 201) {
+                                    console.log('Document Put with error and Reason Successfully'); // Show the HTML for the Google homepage. 
+                                //        var obj = JSON.parse(body);
+                                }
+                            });
+                        }
+                    });
+                }
+//                callback();
+//                console.log(typeof obj);
                 //**********Post data back to Sync with Update Channel as Archive**********
-                if(body > 0) {
+                if(typeof obj == 'object') {
                     request.get('http://'+login+':'+login+'@192.168.1.40:4984/db/'+task._id, function (err, res, bo) {
                         data = JSON.parse(bo);
                         if (!err && res.statusCode == 200) {
@@ -78,7 +110,7 @@ var q = async.queue(function (task, callback) {
                             }, function (error1, response1, body1) {
                                 //                                callback();
                                 if (!error1 && response1.statusCode == 201) {
-                                    console.log('Channel changes as archive succesfully'); // Show the HTML for the Google homepage. 
+                                    console.log('Channel changed as archive succesfully'); // Show the HTML for the Google homepage. 
                                 //        var obj = JSON.parse(body);
                                 }
                             });
@@ -114,7 +146,7 @@ feed.on('error', function(er) {
 
 //**********Exception Function for any case of Exception if Got then Post a request for sending an Email with Error in body**********
 process.on('uncaughtException', function(err) {
-    console.log('Caught exception: ' + err);
+    console.log('Caught exception: ' , err);
     var data = {
         to : 'notify@esajeesolutions.com', 
         subject : 'Exception At-'+login, 
@@ -122,7 +154,7 @@ process.on('uncaughtException', function(err) {
     };
     request({
         method: 'POST',
-        url:'http://192.168.1.41/'+folder+'/admin/api.php?method=sendEmail&type=post&user_id=1888', 
+        url:'http://192.168.1.40/'+folder+'/admin/api.php?method=sendEmail&type=post&user_id=1888', 
         form:(data)
     //        json:true
         
