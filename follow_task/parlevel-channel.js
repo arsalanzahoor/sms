@@ -2,15 +2,15 @@ var follow = require('follow');
 var async = require('async'); 
 var opts = {}; // Same options paramters as before 
 var feed = new follow.Feed(opts);
-var login = 'gulberg_counter';
+var login = 'dev';
 //var folder = '';
 url = '192.168.1.40/v2_gulberg';
 var request = require('request');
 
-feed.since = 'now';
+feed.since = 81175;
 
 // **********You can also set values directly.**********
-feed.db = "http://"+login+":"+login+"@192.168.1.40:4984/db";
+feed.db = "http://"+login+":"+login+"@esajeesolutions.com:4984/db";
 feed.include_docs = true;
 
 //**********Queue For Pushing/Performing Tasks********** 
@@ -18,8 +18,15 @@ var q = async.queue(function (task, callback) {
     console.log(task);
     var balance = JSON.parse(task.data.balance);
     var parlevel = JSON.parse(task.data.par_level);
-    console.log(balance,parlevel);
-    if(balance <= parlevel) {
+    var packing = JSON.parse(task.data.packing);
+    console.log(balance,parlevel,packing);
+    if(packing > 0) {
+        packing = packing;
+    }
+    else {
+        packing = 1;
+    }
+    if( Math.ceil(balance/packing) <= parlevel && parlevel > 0 ) {
         var data = {
             fkbarcodeid : task.data.itemid
         };
