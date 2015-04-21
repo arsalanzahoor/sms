@@ -11,7 +11,15 @@ exports.task = {
         console.log(params);
         var balance = JSON.parse(params.data.balance);
         var parlevel = JSON.parse(params.data.par_level);
-        console.log(balance,parlevel);
+        var packing = JSON.parse(task.data.packing);
+        console.log(balance,parlevel,packing);
+        if(packing > 0) {
+            packing = packing;
+        }
+        else {
+            packing = 1;
+        }
+        if( Math.ceil(balance/packing) <= parlevel && parlevel > 0 ) {
         if(balance <= parlevel) {
             var channel = params.channels[0];
             switch(channel) {
