@@ -133,11 +133,11 @@ var q3 = async.queue(QappFunction,1);
 //q3.pause();
 function QappFunction(data, callback){
 
-data.delay = 10*1000;
-            data.url = url_prefix+'autoclosingprocess.php';
-            data.callbackurl = url_prefix+'autosendclosing.php';
+    data.delay = 5*60*1000;
+    data.url = url_prefix+'autoclosingprocess.php';
+    data.callbackurl = url_prefix+'autosendclosing.php';
             
-            appFunction(data, callback);
+    appFunction(data, callback);
 
 }
 //**********Start Of getClosings for queue's performing tasks**********
@@ -147,21 +147,18 @@ function getClosings() {
         if(!e && r.statusCode == 200) {
            
             console.log("remaining closings request result",b.indexOf('pkclosingid'),b);
-//            var data = {};
             data = JSON.parse(b);
-//            console.log("data after trim",data);
-//            data.delay = 30*1000;
-//            data.url = 'http://192.168.1.40/v2_gulberg/admin/autoclosingprocess.php';
-//            data.callbackurl = 'http://192.168.1.40/v2_gulberg/admin/autosendclosing.php';
-//            console.log("data after trim",data);
             if(data.length > 0) {
                 console.log('pushed');
                 q3.push(data);
             }
             else {
-                console.log(e);
-                setTimeout(getClosings, 5*60*1000);
+                setTimeout(getClosings, 4*60*60*1000);
             }
+        }
+        else {
+            console.log(e);
+            setTimeout(getClosings, 5*60*1000);
         }
     })
 }
@@ -246,7 +243,7 @@ console.log('sync counter server started at ' + port);
 //**********Exception Function for any case of Exception if Got then Post a request for sending an Email with Error in body**********
 process.on('uncaughtException', function(err) {
     console.log('Caught exception: ' ,err);
-//     console.log(err.toString());
+    //     console.log(err.toString());
     var data = {
         to : 'notify@esajeesolutions.com', 
         subject : 'Upstream Exception At-'+counter_id+' '+counter_no, 
@@ -261,5 +258,5 @@ process.on('uncaughtException', function(err) {
         
     }, function (error, response, body) {
         
-    });
+        });
 });
