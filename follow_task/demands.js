@@ -26,28 +26,23 @@ feed.include_docs = true;
 
 //**********Queue For Pushing Tasks to Queue 2********** 
 var q = async.queue(function (task, callbackq) {
-    console.log(task);
+//    console.log(task);
     var data,smslogid;
-    // var sqlqry1 = 'select MAX(id) as id from outbox';
-    // connection.query(sqlqry1, function(e, r) {
-    //     smslogid=r[0].id;
-    //     console.log("sms id",smslogid);
-    // });
     async.waterfall([
         function(callback) {
             console.log("Starting Transaction");
-            connection.connect(function (err)
-            {
-                if(err)
-                {
-                    console.log("Error In Connection!!!",err);
-                    return;
-                }
-                console.log('Connected as id:'+connection.threadId);
-            });
+//            connection.connect(function (err)
+//            {
+//                if(err)
+//                {
+//                    console.log("Error In Connection!!!",err);
+//                    return;
+//                }
+//                console.log('Connected as id:'+connection.threadId);
+//            });
             var sqlqry1 = 'start transaction';
             connection.query(sqlqry1, function(err1, res1) {
-                console.log(err1,res1);
+//                console.log(err1,res1);
                 callback(null,res1);
             })
         },
@@ -111,7 +106,7 @@ var q = async.queue(function (task, callbackq) {
                 connection.query(sqlqry2, function(err2, res2) {
                     callback_c(err2,res2, result);
                 });
-                connection.end();
+//                connection.end();
             }
 
         }
@@ -130,9 +125,13 @@ var q = async.queue(function (task, callbackq) {
                         console.log("pushed"); 
                     });
 
-                    callbackq('with result');
+                   
                 }
+            } else {
+
             }
+            console.log('In Case of Error or Stuck:',err2,result);
+             callbackq('with result');
         });
 }, 1); 
 
@@ -160,10 +159,9 @@ feed.on('change', function(change) {
     excep_seq = change.seq;
     console.log(change.seq,change.id,excep_seq);
     var doc =change.doc;
-    console.log(change)
+//    console.log(change)
     if(doc.data) {
         q.push(doc, function (err) {
-            console.log(err)
         });
     }
 })
@@ -178,7 +176,7 @@ feed.on('error', function(er) {
 
 //**********Exception Function for any case of Exception if Got then Post a request for sending an Email with Error in body**********
 process.on('uncaughtException', function(err) {
-    console.log('Caught exception: ' , err);
+    console.log('Caught exception: ' , err.toString());
     var data = {
         to : 'notify@esajeesolutions.com', 
         subject : 'Exception At-'+login,
