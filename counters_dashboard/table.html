@@ -1,0 +1,339 @@
+<html>
+    <head>
+        <script src="jquery.js"></script>
+        <script src="moment/moment.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            var data;
+            var arr,arr1;
+            //            var moment = Moment();
+            // function tabledata(){
+            //1=dha/2-gulberg/3-koshar
+            //data.serverid+'_'+d1.countername+'_'+d1.fkstoreid
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET","http://192.168.1.40:8080/api/rediscopy?apiVersion=1&key=CLOSING",true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange=function()
+            {
+                //                console.log('test',xmlhttp.readyState,xmlhttp.status);
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    var test = JSON.parse(xmlhttp.responseText);
+                    // var da = test.data.toString();
+                    // var res = da.split('_');
+                    console.log('data',test.data);
+                    var n =[];
+                    var comp = 1000*60*1;
+                    var loc;
+                    var r = JSON.stringify(test.data);
+                    for(var i in  test.data){
+                        //                        console.log('in loop');
+                        var value;
+                        n=JSON.parse(test.data[i]);
+                        //                        console.log('n',typeof n,n.closingid,typeof n.closing);
+                        var nd = moment();
+                        var dif = nd.diff(moment.unix(n.closingdate).format("MMM/DD/YYYY HH:mm:ss"));
+                        //                                                console.log('dates test',typeof n.closingdate,moment.unix(n.closingdate).format("MMM/DD/YYYY HH:mm:ss"));
+                        switch(n.location){
+                            case 1:
+                                loc = 'DHA';
+                                break;
+                            case 2:
+                                loc = 'GULBERG';
+                                break;
+                            case 3:
+                                loc = 'KOHSAR';
+                                break;
+                        }
+                        if(n.closing == 'Open' || (dif >= comp && n.closing != 'Close')){
+                            if(moment(n.closingdate).isValid()){
+                                var row = $("<tr />")
+                                $("#table1").append(row); 
+                                row.append($("<td>" + n.closingid + "</td>"));
+                                row.append($("<td>" + n.counter + "</td>"));
+                                row.append($("<td>" + loc + "</td>"));
+                                row.append($("<td>" + moment.unix(n.closingdate).format("MM/DD/YYYY HH:mm:ss") + "</td>"));     
+                            }
+                        }else if(n.closing == 'Close'){
+                            //                            console.log('in close status');
+                            // iterate over each row
+                            $("#table1 tbody tr").each(function(i) {
+                                // find the first td in the row
+                                value = $(this).find("td:first").text();
+                                // display the value in console
+                                //                                console.log('value:',value);
+                                if(n.closingid == value){
+                                    //                                    $("#table1 tr:eq(1)").remove();
+                                    document.getElementById("table1").deleteRow(i);
+                                    //                                    console.log('test',value,n.closingid);
+
+                                }
+                            });
+                            //                            for(var i=0;i<value.length;i++){
+                            
+                            //                            }
+                            
+                        }
+                        //==============================
+                        if(n.status == 1){
+                            if(dif >= comp && n.closing == 'Open'){
+                                //                                console.log('loc...',loc,n.closing);
+                                if(loc == 'GULBERG'){
+                                    if(n.counter == 2){
+                                        document.getElementById("gc1_2").style.backgroundColor = "red";
+                                    }else if(n.counter == 1){
+                                        document.getElementById("gc1_1").style.backgroundColor = "red";
+                                    }
+                                    //                                    console.log('going red');
+                                    
+                                                                
+                                }
+                                else if(loc == 'DHA'){
+                                    if(n.counter == 2){
+                                        document.getElementById("dc2_1").style.backgroundColor = "red";
+                                    }else if(n.counter == 3){
+                                        document.getElementById("dc3_1").style.backgroundColor = "red";
+                                    }
+                                }
+                                else if(loc == 'KOHSAR'){
+                                    if(n.counter == 1){
+                                        document.getElementById("kc1_1").style.backgroundColor = "red";
+                                    }else if(n.counter == 2){
+                                        document.getElementById("kc2_1").style.backgroundColor = "red";
+                                    }else if(n.counter == 3){
+                                        document.getElementById("kc3_1").style.backgroundColor = "red";
+                                    }
+                                }
+                            }else if(loc == 'GULBERG'){
+                                if(n.counter == 2){
+                                    document.getElementById("gc1_2").style.backgroundColor = "green";                                   
+                                }else if(n.counter == 1){
+                                    document.getElementById("gc1_1").style.backgroundColor = "green";
+                                }
+                            }else if(loc == 'KOHSAR'){
+                                if(n.counter == 1){
+                                    document.getElementById("kc1_1").style.backgroundColor = "green";
+                                }else if(n.counter == 2){
+                                    document.getElementById("kc2_1").style.backgroundColor = "green";
+                                }else if(n.counter == 3){
+                                    document.getElementById("kc3_1").style.backgroundColor = "green";
+                                }
+                            }else if(loc == 'DHA'){
+                                if(n.counter == 2){
+                                    document.getElementById("dc2_1").style.backgroundColor = "green";
+                                    //                                    document.getElementById("dc3_1").style.backgroundColor = "green";
+                                }else if(n.counter == 3){
+                                    document.getElementById("dc3_1").style.backgroundColor = "green";
+                                }
+                            }
+                        }
+                        else if(n.status == 0){
+                            //                            console.log('status close:',loc,n.counter);
+                            //                            document.getElementById("gc1_1").style.backgroundColor = "yellow";
+                            //                            document.getElementById("gc1_2").style.backgroundColor = "yellow";
+                            if(loc == 'GULBERG'){
+                                if(n.counter == 2){
+                                    document.getElementById("gc1_2").style.backgroundColor = "yellow";                                   
+                                }else if(n.counter == 1){
+                                    document.getElementById("gc1_1").style.backgroundColor = "yellow";
+                                }
+                            }else if(loc == 'KOHSAR'){
+                                //                                console.log('koh:',n.counter);
+                                if(n.counter == 1){
+                                    document.getElementById("kc1_1").style.backgroundColor = "yellow";
+                                }else if(n.counter == 2){
+                                    document.getElementById("kc2_1").style.backgroundColor = "yellow";
+                                }else if(n.counter == 3){
+                                    document.getElementById("kc3_1").style.backgroundColor = "yellow";
+                                }
+                            }else if(loc == 'DHA'){
+                                if(n.counter == 2){
+                                    document.getElementById("dc2_1").style.backgroundColor = "yellow";
+                                    //                                    document.getElementById("dc3_1").style.backgroundColor = "green";
+                                }else if(n.counter == 3){
+                                    document.getElementById("dc3_1").style.backgroundColor = "yellow";
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+                
+                //==============================
+                //==============================
+                /*var data;
+                var xmlhttp2;
+                // function tabledata(){
+                //1=dha/2-gulberg/3-koshar
+                //data.serverid+'_'+d1.countername+'_'+d1.fkstoreid
+                var date = "05-14-2015";
+//                console.log('table test',date);
+                xmlhttp2=new XMLHttpRequest();
+                xmlhttp2.open("GET","http://192.168.1.40:8080/api/rediscopy?apiVersion=1&key=CLOSINGS",true);
+                xmlhttp2.send();
+                xmlhttp2.onreadystatechange=function()
+                {
+//                    console.log('test',xmlhttp2.readyState,xmlhttp2.status);
+                    if (xmlhttp2.readyState==4 && xmlhttp2.status==200)
+                    {
+                        var test = JSON.parse(xmlhttp2.responseText);
+                        // var da = test.data.toString();
+                        // var res = da.split('_');
+                        console.log('data',test.data);
+                        var n =[];
+                        var r = JSON.stringify(test.data);
+                        for(var i in  test.data){
+                            n=i.split('_');
+//                            console.log(n);
+                            if(n[1]!=0){
+                                //=========================================
+                                if(n[2]==2){
+                                    if(n[1]==1 && test.data[i] == 0){
+                                        document.getElementById("gc1_1").style.backgroundColor = "yellow";
+                                        document.getElementById("gc1_2").style.backgroundColor = "yellow";
+                                    }
+                                    if  (n[1]==1 && test.data[i] == 1){
+                                        document.getElementById("gc1_1").style.backgroundColor = "green";
+                                        document.getElementById("gc1_2").style.backgroundColor = "green";
+                                    }
+
+
+                                    if  (n[1]==1 && test.data[i] == 2){
+                                        document.getElementById("gc1_1").style.backgroundColor = "red";
+                                        document.getElementById("gc1_2").style.backgroundColor = "red";
+                                    }
+                                }
+                                //=========================================
+                                if(n[2]==1){
+                                    if(n[1]==2 && test.data[i] == 0){
+                                        document.getElementById("dc2_1").style.backgroundColor = "yellow";
+                                        document.getElementById("dc2_2").style.backgroundColor = "yellow";
+                                    }
+                                    if  (n[1]==2 && test.data[i] == 1){
+                                        document.getElementById("dc2_1").style.backgroundColor = "green";
+                                        document.getElementById("dc2_2").style.backgroundColor = "green";
+                                    }
+                                    if  (n[1]==2 && test.data[i] == 2){
+                                        document.getElementById("dc2_1").style.backgroundColor = "red";
+                                        document.getElementById("dc2_2").style.backgroundColor = "red";
+                                    }
+                                    if(n[1]==3 && test.data[i] == 0){
+                                        document.getElementById("dc3_1").style.backgroundColor = "yellow";
+                                        document.getElementById("dc3_2").style.backgroundColor = "yellow";
+                                    }
+                                    if  (n[1]==3 && test.data[i] == 1){
+                                        document.getElementById("dc3_1").style.backgroundColor = "green";
+                                        document.getElementById("dc3_2").style.backgroundColor = "green";
+                                    }
+                                    if  (n[1]==3 && test.data[i] == 2){
+                                        document.getElementById("dc3_1").style.backgroundColor = "red";
+                                        document.getElementById("dc3_2").style.backgroundColor = "red";
+                                    }
+                                }
+                                //=========================================
+                                if(n[2]==3){
+                                    if(n[1]==2 && test.data[i] == 0){
+                                        document.getElementById("kc2_1").style.backgroundColor = "yellow";
+                                        document.getElementById("kc2_2").style.backgroundColor = "yellow";
+                                    }
+                                    if  (n[1]==2 && test.data[i] == 1){
+                                        document.getElementById("kc2_1").style.backgroundColor = "green";
+                                        document.getElementById("kc2_2").style.backgroundColor = "green";
+                                    }
+                                    if  (n[1]==2 && test.data[i] == 2){
+                                        document.getElementById("kc2_1").style.backgroundColor = "red";
+                                        document.getElementById("kc2_2").style.backgroundColor = "red";
+                                    }
+                                    if(n[1]==3 && test.data[i] == 0){
+                                        document.getElementById("kc3_1").style.backgroundColor = "yellow";
+                                        document.getElementById("kc3_2").style.backgroundColor = "yellow";
+                                    }
+                                    if  (n[1]==3 && test.data[i] == 1){
+                                        document.getElementById("kc3_1").style.backgroundColor = "green";
+                                        document.getElementById("kc3_2").style.backgroundColor = "green";
+                                    }
+                                    if  (n[1]==3 && test.data[i] == 2){
+                                        document.getElementById("kc3_1").style.backgroundColor = "red";
+                                        document.getElementById("kc3_2").style.backgroundColor = "red";
+                                    }
+                                    if(n[1]==1 && test.data[i] == 0){
+                                        document.getElementById("kc1_1").style.backgroundColor = "yellow";
+                                    }
+                                    if  (n[1]==1 && test.data[i] == 1){
+                                        document.getElementById("kc1_1").style.backgroundColor = "green";
+                                    }
+                                    if  (n[1]==1 && test.data[i] == 2){
+                                        document.getElementById("kc1_1").style.backgroundColor = "red";
+                                    }
+                                }
+                            }  
+                            //==============================
+                        }
+                    }
+                }*/
+            }
+            //================================
+        </script>
+    </head>
+    <body>
+        <table style="width:60%" border="1">
+            <tr>
+                <th>Location</th>
+                <th>Daily Closings</th> 
+            </tr>
+            <tr>
+                <td>DHA</td>
+                <td>Morning</td> 
+                <td>Evening</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="dc2_1">Counter 2</td> 
+                <td id="dc2_2">Counter 2</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="dc3_1">Counter 3</td> 
+                <td id="dc3_2">Counter 3</td>
+            </tr>
+            <tr>
+                <td>Gulberg</td>
+                <td id="gc1_1">Counter 1</td> 
+                <td id="gc1_2">Counter 1</td>
+            </tr>
+            <tr>
+                <td>Kohsar</td>
+                <td id="kc1_1">Counter 1</td> 
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="kc2_1">Counter 2</td> 
+                <td id="kc2_2">Counter 2</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="kc3_1">Counter 3</td> 
+                <td id="kc3_2">Counter 3</td>
+            </tr>
+        </table>
+        <br>
+        <h1>PENDING LIST</h1><br>
+        <div>
+            LOCATIONS IDS
+            <ul>
+                <li>1 for DHA</li>
+                <li>2 for GULBERG</li>
+                <li>3 for KOHSAR</li>
+            </ul>
+        </div>
+        <table id="table1" style="width:60%" border="1" ">
+            <tr>
+                <th>CURRENT ID</th>
+                <th>COUNTER   </th> 
+                <th>LOCATION  </th>
+                <th>OPENING DATE/TIME </th> 
+            </tr>
+        </table>
+    </body>
+</html>
