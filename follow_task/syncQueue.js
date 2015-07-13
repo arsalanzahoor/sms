@@ -35,7 +35,7 @@ exports.action = {
 
                 // your logic here
 
-                var url = 'http://dev2:dev2@localhost:4984/db';
+                var url = 'http://dev:dev@localhost:4984/db';
                 
                 if(payload.pkkeyColumn && payload.pkkeyValue ){
                     url = url + '/' + encodeURIComponent(payload.pkkeyColumn+'::'+payload.pkkeyValue);
