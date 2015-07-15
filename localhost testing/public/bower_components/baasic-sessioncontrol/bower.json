@@ -1,0 +1,27 @@
+{
+  "name": "baasic-sessioncontrol",
+  "dependencies": {
+    "polymer": "Polymer/polymer#>=0.4.2",
+    "paper-dialog": "Polymer/paper-dialog#>=0.4.2",
+    "core-signals": "Polymer/core-signals#>=0.4.2",
+    "baasic-ajax": "Baasic/baasic-sdk-polymer-core-ajax#>=0.1.0",
+    "baasic-globals": "Baasic/baasic-sdk-polymer-core-globals#>=0.1.0"
+  },
+  "description": "Baasic Web component that monitors session state.",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "baasic",
+    "membership",
+    "session"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/baasic/baasic-sdk-polymer-core-sessioncontrol",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

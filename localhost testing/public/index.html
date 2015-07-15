@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+        <script src="/public/bower_components/webcomponentsjs/webcomponents.js"></script>
+        <link rel="import" href="/public/bower_components/polymer/polymer.html">
+
+        <link rel="import" href="/public/bower_components/core-localstorage/core-localstorage.html">
+        <link rel="import" href="/public/bower_components/app-router/app-router.html">
+        <link rel="import" href="/public/bower_components/font-roboto/roboto.html">
+        <link rel="import" href="/public/bower_components/paper-tabs/paper-tabs.html">
+        <link rel="import" href="/public/bower_components/baasic-ajax/baasic-ajax.html">
+        <link rel="import" href="/public/bower_components/baasic-globals/baasic-globals.html">
+        <!--<link rel="import" href="/bower_components/baasic-login/baasic-login.html">-->
+        <link rel="import" href="/public/layouts/sidebar-layout.html">
+        <link rel="stylesheet" href="/public/pages/signin.css">
+
+
+        <link rel="stylesheet" href="/public/pages/styles.css" shim-shadowdom>
+        <title>
+            Shell
+        </title>
+
+    </head>
+    <body unresolved>
+
+    <polymer-element name="index-app" attribute="appPath session">
+        <template>
+            <!--<baasic-login id="log"></baasic-login>-->
+            <baasic-globals id="globals"></baasic-globals>
+            <!--<core-localstorage name="app-storage" id="storage" value=""></core-localstorage>-->
+            <!-- bind the session object to index--page -->
+            <user-session session="{{session}}"></user-session>
+
+            <app-router mode="hash" init="manual" id="router" on-state-change="{{stateChange}}">
+                <app-route path="/" import="/pages/index.html" on-before-data-binding="{{bindSession}}"></app-route>
+                <app-route path="/signin" bindRouter import="/pages/signin-page.html"  on-before-data-binding="{{bindSession}}"></app-route>
+                <!--<app-route path="/signin" bindRouter import="/pages/baasic-login.html"  on-before-data-binding="{{bindSession}}"></app-route>-->
+                <app-route path="/home" bindRouter import="/pages/home-page.html" ></app-route>
+                <app-route path="/employees" bindRouter import="/pages/employees-page.html" ></app-route>
+                <app-route path="/attendance" bindRouter import="/pages/attendance-page.html" ></app-route>
+                <app-route path="/attendance/report/:employeeid/:fromdate/:todate" bindRouter import="/pages/attendance-view-page.html" ></app-route>
+                <app-route path="/employees/update/:employeeid" bindRouter import="/pages/update-page.html" ></app-route>
+                <app-route path="/admin" bindRouter import="/pages/admin-page.html" ></app-route>
+                <app-route path="/test" bindRouter import="/pages/test-page.html"  on-before-data-binding="{{bindSession}}" ></app-route>
+                <app-route path="/signout" bindRouter on-activate-route-start="{{logOut}}" ></app-route>
+                <app-route path="*" import="/pages/not-found-page.html"></app-route>
+            </app-router>
+            <!--<core-localstorage id="storage" name="polymer-localstorage-app-session" value="{{session}}"></core-localstorage>-->
+
+        </template>
+
+        <script>
+            Polymer('index-app', {
+                //                ready:function(){
+                //                  console.log(this.$.globals);
+                //                },
+                init: function(newpath){
+                    //                    console.log(this.$.router);
+                    //                    console.log(this.$.globals)
+                    this.$.router.init();
+                    if(this.$.globals.baasicUser && this.$.globals.baasicUser.accessToken){
+                        this.session=true;
+//                        console.log(newpath);
+                        if(newpath == '')
+                            this.$.router.go('/signin');
+                        this.$.router.go(newpath);
+                    }
+
+               
+               
+                },
+                stateChange: function(event) {
+                    
+                    this.appPath = ''+ event.detail.path;
+                    //                    this.$.storage.value = event.detail.path;
+//                    console.log(this.appPath);
+                    // redirect to the login page if not signed in
+                    if (!this.session && event.detail.path !== '/signin') {
+                        event.preventDefault();
+                        //console.log(event.preventDefault());
+                        var redirectUrl = '';
+                        if(this.appPath != '/')
+                            redirectUrl = '?redirectUrl='+ encodeURIComponent(this.appPath);
+                        //                        console.log(redirectUrl);
+                        this.$.router.go('/signin'+redirectUrl);
+                    }
+                    //                    var appPath = event.detail.path;
+                    //                    this.$.router.go(appPath);
+                    //                        
+                },
+                bindSession: function(event) {
+                    //var appSession = this.$.localstorage.session.value;
+                    // update the route's model before it's bound to the home-page or login-page
+                    //console.log(this.$.session);
+                    //event.detail.model.session = this.$.session;
+                    
+                },
+                logOut : function(){
+                    this.$.globals.logOut();
+                    //                      console.log("test");
+                    //                    this.$.session = false;
+                    //                    this.$.router.go('/signin');
+                }
+            });
+        </script>
+    </polymer-element>
+    <index-app></index-app>  
+    <script>
+        window.addEventListener('WebComponentsReady', function() {
+            var app = document.querySelector('index-app');
+            //            //            console.log(app.$.globals.baasicUser);
+            //            app.globals = app.$.globals;
+            ////            console.log(app.globals.baasicUser);
+            //                        if(!app.globals.baasicUser && !app.globals.baasicUser.accessToken)
+            //                        {
+            //                            console.log(app.$.router.body); 
+            //                            app.$.router.go('/signin');
+            //                        }
+            ////            //            console.log(this.globals.session);
+            ////            //            console.log(app.$.router); 
+            ////            //            console.log(app.$.appPath);
+            var path = document.location.href;
+            var newpath = path.substring(23,path.length);
+//            console.log(path.indexOf('#'),newpath);
+            
+            //            var a = '/attendance'
+            app.init(newpath);
+        });
+    </script>
+</body>
+</html>

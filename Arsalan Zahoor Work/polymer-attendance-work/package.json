@@ -1,0 +1,32 @@
+{
+  "name": "arsalan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "Polymer": "git://github.com/Polymer/polymer",
+    "body-parser": "^1.10.0",
+    "ejs": "^1.0.0",
+    "express": "^4.10.6",
+    "multer": "^0.1.6",
+    "mysql": "^2.5.4",
+    "node-oauth2-server": "^2.2.2",
+    "oauth2-server": "^2.3.0",
+    "simple-oauth2": "^0.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arsalanzahoor/sms.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arsalanzahoor/sms/issues"
+  },
+  "homepage": "https://github.com/arsalanzahoor/sms"
+}

@@ -1,0 +1,351 @@
+<html>
+    <head>
+
+        <script src="chartjs/Chart.js"></script>
+        <script src="moment/moment.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            
+            var data;
+            var chart;
+            var xmlhttp;
+            var arr,arr1;
+            //            var data1,data3 = [];
+            //            var data1 = [0,0,0,0,0,0,0,0,0,0,0,0];
+            //            var data3 = [0,0,0,0,0,0,0,0,0,0,0,0];
+
+            // Load the Visualization API and the piechart package.
+            google.load('visualization', '1', {'packages':['corechart']});
+
+            // Set a callback to run when the Google Visualization API is loaded.
+            google.setOnLoadCallback(drawChart);
+
+            // Callback that creates and populates a data table,
+            // instantiates the pie chart, passes in the data and
+            // draws it.
+            function drawChart() {
+                //                console.log('testing');
+                // Create our data table.
+                //        data = new google.visualization.DataTable();
+                var ctx = this.myGraph.getContext("2d");
+                //                var ctx1 = this.myRadar.getContext("2d");
+                //                var ctx2 = this.myPolar.getContext("2d");
+                var ctx3 = this.myPie.getContext("2d");
+                //                var ctx4 = this.myDoghnut.getContext("2d");
+                
+                xmlhttp=new XMLHttpRequest();
+                //                xmlhttp.open("GET","http://192.168.1.20:9200/sales/_search?q=*&from=0&size=132000",true);
+                xmlhttp.open("POST","http://192.168.1.20:9200/sales/_search",true);
+                //                xmlhttp.withCredentials = true;
+                //                xmlhttp.setRequestHeader( 'Authorization', 'Basic ' + btoa( 'es_admin : 786ab786') )
+                xmlhttp.setRequestHeader("Content-type","JSON(application/json)");
+                var p = {_source: 'false',aggs: {articles_over_time: {date_histogram: {field: 'sale_time',interval: 'month' },aggs: {User: {sum: {field: 'amount'}}}}}};
+                xmlhttp.send(JSON.stringify(p));
+                xmlhttp.onreadystatechange=function()
+                {
+                    //                    console.log('state and status',xmlhttp.readyState,xmlhttp.status);
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                    {
+                        var test = JSON.parse(xmlhttp.responseText);
+                        //                        console.log('Result',xmlhttp.status,test);
+                        //                        console.log('status and Result',xmlhttp.status,xmlhttp.responseText);
+                        arr = JSON.parse(xmlhttp.responseText);
+                        //                        console.log(arr.hits.hits.length);
+                        var data1=[];
+                        var data3 =[];
+                        var labels = [];
+                        for(var i=11,a=0;i >= 0,a<12;i--,a++) {
+                            labels[a] = moment().subtract(i,'months').format('MMMM YYYY');
+                            
+                        }
+                        //                        console.log('length and types',arr.hits.hits.length, typeof labels[10],typeof moment(arr.hits.hits[0]._source.sale_time.toString()).format('MMMM YYYY'));
+                        for(var k=0;k<12;k++) {
+                            for(var j=0;j<arr.aggregations.articles_over_time.buckets.length;j++) {
+                                //                                console.log('start',k,j,labels[k],arr.aggregations.articles_over_time.buckets[j].User.value,moment(arr.aggregations.articles_over_time.buckets[j].key_as_string).format('MMMM YYYY'));
+                                //                                console.log(arr.aggregations.articles_over_time.buckets[j].User);
+                                if(labels[k] === moment(arr.aggregations.articles_over_time.buckets[j].key_as_string).format('MMMM YYYY')) {
+                                    //                                    console.log('matching here and adding values now');
+                                    
+                                    data1[k] = (arr.aggregations.articles_over_time.buckets[j].User.value/1000000).toFixed(2);
+                                    //                                    console.log('data1[k]',k,data1)
+                                }
+                                else {
+                                    if(data1[k] > 0) {
+                                        data1[k] + 0;
+                                    }else {
+                                        data1[k] = 0;
+                                    }
+                                }
+                                
+                            }
+                        }
+                        xmlhttp1=new XMLHttpRequest();
+                        xmlhttp1.open("POST","http://192.168.1.20:9200/dhasale/_search",true);
+                        xmlhttp1.setRequestHeader("Content-type","JSON(application/json)");
+                        var d = {_source: 'false',aggs: {articles_over_time: {date_histogram: {field: 'sale_time',interval: 'month' },aggs: {User: {sum: {field: 'amount'}}}}}};
+                        xmlhttp1.send(JSON.stringify(d));
+                        xmlhttp1.onreadystatechange=function()
+                        {
+                            if(xmlhttp1.readyState==4 && xmlhttp1.status==200) {
+                                //                                console.log('test',xmlhttp1.status,xmlhttp1.responseText);
+                                arr2 = JSON.parse(xmlhttp1.responseText);
+                                //                                console.log('length',arr2.hits.hits.length);
+                                for(var k=0;k<12;k++) {
+                                    for(var j=0;j<arr2.hits.hits.length;j++) {
+                                        //                                        console.log('start',k,j,labels[k],arr2.aggregations.articles_over_time.buckets[j].User.value,moment(arr2.aggregations.articles_over_time.buckets[j].key_as_string).format('MMMM YYYY'));
+                                        if(labels[k] === moment(arr2.aggregations.articles_over_time.buckets[j].key_as_string).format('MMMM YYYY')) {
+                                            //                                            console.log('hi now here');
+                                            data3[k] = (arr2.aggregations.articles_over_time.buckets[j].User.value/1000000).toFixed(2);
+                                            //                                            console.log(data2[k]);
+                                        }
+                                        else {
+                                            if(data3[k] > 0) {
+                                                data3[k] + 0;
+                                            }else {
+                                                data3[k] = 0;
+                                            }
+                                            //                                            console.log(data2[k]);
+                                        }
+                                
+                                    }
+                                }
+                                //                                console.log(data3);
+                                data = {
+                                    labels:labels,
+                                    //                            labels: [
+                               
+                                    //                                moment(arr.hits.hits[0]._source.sale_time.toString()).format('MMMM YYYY'),
+                                    //                                moment(arr.hits.hits[1]._source.sale_time.toString()).format('MMMM YYYY'),
+                                    //                                moment(arr.hits.hits[2]._source.sale_time.toString()).format('MMMM YYYY'),
+                                    //                                moment(arr.hits.hits[3]._source.sale_time.toString()).format('MMMM YYYY'),
+                                    //                                moment(arr.hits.hits[4]._source.sale_time.toString()).format('MMMM YYYY'),
+                                    //                                moment(arr.hits.hits[5]._source.sale_time.toString()).format('MMMM YYYY')
+                                    //                            ],
+                                    datasets: [
+                                        {
+                                            label: "Monthly Sales",
+                                            fillColor: "lightblue",
+                                            strokeColor: "#f5f5f5",
+                                            pointColor: "lightblue",
+                                            pointStrokeColor: "darkblue",
+                                            pointHighlightFill: "darkblue",
+                                            pointHighlightStroke: "lightblue",
+                                            data:data1
+                                            //                                    data: [0+arr.hits.hits[0]._source.amount,
+                                            //                                        0+arr.hits.hits[1]._source.amount,
+                                            //                                        0+arr.hits.hits[2]._source.amount,
+                                            //                                        0+arr.hits.hits[3]._source.amount,
+                                            //                                        0+arr.hits.hits[4]._source.amount,
+                                            //                                        0+arr.hits.hits[5]._source.amount
+                                            //                                    ]
+                                        },
+                                        {
+                                            label: "DHA Sales",
+                                            fillColor: "grey",
+                                            strokeColor: "grey",
+                                            pointColor: "grey",
+                                            pointStrokeColor: "#fff",
+                                            pointHighlightFill: "#fff",
+                                            pointHighlightStroke: "grey",
+                                            data: data3
+                                        }
+                                    ]
+                                };
+                                var myLineChart = new Chart(ctx).Line(data); 
+                                
+                                console.log(data1[8]);
+                                var data2 = [
+                                    {
+                                        value: Math.round(arr.aggregations.articles_over_time.buckets[3].User.value/1000000),
+                                        color:"Grey",
+                                        highlight: "grey",
+                                        label: "Gulberg Sale"
+                                    },
+                                    {
+                                        value: Math.round(arr.aggregations.articles_over_time.buckets[0].User.value/1000000),
+                                        color: "blue",
+                                        highlight: "blue",
+                                        label: "Kohsar Sale"
+                                    },
+                                    {
+                                        value: Math.round(arr.aggregations.articles_over_time.buckets[1].User.value/1000000),
+                                        color: "skyblue",
+                                        highlight: "skyblue",
+                                        label: "DHA Sale"
+                                    },
+                                    {
+                                        value: Math.round(arr.aggregations.articles_over_time.buckets[3].User.value/1000000),
+                                        color: "green",
+                                        highlight: "green",
+                                        label: "DHA Warehouse Sale"
+                                    },
+                                    {
+                                        value: Math.round(arr.aggregations.articles_over_time.buckets[2].User.value/1000000),
+                                        color: "yellow",
+                                        highlight: "yellow",
+                                        label: "Warehouse Sale"
+                                    },{
+                                        value: Math.round(arr.aggregations.articles_over_time.buckets[1].User.value/1000000),
+                                        color:"red",
+                                        highlight: "red",
+                                        label: "ISE Sale"
+                                    }
+
+                                ];
+                        
+                                console.log(data2);
+                                //                                var myRadarChart = new Chart(ctx1).Radar(data);
+                                //                                var myPolarChart = new Chart(ctx2).PolarArea(data2);
+                                var myPieChart = new Chart(ctx3).Pie(data2);
+                                //                                var myDoghnutChart = new Chart(ctx4).Doughnut(data2);
+                            }
+                        }
+                        
+                        //                        data = new google.visualization.DataTable();
+                        //                        data = data1;
+                        //                        data.addColumn('number', 'age');
+                        //                        data.addColumn('string', 'name');
+                        //                
+                        //                        data.addRows([
+                        //                            [arr.hits.hits[0]._source.age, arr.hits.hits[0]._source.item_name],
+                        //                            [arr.hits.hits[1]._source.age, arr.hits.hits[1]._source.item_name],
+                        //                            [arr.hits.hits[2]._source.age, arr.hits.hits[2]._source.item_name],
+                        //                            [arr.hits.hits[3]._source.age, arr.hits.hits[3]._source.item_name],
+                        //                            [arr.hits.hits[4]._source.age, arr.hits.hits[4]._source.item_name],
+                        //                            [arr.hits.hits[5]._source.age, arr.hits.hits[5]._source.item_name],
+                        //
+                        //                        ]);
+                        //                        data = new google.visualization.DataTable()
+                        //                        data.addColumn('string', 'name');
+                        //                        data.addColumn('number', 'age');
+                        //                
+                        //                        data.addRows([
+                        //                            [arr.hits.hits[0]._source.item_name, arr.hits.hits[0]._source.amount],
+                        //                            [arr.hits.hits[1]._source.item_name, arr.hits.hits[1]._source.amount],
+                        //                            [arr.hits.hits[2]._source.item_name, arr.hits.hits[2]._source.amount],
+                        //                            [arr.hits.hits[3]._source.item_name, arr.hits.hits[3]._source.amount],
+                        //                            [arr.hits.hits[4]._source.item_name, arr.hits.hits[4]._source.amount],
+                        //                            [arr.hits.hits[5]._source.item_name, arr.hits.hits[5]._source.amount]
+                        //                        ]);
+                        
+                        
+                    }
+                }
+                
+                
+                //                data = new google.visualization.DataTable();
+                //                data = data1;
+                
+                //                console.log(data1);
+                // Set chart options
+                //                var options = {'title':'How Much Pizza I Ate Last Night',
+                //                    'width':400,
+                //                    'height':300};
+
+                // Instantiate and draw our chart, passing in some options.
+                //                chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+                //                google.visualization.events.addListener(chart, 'select', selectHandler);
+                //                chart.draw(data, options);
+                
+                
+                
+            }
+
+            //            function selectHandler() {
+            //                var selectedItem = chart.getSelection()[0];
+            //                var value = data.getValue(selectedItem.row, 0);
+            //                alert('The user selected ' + value);
+            //            }
+        
+            //            function onReady() {
+            //                console.log('test');
+            ////                this.$.ajax.go();
+            //            }
+            //            function onResponse() {
+            //                console.log(this.$.ajax.response.status);
+            //                if(this.$.ajax.response.status==true)
+            //                {
+            //                    console.log(this.$.ajax.response.data);
+            //                    var data1 = this.$.ajax.response.data;
+            //                    drawChart(data1);
+            //                    //                    this.employees=employees;
+            //                }
+            //                else
+            //                {
+            //                    alert("There is an Error on Employees Request/Response");
+            //                    
+            //                }
+            //            }
+        </script>
+    </head>
+    <body>
+    <center>
+        Monthly Sales Chart Showing Amounts In Million Rupees<br><br>
+        <div>
+            <div style="width:100px;height:30px;border:1px solid #000; background-color: lightblue">Gulberg Sale</div>
+            <div style="width:100px;height:30px;border:1px solid #000; background-color: grey">DHA Sale</div>
+        </div>
+        <!--<div id="chart_div" style="width:400; height:300"></div>-->
+        <div>
+            <canvas class="graph" id="myGraph" width="700" height="500"></canvas>
+            <canvas class="graph" id="myPie" width="300" height="200"></canvas>
+        </div>
+        <!--<canvas class="graph" id="myRadar" width="700" height="500"></canvas>-->
+        <!--<br>-->
+        <!--<canvas class="graph" id="myPolar" width="400" height="300"></canvas>-->
+        <!--<canvas class="graph" id="myDoghnut" width="300" height="200"></canvas>-->
+    </center>
+</body>
+</html>
+
+
+<!--
+<html>
+    <head>
+        <link rel="import" href="/core-ajax/core-ajax.html">
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            google.load('visualization', '1');
+            google.setOnLoadCallback(drawVisualization);
+
+            function drawVisualization() {
+                var wrapper = new google.visualization.ChartWrapper({
+                    chartType: 'LineChart',
+                    dataSourceUrl: 'http://localhost:9200/customer/_search?q=*&pretty',
+                    //          dataSourceUrl: 'http://spreadsheets.google.com/tq?key=pCQbetd-CptGXxxQIG7VFIQ&pub=1',
+                    query: 'SELECT A,D WHERE D > 100 ORDER BY D',
+                    options: {'title': 'Countries'},
+                    containerId: 'vis_div'
+                });
+                wrapper.draw()
+
+                // No query callback handler needed!
+            }
+            function onReady() {
+                this.$.ajax.go();
+            }
+            function onResponse() {
+                if(this.$.ajax.response.status==true)
+                {
+                    var data = this.$.ajax.response.data;
+                    //                    this.employees=employees;
+                }
+                else
+                {
+                    this.$.toast1.text="There is an Error on Employees Request/Response";
+                    this.$.toast1.opened="true";
+                }
+            }
+        </script>
+    </head>
+    <body style="font-family: Arial;border: 0 none;">
+    <core-ajax id="ajax"
+               url="http://localhost:9200/customer/_search?q=*&pretty"
+               method="GET"
+               on-core-response="{{onResponse}}"
+               content-type="application/json"
+               handleAs="json">
+    </core-ajax>
+    <div id="vis_div" style="width: 600px; height: 400px;"></div>
+</body>
+</html>-->

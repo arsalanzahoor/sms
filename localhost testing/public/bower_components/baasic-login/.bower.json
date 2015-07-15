@@ -1,0 +1,40 @@
+{
+  "name": "baasic-login",
+  "dependencies": {
+    "polymer": "Polymer/polymer#>=0.4.2",
+    "paper-button": "Polymer/paper-button#>=0.4.2",
+    "paper-input": "Polymer/paper-input#>=0.4.2",
+    "paper-toast": "Polymer/paper-toast#>=0.4.2",
+    "core-signals": "Polymer/core-signals#>=0.4.2",
+    "baasic-ajax": "Baasic/baasic-sdk-polymer-core-ajax#>=0.1.0",
+    "baasic-globals": "Baasic/baasic-sdk-polymer-core-globals#>=0.1.0"
+  },
+  "description": "Baasic login Web component.",
+  "keywords": [
+    "polymer",
+    "web-components",
+    "baasic",
+    "membership",
+    "login"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/baasic/baasic-sdk-polymer-membership-login",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "version": "0.1.6",
+  "_release": "0.1.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.6",
+    "commit": "07d08b4aabae749b9c615966e9da4ec28c79b2b2"
+  },
+  "_source": "git://github.com/Baasic/baasic-sdk-polymer-membership-login.git",
+  "_target": "~0.1.6",
+  "_originalSource": "baasic-login",
+  "_direct": true
+}

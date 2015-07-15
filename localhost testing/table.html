@@ -1,0 +1,220 @@
+<html>
+    <head>
+        <script src="jquery.js"></script>
+        <script src="moment/moment.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript">
+            var data;
+            var arr,arr1;
+            //1=dha/2-gulberg/3-koshar
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET","http://192.168.1.40:8080/api/rediscopy?apiVersion=1&key=CLOSING",true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange=function()
+            {
+                //                console.log('test',xmlhttp.readyState,xmlhttp.status);
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    var test = JSON.parse(xmlhttp.responseText);
+                    console.log('data',typeof test.data,test.data);
+                    var n =[];
+                    var comp = 1000*60*60*8;
+                    //                    var comp = 1000*60*5;
+                    var loc;
+                    var r = JSON.stringify(test.data);
+                    var arr = [];
+                    for(var i in test.data){
+                        arr.push(test.data[i]);
+                    }
+                    //                    console.log('array:',arr);
+                    //                    for(var i = arr.length-1;i>=0;i--){
+                    for(var i = 0;i<arr.length;i++){
+                        //                    for(var i in test.data){
+                        var value;
+                        n=JSON.parse(arr[i]);
+                        console.log('i',i,typeof n,n);
+                        var nd = moment();
+                        var dif = nd.diff(moment.unix(n.closingdate).format("MMM/DD/YYYY HH:mm:ss"));
+                        //                        console.log('dates test', n.closingdate,moment.unix(n.closingdate).format("MMM/DD/YYYY HH:mm:ss"));
+                        //                        console.log('dates test', typeof n);
+                        switch(n.location){
+                            case 1:
+                                loc = 'DHA';
+                                break;
+                            case 2:
+                                loc = 'GULBERG';
+                                break;
+                            case 3:
+                                loc = 'KOHSAR';
+                                break;
+                        }
+                        if(n.closing == 'Open' || (dif >= comp && n.closing != 'Close')){
+                            if(moment(n.closingdate).isValid()){
+                                var row = $("<tr />")
+                                $("#table1").append(row); 
+                                row.append($("<td>" + n.closingid + "</td>"));
+                                row.append($("<td>" + n.counter + "</td>"));
+                                row.append($("<td>" + loc + "</td>"));
+                                row.append($("<td>" + moment.unix(n.closingdate).format("MM/DD/YYYY HH:mm:ss") + "</td>"));     
+                            }
+                        }else if(n.closing == 'Close'){
+                            // iterate over each row
+                            $("#table1 tbody tr").each(function(i) {
+                                // find the first td in the row
+                                value = $(this).find("td:first").text();
+                                // display the value in console
+                                //                                console.log('value:',value);
+                                if(n.closingid == value){
+                                    document.getElementById("table1").deleteRow(i);
+
+                                }
+                            });
+                        }
+                        //==============================For Table Showing Color's/Status'==========
+                        if(n.status == 1 && n.closing == 'Open'){
+                            if(dif >= comp){
+                                //                                console.log('status 1 with diff:',loc,n.location);
+                                if(loc == 'GULBERG'){
+                                    if(n.counter == 2){
+                                        document.getElementById("gc1_2").style.backgroundColor = "red";
+                                    }else if(n.counter == 1){
+                                        document.getElementById("gc1_1").style.backgroundColor = "red";
+                                    }
+                                }
+                                else if(loc == 'DHA'){
+                                    if(n.counter == 2){
+                                        document.getElementById("dc2_1").style.backgroundColor = "red";
+                                    }else if(n.counter == 3){
+                                        document.getElementById("dc3_1").style.backgroundColor = "red";
+                                    }
+                                }
+                                else if(loc == 'KOHSAR'){
+                                    if(n.counter == 1){
+                                        document.getElementById("kc1_1").style.backgroundColor = "red";
+                                    }else if(n.counter == 2){
+                                        document.getElementById("kc2_1").style.backgroundColor = "red";
+                                    }else if(n.counter == 3){
+                                        document.getElementById("kc3_1").style.backgroundColor = "red";
+                                    }
+                                }
+                            }else if(loc == 'GULBERG'){
+                                console.log('status 1:',loc,n.location);
+                                if(n.counter == 2){
+                                    document.getElementById("gc1_2").style.backgroundColor = "green";                                   
+                                }else if(n.counter == 1){
+                                    document.getElementById("gc1_1").style.backgroundColor = "green";
+                                }
+                            }else if(loc == 'KOHSAR'){
+                                if(n.counter == 1){
+                                    document.getElementById("kc1_1").style.backgroundColor = "green";
+                                }else if(n.counter == 2){
+                                    document.getElementById("kc2_1").style.backgroundColor = "green";
+                                }else if(n.counter == 3){
+                                    document.getElementById("kc3_1").style.backgroundColor = "green";
+                                }
+                            }else if(loc == 'DHA'){
+                                if(n.counter == 2){
+                                    document.getElementById("dc2_1").style.backgroundColor = "green";
+                                    //                                    document.getElementById("dc3_1").style.backgroundColor = "green";
+                                }else if(n.counter == 3){
+                                    document.getElementById("dc3_1").style.backgroundColor = "green";
+                                }
+                            }
+                        }
+                        else if(n.status == 0){
+                            //                            console.log('status close:',loc,n.counter);
+                            //                            document.getElementById("gc1_1").style.backgroundColor = "yellow";
+                            //                            document.getElementById("gc1_2").style.backgroundColor = "yellow";
+                            if(loc == 'GULBERG'){
+                                if(n.counter == 2){
+                                    document.getElementById("gc1_2").style.backgroundColor = "yellow";                                   
+                                }else if(n.counter == 1){
+                                    document.getElementById("gc1_1").style.backgroundColor = "yellow";
+                                }
+                            }else if(loc == 'KOHSAR'){
+                                //                                console.log('koh:',n.counter);
+                                if(n.counter == 1){
+                                    document.getElementById("kc1_1").style.backgroundColor = "yellow";
+                                }else if(n.counter == 2){
+                                    document.getElementById("kc2_1").style.backgroundColor = "yellow";
+                                }else if(n.counter == 3){
+                                    document.getElementById("kc3_1").style.backgroundColor = "yellow";
+                                }
+                            }else if(loc == 'DHA'){
+                                if(n.counter == 2){
+                                    document.getElementById("dc2_1").style.backgroundColor = "yellow";
+                                    //                                    document.getElementById("dc3_1").style.backgroundColor = "green";
+                                }else if(n.counter == 3){
+                                    document.getElementById("dc3_1").style.backgroundColor = "yellow";
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            //================================
+        </script>
+    </head>
+    <body>
+        <table style="width:60%" border="1">
+            <tr>
+                <th>Location</th>
+                <th>Daily Closings</th> 
+            </tr>
+            <tr>
+                <td>DHA</td>
+                <td>Morning</td> 
+                <td>Evening</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="dc2_1">Counter 2</td> 
+                <td id="dc2_2">Counter 2</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="dc3_1">Counter 3</td> 
+                <td id="dc3_2">Counter 3</td>
+            </tr>
+            <tr>
+                <td>Gulberg</td>
+                <td id="gc1_1">Counter 1</td> 
+                <td id="gc1_2">Counter 1</td>
+            </tr>
+            <tr>
+                <td>Kohsar</td>
+                <td id="kc1_1">Counter 1</td> 
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="kc2_1">Counter 2</td> 
+                <td id="kc2_2">Counter 2</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td id="kc3_1">Counter 3</td> 
+                <td id="kc3_2">Counter 3</td>
+            </tr>
+        </table>
+        <br>
+        <h1>PENDING LIST</h1><br>
+        <div>
+            LOCATIONS IDS
+            <ul>
+                <li>1 for DHA</li>
+                <li>2 for GULBERG</li>
+                <li>3 for KOHSAR</li>
+            </ul>
+        </div>
+        <table id="table1" style="width:60%" border="1" ">
+            <tr>
+                <th>CURRENT ID</th>
+                <th>COUNTER   </th> 
+                <th>LOCATION  </th>
+                <th>OPENING DATE/TIME </th> 
+            </tr>
+        </table>
+    </body>
+</html>

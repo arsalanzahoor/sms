@@ -1,0 +1,262 @@
+
+<!doctype html>
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--<html>-->
+<!--<head>-->
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">-->
+<!--<script src="/bower_components/webcomponentsjs/webcomponents.js"></script>-->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/polymer-filters/polymer-filters.html">
+<link rel="import" href="/bower_components/core-list/core-list.html">
+<link rel="import" href="/bower_components/core-icon/core-icon.html">
+<link rel="import" href="/pages/app-ajax.html">
+
+
+<list-test></list-test>
+
+<polymer-element name="list-test" layout horizontal>
+    <template>
+        <style>
+            .item {
+                box-sizing: border-box;
+                height: 80px;
+                border-bottom: 1px solid #ddd;
+                padding: 4px;
+                cursor: default;
+                background-color: white;
+                overflow: hidden;
+            }
+
+            .selected {
+                background: silver;
+            }
+
+            .message {
+                padding-left: 77px;
+                line-height: 167%;
+                background-repeat: no-repeat;
+                background-position: 10px 10px;
+                background-size: 60px;
+            }
+
+            .from {
+                display: inline;
+                font-weight: bold;
+            }
+
+            .timestamp {
+                margin-left: 10px;
+                font-size: 12px;
+                opacity: 0.8;
+            }
+
+            .body {
+                font-size: 12px;
+            }
+
+            .spaced {
+                margin: 10px;
+            }
+
+            .selection-display {
+                background: lightgray;
+                padding: 0 5px;
+                margin: 0 5px;
+            }
+
+            .narrow {
+                width: 40px;
+            }
+            .mylist {
+                height: 300px;
+            }
+
+        </style>
+        <sidebar-layout selected="test">
+                        <div class="spaced">
+                            <button on-tap="{{addRecord}}">Add row at index:</button>
+                            <input value="{{addIdx}}" class="narrow" type="number">
+                            <br>
+                            <button on-tap="{{deleteRecord}}">Delete row at index:</button>
+                            <input value="{{deleteIdx}}" class="narrow" type="number">
+                            <br>
+                            <button on-tap="{{deleteAll}}">Delete all</button>
+                            <button on-tap="{{deleteArray}}">Delete data array</button>
+                            <button on-tap="{{initArrayEmpty}}">Init empty array</button>
+                            <button on-tap="{{initArrayFull}}">Init full array</button>
+                            <br>
+                            <label><input type="checkbox" checked="{{selectionEnabled}}">Selection enabled</label>
+                            <label><input type="checkbox" checked="{{multi}}">Multiple selection</label>
+                            <br>
+                            <button on-tap="{{clearSelection}}">Clear selection</button>
+                            <button on-tap="{{deleteSelection}}">Delete selection</button>
+                        </div>
+            <div layout horizontal wrap class="spaced">
+                Selected Employees: 
+<!--                <template repeat="{{multi ? selection: [selection]}}">
+                    <div class="selection-display">Id {{model.EmployeeID}}: {{checked}} {{value}} {{['a','b','c'][type]}}</div>
+                </template>-->
+            </div>
+            <core-list class="mylist" id="list" data="{{data}}" selectionEnabled="{{selectionEnabled}}" selection="{{selection}}" height="80" flex multi?={{multi}}>
+                       <template>
+
+                    <div  class="item {{ {selected: selected} | tokenList }}">
+                        <core-icon src="/pages/4.png" style="width: 35px;height: 35px;"></core-icon>
+                        <!--<div class="message" style="background-image: url(images/{{model.image}}.png);">-->
+                            <span class="from">{{model.FirstName}}</span>
+                            <span class="from">{{model.LastName}}</span>
+                            <!--<span class="from">{{model.CompanyName}}</span>-->
+                            <!--<span class="from">{{model.MainID}}</span>-->
+                            <!--<span class="from">{{model.RegistrationDate}}</span>-->
+
+                            <div class="subject">Employee ID: {{model.EmployeeID}}</div>
+                            <!--<input type="checkbox" checked="{{model.checked}}">-->
+                            <!--<input type="number" value="{{model.value}}" class="narrow">-->
+                            <!--<select selectedIndex="{{model.type}}"><option>a</option><option>b</option><option>c</option></select>-->
+                            <span class="body">Company Name:{{model.CompanyName}},</span>
+                            <span class="body">Main ID:{{model.MainID}},</span>
+                            <span class="body">Registration Date:{{model.RegistrationDate | date('yyyy/MM/dd')}}.</span>
+                        </div>
+                    </div>
+                </template>
+            </core-list>
+            <app-ajax id="ajax"
+                      url="/api/employee"
+                      method="GET"
+                      on-core-response="{{employeeResponse}}"
+                      content-type="application/json"
+                      handleAs="json">
+            </app-ajax>
+        </sidebar-layout>
+    </template>
+    <script>
+        (function() {
+            var strings = [
+                "PARKOUR!",
+                "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            ];
+            
+
+            var namegen = {
+                generateString: function(inLength) {
+                    var s = '';
+                    for (var i=0; i<inLength; i++) {
+                        s += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+                    }
+                    return s;
+                },
+                generateName: function(inMin, inMax) {
+                    return this.generateString(Math.floor(Math.random() * (inMax - inMin + 1) + inMin));
+                }
+            };
+
+            Polymer('list-test', {
+                addIdx: 0,
+                deleteIdx: 0,
+                count: 50000,
+                ready: function() {
+                    
+                    this.initArrayFull();
+                    window.list = this.$.list;
+                    // this.data = this.data || [];
+                    //                    this.$.ajax.go();
+                },
+                //                generateData: function() {
+                //                    var names = [], data = [];
+                //                    for (var i=0; i<this.count; i++) {
+                //                        names.push(namegen.generateName(4, 8));
+                //                    }
+                //                    names.sort();
+                //                    for (i=0; i<this.count; i++) {
+                //                        data.push({
+                //                            id: i,
+                //                            name: names[i],
+                //                            details: strings[i % 3],
+                //                            image: i % 4,
+                //                            value: 0,
+                //                            type: 0,
+                //                            checked: false
+                //                        });
+                //                    }
+                //                    return data;
+                //                },
+                employeeResponse: function()
+                {
+                    //                    console.log(this.$.ajax.response.data);
+                    if(this.$.ajax.response.status==true)
+                    {
+                        this.data = this.$.ajax.response.data;
+                        this.count = this.data.length;
+                        //                        console.log(this.data);
+                        //                    this.employees=employees;
+                    }
+                    else
+                    {
+                        this.$.toast1.text="There is an Error on Employees Request/Response";
+                        this.$.toast1.opened="true";
+                    }
+                },
+                addRecord: function() {
+                    this.data.splice(this.addIdx, 0, {
+                        id: ++this.count,
+                        name: namegen.generateName(4, 8),
+                        details: strings[this.count % 3],
+                        image: this.count % 4,
+                        value: 0,
+                        type: 0,
+                        checked: false
+                    });
+                },
+                deleteRecord: function() {
+                    this.data.splice(this.deleteIdx, 1);
+                },
+                deleteSelection: function() {
+                    var i, idx;
+                    if (this.multi) {
+                        if (this.selection.length) {
+                            for (i=0; i<this.selection.length; i++) {
+                                idx = this.data.indexOf(this.selection[i]);
+                                this.data.splice(idx, 1);
+                            }
+                        }
+                    } else {
+                        idx = this.data.indexOf(this.selection);
+                        this.data.splice(idx, 1);
+                    }
+                },
+                clearSelection: function() {
+                    this.$.list.clearSelection();
+                },
+                deleteAll: function() {
+                    this.data.splice(0,this.data.length);
+                    // this.data.length = 0;
+                },
+                deleteArray: function() {
+                    this.data = null;
+                },
+                initArrayEmpty: function() {
+                    this.data = [];
+                },
+                initArrayFull: function() {
+                    this.$.ajax.go();
+                    //                    this.data = this.employeeResponse();
+                }
+            });
+        })();  
+    </script>
+</polymer-element>
+
+
+
+
+
+
+

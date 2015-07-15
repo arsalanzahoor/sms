@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <script src="jquery.js"></script>
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+            div {
+                margin: 20px;
+                padding: 20px 20px;
+                border-radius: 20px;
+                background-color:   #ADD8E6;
+            }
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th,td {
+                padding: 15px;
+            }
+            th {
+                text-align: left;
+            } 
+            input{
+                display: table-row;
+            }
+            label { display: inline-block;
+                    width: 140px; 
+                    text-align: right; }​
+            #my-button {
+                background: green;
+                color: yellow;
+            }
+        </style>
+    </head>
+    <body fullbleed vertical layout unresolved>
+        <h1>KOHSAR SQUENCE</h1>	
+        <br>
+        <table id="kohsartable" style="width:50%">
+            <tr>
+                <th>KOHSAR</th>
+                <th>K1</th>
+                <th>K2</th>
+                <th>K3</th>
+            </tr>
+            <tr>
+                <th><b id="ks"></b></th>
+                <th><b id="kc1"></b></th>
+                <th><b id="kc2"></b></th>
+                <th><b id="kc3"></b></th>
+            </tr>
+        </table>
+        <br>
+        <h1>DHA SQUENCE</h1>	
+        <br>
+        <table id="dhatable" style="width:50%">
+            <tr>
+                <th>DHA   </th>
+                <th>D2</th>
+                <th>D3</th>
+            </tr>
+            <tr>
+                <th><b id="ds"></b></th>
+                <th><b id="dc2"></b></th>
+                <th><b id="dc3"></b></th>
+            </tr>
+        </table>
+        <br>
+        <h1>GULBERG SQUENCE</h1>	
+        <br>
+        <table id="gulbergtable" style="width:50%">
+            <tr>
+                <th>GULBERG</th>
+                <th>G1</th>
+            </tr>
+            <tr>
+                <th><b id="gs"></b></th>
+                <th><b id="gc1"></b></th>
+            </tr>
+        </table>
+        <br>
+        <button type="button" class="buttonRefresh" id="my-button">REFRESH</button>
+        <script>
+            $(document).ready(function() {
+                $('.buttonRefresh').click(function(){
+                    var data;
+                    var xmlhttp;
+                    xmlhttp=new XMLHttpRequest();
+                    xmlhttp.open("GET","api/rediscopy?apiVersion=1&key=SERVERS");
+                    xmlhttp.send();
+                    xmlhttp.onreadystatechange=function()
+                    {
+                        console.log(xmlhttp.readyState,xmlhttp.status);
+                        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                        {
+                            var test = JSON.parse(xmlhttp.responseText);
+                            console.log(test.data);
+                            // var da = test.data.toString();
+
+                            // var res = da.split('_');
+
+                            // console.log('data',test.data);
+                            var n =[];
+                            var r = JSON.stringify(test.data);
+                            for(var i in  test.data){
+                                //                                n=test.data[i].split('_');
+                                if(i=="GULBERG"){
+                                    document.getElementById('gs').innerHTML = test.data[i];
+                                }else if(i=="GULBERG1"){
+                                    document.getElementById('gc1').innerHTML = test.data[i];
+                                }else if(i=="KOHSAR"){
+                                    document.getElementById('ks').innerHTML = test.data[i];
+                                }else if(i=="KOHSAR1"){
+                                    document.getElementById('kc1').innerHTML = test.data[i];
+                                }else if(i=="KOHSAR2"){
+                                    document.getElementById('kc2').innerHTML = test.data[i];
+                                }else if(i=="KOHSAR3"){
+                                    document.getElementById('kc3').innerHTML = test.data[i];
+                                }else if(i=="DHA"){
+                                    document.getElementById('ds').innerHTML = test.data[i];
+                                }else if(i=="DHA2"){
+                                    document.getElementById('dc2').innerHTML = test.data[i];
+                                }else if(i=="DHA3"){
+                                    document.getElementById('dc3').innerHTML = test.data[i];
+                                }
+                            }
+                        }
+                    }
+                })
+                $('.buttonRefresh').click();
+            })
+        </script>
+    </body>
+</html>

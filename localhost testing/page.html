@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>HOME</title>
+        <style>
+            table {
+                width: 100%;
+                border-color: blanchedalmond;
+                padding-left: 5px;
+                padding-top: 5px;
+            }
+
+            body {
+                background-color: activecaption
+            }
+        </style>
+    </head>
+    <body onload="defaultBody()">
+        <table border="1">
+            <tr>
+                <td>
+                    <div id="div_category">
+                        <b>Categories</b>
+                        <br>
+                        <a href="" id="cat1">Category 1</a><br>
+                        <a href="" id="cat2">Category 2</a><br>
+                        <a href="" id="cat3">Category 3</a><br>
+                        <a href="" id="cat4">Category 4</a><br>
+                        <a href="" id="cat5">Category 5</a><br>
+                        <a href="" id="cat6">Category 6</a><br>
+                        <a href="" id="cat7">Category 7</a><br>
+                        <a href="" id="cat8">Category 8</a><br>
+                        <a href="" id="cat9">Category 9</a><br>
+                        <a href="" id="cat10">Category 10</a><br>
+                        <a href="" id="category_see_more">see more...</a><br>
+                    </div><br>
+                    <div id="div_product">
+                        <b>Products</b>
+                        <br>
+                        <a href="" id="pro1">Product 1</a><br>
+                        <a href="" id="pro2">Product 2</a><br>
+                        <a href="" id="pro3">Product 3</a><br>
+                        <a href="" id="pro4">Product 4</a><br>
+                        <a href="" id="pro5">Product 5</a><br>
+                        <a href="" id="pro6">Product 6</a><br>
+                        <a href="" id="pro7">Product 7</a><br>
+                        <a href="" id="pro8">Product 8</a><br>
+                        <a href="" id="pro9">Product 9</a><br>
+                        <a href="" id="pro10">Product 10</a><br>
+                        <a href="" id="product_see_more">see more...</a><br>
+                    </div>
+
+                </td>
+                <td>
+                    <div>
+                        <input type="text" name="search" placeholder="search..." style=" width: 50%">
+                        <button type="button" name="search" onclick="search()">Search</button><br>
+                        <div style=" text-align: right">
+                            <b>Sort By:</b>
+                            <select>
+                                <option value="">Relevance</option>
+                                <option value="">Featured</option>
+                                <option value="">Price: High to Low</option>
+                                <option value="">Price: Low to High</option>
+                            </select>
+                        </div>
+                        <b>Popular Products</b>
+                        <br><br>
+                        <table>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem1"><br>
+                                    <label id="sold_name1"></label><br>
+                                    <label id="sold_price1"></label><br>
+                                    <label id="sold_purchase1"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem2"><br>
+                                    <label id="sold_name2"></label><br>
+                                    <label id="sold_price2"></label><br>
+                                    <label id="sold_purchase2"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem3"><br>
+                                    <label id="sold_name3"></label><br>
+                                    <label id="sold_price3"></label><br>
+                                    <label id="sold_purchase3"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem4"><br>
+                                    <label id="sold_name4"></label><br>
+                                    <label id="sold_price4"></label><br>
+                                    <label id="sold_purchase4"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem5"><br>
+                                    <label id="sold_name5"></label><br>
+                                    <label id="sold_price5"></label><br>
+                                    <label id="sold_purchase5"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem6"><br>
+                                    <label id="sold_name6"></label><br>
+                                    <label id="sold_price6"></label><br>
+                                    <label id="sold_purchase6"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem7"><br>
+                                    <label id="sold_name7"></label><br>
+                                    <label id="sold_price7"></label><br>
+                                    <label id="sold_purchase7"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem8"><br>
+                                    <label id="sold_name8"></label><br>
+                                    <label id="sold_price8"></label><br>
+                                    <label id="sold_purchase8"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem9"><br>
+                                    <label id="sold_name9"></label><br>
+                                    <label id="sold_price9"></label><br>
+                                    <label id="sold_purchase9"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem10"><br>
+                                    <label id="sold_name10"></label><br>
+                                    <label id="sold_price10"></label><br>
+                                    <label id="sold_purchase10"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem11"><br>
+                                    <label id="sold_name11"></label><br>
+                                    <label id="sold_price11"></label><br>
+                                    <label id="sold_purchase11"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem12"><br>
+                                    <label id="sold_name12"></label><br>
+                                    <label id="sold_price12"></label><br>
+                                    <label id="sold_purchase12"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem13"><br>
+                                    <label id="sold_name13"></label><br>
+                                    <label id="sold_price13"></label><br>
+                                    <label id="sold_purchase13"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem14"><br>
+                                    <label id="sold_name14"></label><br>
+                                    <label id="sold_price14"></label><br>
+                                    <label id="sold_purchase14"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem15"><br>
+                                    <label id="sold_name15"></label><br>
+                                    <label id="sold_price15"></label><br>
+                                    <label id="sold_purchase15"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem16"><br>
+                                    <label id="sold_name16"></label><br>
+                                    <label id="sold_price16"></label><br>
+                                    <label id="sold_purchase16"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem17"><br>
+                                    <label id="sold_name17"></label><br>
+                                    <label id="sold_price17"></label><br>
+                                    <label id="sold_purchase17"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem18"><br>
+                                    <label id="sold_name18"></label><br>
+                                    <label id="sold_price18"></label><br>
+                                    <label id="sold_purchase18"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem19"><br>
+                                    <label id="sold_name19"></label><br>
+                                    <label id="sold_price19"></label><br>
+                                    <label id="sold_purchase19"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="solditem20"><br>
+                                    <label id="sold_name20"></label><br>
+                                    <label id="sold_price20"></label><br>
+                                    <label id="sold_purchase20"></label>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="div_brand">
+                        <b>Brands</b>
+                        <br>
+                        <input type="checkbox" name="brand1" value=""><label id="brand1">Brand 1</label><br>
+                        <input type="checkbox" name="brand2" value=""><label id="brand2">Brand 1</label><br>
+                        <input type="checkbox" name="brand3" value=""><label id="brand3">Brand 1</label><br>
+                        <input type="checkbox" name="brand4" value=""><label id="brand4">Brand 1</label><br>
+                        <input type="checkbox" name="brand5" value=""><label id="brand5">Brand 1</label><br>
+                        <input type="checkbox" name="brand6" value=""><label id="brand6">Brand 1</label><br>
+                        <input type="checkbox" name="brand7" value=""><label id="brand7">Brand 1</label><br>
+                        <input type="checkbox" name="brand8" value=""><label id="brand8">Brand 1</label><br>
+                        <input type="checkbox" name="brand9" value=""><label id="brand9">Brand 1</label><br>
+                        <input type="checkbox" name="brand10" value=""><label id="brand10">Brand 1</label><br>
+                        <a href="" id="brand_see_more">see more...</a><br>
+                    </div><br>
+                    <b><label id="availablestock">Available</label></b><br>
+                    <b><input type="checkbox" name="outofstock" value="" id="outofstock" onchange="outOfStock()">Include Out Of Stock</b><br>
+                    <br>
+                    <div id="div_product">
+                        <b>Supplier's</b>
+                        <br>
+                        <input type="checkbox" name="supplier1" value="" ><label id="supplier1">Supplier 1</label><br>
+                        <input type="checkbox" name="supplier2" value="" ><label id="supplier2">Supplier 2</label><br>
+                        <input type="checkbox" name="supplier3" value="" ><label id="supplier3">Supplier 3</label><br>
+                        <input type="checkbox" name="supplier4" value="" ><label id="supplier4">Supplier 4</label><br>
+                        <input type="checkbox" name="supplier5" value="" ><label id="supplier5">Supplier 5</label><br>
+                        <input type="checkbox" name="supplier6" value="" ><label id="supplier6">Supplier 6</label><br>
+                        <input type="checkbox" name="supplier7" value="" ><label id="supplier7">Supplier 7</label><br>
+                        <input type="checkbox" name="supplier8" value="" ><label id="supplier8">Supplier 8</label><br>
+                        <input type="checkbox" name="supplier9" value="" ><label id="supplier9">Supplier 9</label><br>
+                        <input type="checkbox" name="supplier10" value="" ><label id="supplier10">Supplier 10</label><br>
+                        <a href="" id="supplier_see_more">see more...</a><br>
+                    </div><br>
+                    <div>
+                        <b>Price Range Rs:</b>
+                        <select>
+                            <option value="">1 to 500</option>
+                            <option value="">501 to 1000</option>
+                            <option value="">1001 2000</option>
+                            <option value="">2001 to 3000</option>
+                            <option value="">3001 to 4000</option>
+                            <option value="">4001 to 5000</option>
+                        </select>
+                    </div>
+
+                </td>
+                <td>
+                    <div>
+                        <b>Latest Products</b>
+                        <br><br>
+                        <table>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem1"><br>
+                                    <label id="new_name1"></label><br>
+                                    <label id="new_price1"></label><br>
+                                    <label id="new_purchase1"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem2"><br>
+                                    <label id="new_name2"></label><br>
+                                    <label id="new_price2"></label><br>
+                                    <label id="new_purchase2"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem3"><br>
+                                    <label id="new_name3"></label><br>
+                                    <label id="new_price3"></label><br>
+                                    <label id="new_purchase3"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem4"><br>
+                                    <label id="new_name4"></label><br>
+                                    <label id="new_price4"></label><br>
+                                    <label id="new_purchase4"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem5"><br>
+                                    <label id="new_name5"></label><br>
+                                    <label id="new_price5"></label><br>
+                                    <label id="new_purchase5"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem6"><br>
+                                    <label id="new_name6"></label><br>
+                                    <label id="new_price6"></label><br>
+                                    <label id="new_purchase6"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem7"><br>
+                                    <label id="new_name7"></label><br>
+                                    <label id="new_price7"></label><br>
+                                    <label id="new_purchase7"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem8"><br>
+                                    <label id="new_name8"></label><br>
+                                    <label id="new_price8"></label><br>
+                                    <label id="new_purchase8"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem9"><br>
+                                    <label id="new_name9"></label><br>
+                                    <label id="new_price9"></label><br>
+                                    <label id="new_purchase9"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem10"><br>
+                                    <label id="new_name10"></label><br>
+                                    <label id="new_price10"></label><br>
+                                    <label id="new_purchase10"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem11"><br>
+                                    <label id="new_name11"></label><br>
+                                    <label id="new_price11"></label><br>
+                                    <label id="new_purchase11"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem12"><br>
+                                    <label id="new_name12"></label><br>
+                                    <label id="new_price12"></label><br>
+                                    <label id="new_purchase12"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem13"><br>
+                                    <label id="new_name13"></label><br>
+                                    <label id="new_price13"></label><br>
+                                    <label id="new_purchase13"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem14"><br>
+                                    <label id="new_name14"></label><br>
+                                    <label id="new_price14"></label><br>
+                                    <label id="new_purchase14"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem15"><br>
+                                    <label id="new_name15"></label><br>
+                                    <label id="new_price15"></label><br>
+                                    <label id="new_purchase15"></label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem16"><br>
+                                    <label id="new_name16"></label><br>
+                                    <label id="new_price16"></label><br>
+                                    <label id="new_purchase16"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem17"><br>
+                                    <label id="new_name17"></label><br>
+                                    <label id="new_price17"></label><br>
+                                    <label id="new_purchase17"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem18"><br>
+                                    <label id="new_name18"></label><br>
+                                    <label id="new_price18"></label><br>
+                                    <label id="new_purchase18"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem19"><br>
+                                    <label id="new_name19"></label><br>
+                                    <label id="new_price19"></label><br>
+                                    <label id="new_purchase19"></label>
+                                </td>
+                                <td>
+                                    <img src="" alt="Popular Product" height="125" width="140" id="newitem20"><br>
+                                    <label id="new_name20"></label><br>
+                                    <label id="new_price20"></label><br>
+                                    <label id="new_purchase20"></label>
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+
+        <script>
+            function defaultBody(){
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("GET","http://192.168.1.40:8080/api/categories?apiVersion=1",true);
+                xmlhttp.send();
+                xmlhttp.onreadystatechange=function()
+                {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                    {
+                        //                        console.log('test',xmlhttp.responseText);
+                        var categories = JSON.parse(xmlhttp.responseText);
+                        //                        console.log('categories',categories.data[0].name);  
+                        //                        document.getElementById("cat1").setAttribute("href", categories.data[0].name);
+                        for(var i=0; i<10; i++){
+                            var id = i+1;
+                            document.getElementById("cat"+id).innerHTML = categories.data[i].name;
+                        }
+                    }
+                }
+                var xmlhttp1 = new XMLHttpRequest();
+                xmlhttp1.open("GET","http://192.168.1.40:8080/api/products?apiVersion=1",true);
+                xmlhttp1.send();
+                xmlhttp1.onreadystatechange=function()
+                {
+                    if (xmlhttp1.readyState==4 && xmlhttp1.status==200)
+                    {
+                        //                        console.log('test',xmlhttp1.responseText);
+                        var products = JSON.parse(xmlhttp1.responseText);
+                        //                        console.log('products',products.data,products.data[0].name);  
+                        for(var i=0; i<10; i++){
+                            var id = i+1;
+                            document.getElementById("pro"+id).innerHTML = products.data[i].name;
+                        }
+                    }
+                }
+                var xmlhttp2 = new XMLHttpRequest();
+                xmlhttp2.open("GET","http://192.168.1.40:8080/api/brands?apiVersion=1",true);
+                xmlhttp2.send();
+                xmlhttp2.onreadystatechange=function()
+                {
+                    if (xmlhttp2.readyState==4 && xmlhttp2.status==200)
+                    {
+                        //                        console.log('test',xmlhttp2.responseText);
+                        var brands = JSON.parse(xmlhttp2.responseText);
+                        //                        console.log('brands',brands.data[0].name);  
+                        for(var i=0; i<10; i++){
+                            var id = i+1;
+                            //                            console.log('testing loop',i,"brand"+id,brands.data[i].name);
+                            document.getElementById("brand"+id).innerHTML = brands.data[i].name;
+                        }
+                    }
+                }
+                var xmlhttp3 = new XMLHttpRequest();
+                xmlhttp3.open("GET","http://192.168.1.40:8080/api/suppliers?apiVersion=1",true);
+                xmlhttp3.send();
+                xmlhttp3.onreadystatechange=function()
+                {
+                    if (xmlhttp3.readyState==4 && xmlhttp3.status==200)
+                    {
+                        //                        console.log('test',xmlhttp3.responseText);
+                        var suppliers = JSON.parse(xmlhttp3.responseText);
+                        //                        console.log('suppliers',suppliers.data[0],suppliers.data[0].name);  
+                        for(var i=0; i<10; i++){
+                            var id = i+1;
+                            //                            console.log('testing loop',i,"supplier"+id,suppliers.data[i].name);
+                            document.getElementById("supplier"+id).innerHTML = suppliers.data[i].name;
+                        }
+                    }
+                }
+                
+                var xmlhttp4=new XMLHttpRequest();
+                xmlhttp4.open("GET","http://192.168.1.40:8080/api/items?apiVersion=1&filters=highestSold",true);
+                //                xmlhttp4.setRequestHeader("Content-type","JSON(application/json)");
+                //                var p = {_source: 'false',aggs: {articles_over_time: {date_histogram: {field: 'sale_time',interval: 'month' },aggs: {User: {sum: {field: 'amount'}}}}}};
+                //                var p = {sort : [{'sold' : {order : 'desc'}}]};
+                //                xmlhttp4.send(JSON.stringify(p));
+                xmlhttp4.send();
+                xmlhttp4.onreadystatechange=function()
+                {
+                    if (xmlhttp4.readyState==4 && xmlhttp4.status==200)
+                    {
+                        //                        console.log('test',xmlhttp4.responseText);
+                        var solditems = JSON.parse(xmlhttp4.responseText);
+                        //                        console.log('solditems',solditems.data[0],solditems.data[0].name);  
+                        for(var i=0; i<20; i++){
+                            var id = i+1;
+                            //                            console.log('testing loop',i,"solditem"+id,solditems.data[i].name);
+                            document.getElementById("sold_name"+id).innerHTML = solditems.data[i].name;
+                            document.getElementById("sold_price"+id).innerHTML = "Rs:"+solditems.data[i].price;
+                            document.getElementById("sold_purchase"+id).innerHTML = "Last Purchased:"+solditems.data[i].lastpurchased;
+                            document.getElementById("solditem"+id).src = solditems.data[i].image;
+                        }
+                    }
+                }
+                var xmlhttp5=new XMLHttpRequest();
+                xmlhttp5.open("GET","http://192.168.1.40:8080/api/items?apiVersion=1&filters=latestItems",true);
+                xmlhttp5.send();
+                xmlhttp5.onreadystatechange=function()
+                {
+                    if (xmlhttp5.readyState==4 && xmlhttp5.status==200)
+                    {
+                        //                        console.log('test',xmlhttp5.responseText);
+                        var newitems = JSON.parse(xmlhttp5.responseText);
+                        //                        console.log('newitems',newitems.data[0],newitems.data[0].name);  
+                        for(var i=0; i<20; i++){
+                            var id = i+1;
+                            //                            console.log('testing loop',i,"newitem"+id,newitems.data[i].name);
+                            //                            document.getElementById("solditem"+id).src = "http://www.esajeecom.esajee.com/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/0/2/020310090758_untitled-1_20copy.jpg";
+                            document.getElementById("new_name"+id).innerHTML = newitems.data[i].name;
+                            document.getElementById("new_price"+id).innerHTML = "Rs:"+newitems.data[i].price;
+                            document.getElementById("new_purchase"+id).innerHTML = "Last Purchased:"+newitems.data[i].lastpurchased;
+                            document.getElementById("newitem"+id).src = newitems.data[i].image;
+                        }
+                    }
+                }
+                
+            }
+            function outOfStock(){
+                if(document.getElementById("outofstock").checked == true){
+                    console.log('success:checked');
+                    var xmlhttp4=new XMLHttpRequest();
+                    xmlhttp4.open("GET","http://192.168.1.40:8080/api/items?apiVersion=1&filters=inActive",true);
+                    xmlhttp4.send();
+                    xmlhttp4.onreadystatechange=function()
+                    {
+                        if (xmlhttp4.readyState==4 && xmlhttp4.status==200)
+                        {
+                            //                        console.log('test',xmlhttp4.responseText);
+                            var solditems = JSON.parse(xmlhttp4.responseText);
+                            //                        console.log('solditems',solditems.data[13],solditems.data[13].name);  
+                            for(var i=0; i<20; i++){
+                                var id = i+1;
+                                //                            console.log('testing loop',i,"solditem"+id,solditems.data[i].name);
+                                document.getElementById("sold_name"+id).innerHTML = solditems.data[i].name;
+                                document.getElementById("sold_price"+id).innerHTML = "Rs:"+solditems.data[i].price;
+                                document.getElementById("sold_purchase"+id).innerHTML = "Last Purchased:"+solditems.data[i].lastpurchased;
+                                document.getElementById("solditem"+id).src = solditems.data[i].image;
+                            }
+                        }
+                    }
+                    var xmlhttp5=new XMLHttpRequest();
+                    xmlhttp5.open("GET","http://192.168.1.40:8080/api/items?apiVersion=1&filters=inActive",true);
+                    xmlhttp5.send();
+                    xmlhttp5.onreadystatechange=function()
+                    {
+                        if (xmlhttp5.readyState==4 && xmlhttp5.status==200)
+                        {
+                            //                        console.log('test',xmlhttp5.responseText);
+                            var newitems = JSON.parse(xmlhttp5.responseText);
+                            //                        console.log('newitems',newitems.data[0],newitems.data[0].name);  
+                            for(var i=0; i<20; i++){
+                                var id = i+1;
+                                //                            console.log('testing loop',i,"newitem"+id,newitems.data[i].name);
+                                //                            document.getElementById("solditem"+id).src = "http://www.esajeecom.esajee.com/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/0/2/020310090758_untitled-1_20copy.jpg";
+                                document.getElementById("new_name"+id).innerHTML = newitems.data[i].name;
+                                document.getElementById("new_price"+id).innerHTML = "Rs:"+newitems.data[i].price;
+                                document.getElementById("new_purchase"+id).innerHTML = "Last Purchased:"+newitems.data[i].lastpurchased;
+                                document.getElementById("newitem"+id).src = newitems.data[i].image;
+                            }
+                        }
+                    }
+                }else if(document.getElementById("outofstock").checked == false){
+                    console.log('UNsuccess:checked');
+                    defaultBody();
+                }
+            }
+        </script>
+    </body>
+</html>
